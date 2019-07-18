@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button,Dimensions } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 
 import Login from './src/pages/Login';
 import Signup from './src/pages/Signup';
 import Forgetpw from './src/pages/Forgetpw';
 import Table from './src/pages/Table';
+import Chairs from './src/pages/Chairs';
+import Cupboards from './src/pages/Cupboards';
+import MyAccount from './src/pages/MyAccount';
+import MyCart from './src/pages/MyCart';
+import MyOrders from './src/pages/MyOrders';
+import Sofas from './src/pages/Sofas';
+import StoreLocator from './src/pages/StoreLocator';
+
+import MenuDrawer from './src/components/MenuDrawer';
+
+
+const WIDTH = Dimensions.get('window').width;
+
+const DrawerConfig = {
+  drawerWidth: WIDTH*0.83,
+  contentComponent: ({navigation}) => {
+    return(<MenuDrawer navigation={navigation}/>)
+  }
+}
 /**
  * - AppSwitchNavigator
  *    - WelcomeScreen
@@ -60,11 +79,11 @@ class DashboardScreen extends Component {
   }
 }
 
-class Feed extends Component {
+class LogOut extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Feed</Text>
+        <Text>LogOut</Text>
       </View>
     );
   }
@@ -110,7 +129,6 @@ const DashboardStackNavigator = createStackNavigator(
   {
     //RouteConfig Param
     DashboardTabNavigator: DashboardScreen,
-    Feed: { screen: Feed }
   },
   {
     //NavigatorConfig param
@@ -143,11 +161,18 @@ const DashboardStackNavigator = createStackNavigator(
 
 const AppDrawerNavigator = createDrawerNavigator({
   Dashboard: { screen: DashboardStackNavigator },
-  Feed: { screen: Feed },
-  Settings: { screen: Settings },
-  Profile: { screen: Profile },
-  Table: { screen: Table }
-});
+  MyCart: { screen: MyCart},
+  Table: { screen: Table },
+  Sofas: { screen: Sofas },
+  Chairs: { screen: Chairs },
+  Cupboards: { screen: Cupboards },
+  MyAccount: { screen: MyAccount },
+  StoreLocator: { screen: StoreLocator},
+  MyOrders: { screen: MyOrders },
+  LogOut: { screen: LogOut}
+},
+DrawerConfig
+);
 
 //Navigator for switching between pages starting from Login page
 const AppSwitchNavigator = createSwitchNavigator({

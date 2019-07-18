@@ -6,11 +6,11 @@ import { StyleSheet,
     TouchableOpacity,
  } from 'react-native';
 
- export default class Table extends Component {
+ export default class MyOrders extends Component {
     render(){
         return(
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Table</Text>
+                <Text>My Orders</Text>
             </View>
         )
     }
