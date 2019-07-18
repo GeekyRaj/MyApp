@@ -5,6 +5,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import Login from './src/pages/Login';
 import Signup from './src/pages/Signup';
 import Forgetpw from './src/pages/Forgetpw';
+import Table from './src/pages/Table';
 /**
  * - AppSwitchNavigator
  *    - WelcomeScreen
@@ -26,7 +27,7 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from 'react-navigation';
-
+//import { Container, Header, Content, Left } from 'native-base';
 
 class App extends Component {
   render() {
@@ -141,12 +142,11 @@ const DashboardStackNavigator = createStackNavigator(
 );
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Dashboard: {
-    screen: DashboardStackNavigator
-  },
-  Feed: {
-    screen: Feed
-  }
+  Dashboard: { screen: DashboardStackNavigator },
+  Feed: { screen: Feed },
+  Settings: { screen: Settings },
+  Profile: { screen: Profile },
+  Table: { screen: Table }
 });
 
 //Navigator for switching between pages starting from Login page
