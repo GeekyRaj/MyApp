@@ -13,6 +13,7 @@ import MyCart from './src/pages/MyCart';
 import MyOrders from './src/pages/MyOrders';
 import Sofas from './src/pages/Sofas';
 import StoreLocator from './src/pages/StoreLocator';
+import DashboardScreen from './src/pages/DashboardScreen';
 
 import MenuDrawer from './src/components/MenuDrawer';
 
@@ -55,29 +56,7 @@ class App extends Component {
 }
 export default App;
 
-class WelcomeScreen extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Login"
-          onPress={() => this.props.navigation.navigate('Dashboard')}
-        />
-        <Button title="Sign Up" onPress={() => alert('button pressed')} />
-      </View>
-    );
-  }
-}
 
-class DashboardScreen extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>DashboardScreen</Text>
-      </View>
-    );
-  }
-}
 
 class LogOut extends Component {
   render() {
@@ -88,27 +67,6 @@ class LogOut extends Component {
     );
   }
 }
-
-class Settings extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Settings</Text>
-      </View>
-    );
-  }
-}
-
-class Profile extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Profile</Text>
-      </View>
-    );
-  }
-}
-
 
 /*const DashboardTabNavigator = createBottomTabNavigator(
   {
@@ -129,6 +87,15 @@ const DashboardStackNavigator = createStackNavigator(
   {
     //RouteConfig Param
     DashboardTabNavigator: DashboardScreen,
+    MyCart: MyCart,
+    Table: Table,
+    Sofas: Sofas,
+    Chairs: Chairs,
+    Cupboards: Cupboards,
+    MyAccount: MyAccount,
+    StoreLocator: StoreLocator,
+    MyOrders: MyOrders,
+    LogOut: LogOut,
   },
   {
     //NavigatorConfig param
@@ -188,6 +155,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: "#e91c1a"
   }
 });
