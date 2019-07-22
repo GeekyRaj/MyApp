@@ -24,6 +24,33 @@ const DrawerConfig = {
   drawerWidth: WIDTH*0.83,
   contentComponent: ({navigation}) => {
     return(<MenuDrawer navigation={navigation}/>)
+    
+  },
+  
+}
+const defaultConfig = {
+  defaultNavigationOptions: ({ navigation }) => {  
+    return {  
+      headerLeft: (  
+        <Icon  
+            style={{ paddingLeft: 16,  color: '#ffffff' }}  
+            onPress={() => navigation.openDrawer()}  
+            name="md-menu"  
+            size={30}  
+        />  
+    ),
+    headerRight: (
+      <Icon
+        style={{ paddingRight: 16 , color: '#ffffff'}}
+        //onPress={() => navigation.openDrawer()}
+        name="md-search"
+        size={30}
+      />
+    ),
+    headerStyle: {
+      backgroundColor: '#e91c1a',
+    },
+    };  
   }
 }
 /**
@@ -47,7 +74,6 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from 'react-navigation';
-//import { Container, Header, Content, Left } from 'native-base';
 
 class App extends Component {
   render() {
@@ -83,62 +109,90 @@ class LogOut extends Component {
     }
   }
 );*/
-const DashboardStackNavigator = createStackNavigator(
+const StackMyCart = createStackNavigator(
   {
     //RouteConfig Param
-    DashboardTabNavigator: DashboardScreen,
     MyCart: MyCart,
-    Table: Table,
-    Sofas: Sofas,
-    Chairs: Chairs,
-    Cupboards: Cupboards,
-    MyAccount: MyAccount,
-    StoreLocator: StoreLocator,
-    MyOrders: MyOrders,
-    LogOut: LogOut,
   },
+    defaultConfig
+);
+
+const StackTable = createStackNavigator(
   {
-    //NavigatorConfig param
-    //initialRouteName: "NeoSoft",
-    defaultNavigationOptions: ({ navigation }) => {
-      return {
-        headerLeft: (
-          <Icon
-            style={{ paddingLeft: 16 , color: '#ffffff'}}
-            onPress={() => navigation.openDrawer()}
-            name="md-menu"
-            size={30}
-          />
-        ),
-        headerRight: (
-          <Icon
-            style={{ paddingRight: 16 , color: '#ffffff'}}
-            //onPress={() => navigation.openDrawer()}
-            name="md-search"
-            size={30}
-          />
-        ),
-        headerStyle: {
-          backgroundColor: '#e91c1a',
-        },
-      };
-    }
-  }
+    //RouteConfig Param
+    Table: Table,
+  },
+    defaultConfig
+);
+
+const StackSofas = createStackNavigator(
+  {
+    //RouteConfig Param
+    Sofas: Sofas,
+  },
+    defaultConfig
+);
+
+const StackChairs = createStackNavigator(
+  {
+    //RouteConfig Param
+    Chairs: Chairs,
+  },
+    defaultConfig
+);
+
+const StackCupboards = createStackNavigator(
+  {
+    //RouteConfig Param
+    Cupboards: Cupboards,
+  },
+    defaultConfig
+);
+
+const StackMyAccount = createStackNavigator(
+  {
+    //RouteConfig Param
+    MyAccount: MyAccount,
+  },
+    defaultConfig
+);
+
+const StackMyOrders = createStackNavigator(
+  {
+    //RouteConfig Param
+    MyOrders: MyOrders,
+  },
+    defaultConfig
+);
+
+const StackStoreLocator = createStackNavigator(
+  {
+    //RouteConfig Param
+    StoreLocator: StoreLocator,
+  },
+    defaultConfig
+);
+
+const DashboardStackNavigator = createStackNavigator(
+  {
+    DashboardTabNavigator: DashboardScreen,
+  },
+  defaultConfig
 );
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Dashboard: { screen: DashboardStackNavigator },
-  MyCart: { screen: MyCart},
-  Table: { screen: Table },
-  Sofas: { screen: Sofas },
-  Chairs: { screen: Chairs },
-  Cupboards: { screen: Cupboards },
-  MyAccount: { screen: MyAccount },
-  StoreLocator: { screen: StoreLocator},
-  MyOrders: { screen: MyOrders },
+  Dashboard: { screen: DashboardStackNavigator},
+  MyCart: { screen: StackMyCart},
+  Table: { screen: StackTable },
+  Sofas: { screen: StackSofas },
+  Chairs: { screen: StackChairs },
+  Cupboards: { screen: StackCupboards },
+  MyAccount: { screen: StackMyAccount },
+  StoreLocator: { screen: StackStoreLocator},
+  MyOrders: { screen: StackMyOrders },
   LogOut: { screen: LogOut}
 },
-DrawerConfig
+  DrawerConfig,
 );
 
 //Navigator for switching between pages starting from Login page

@@ -14,6 +14,9 @@ import { StyleSheet,
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          headerStyle:{
+              backgroundColor:'black',
+          }
       };
     render(){
         return(
