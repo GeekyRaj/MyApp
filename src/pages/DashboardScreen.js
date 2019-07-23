@@ -23,12 +23,6 @@ import Header from '../components/Header';
  export default class DashboardScreen extends Component {
     static navigationOptions = {
       title: 'NeoSTORE',
-      /*headerLeft:(<Icon
-        style={{ paddingLeft:15,paddingRight: 16 , color: '#ffffff'}}
-        onPress={() => this.props.navigation.dispatch(DraerActions.openDrawer())}
-        name="md-menu"
-        size={30}
-      />),*/
       headerStyle: {
         backgroundColor: '#e91c1a',
       },

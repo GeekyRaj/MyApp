@@ -14,6 +14,7 @@ import MyOrders from './src/pages/MyOrders';
 import Sofas from './src/pages/Sofas';
 import StoreLocator from './src/pages/StoreLocator';
 import DashboardScreen from './src/pages/DashboardScreen';
+import ProductDetail from './src/pages/ProductDetail';
 
 import MenuDrawer from './src/components/MenuDrawer';
 
@@ -59,12 +60,7 @@ const defaultConfig = {
  *      - Login Button
  *      - Sign Up Button
  *    - AppDrawerNavigator
- *          - Dashboard - DashboardStackNavigator(needed for header and to change the header based on the                     tab)
- *            - DashboardTabNavigator
- *              - Tab 1 - FeedStack
- *              - Tab 2 - ProfileStack
- *              - Tab 3 - SettingsStack
- *            - Any files you don't want to be a part of the Tab Navigator can go here.
+ *          - Dashboard - DashboardStackNavigator(needed for header and to change the header based on the  tab)
  */
 
 import {
@@ -109,49 +105,51 @@ class LogOut extends Component {
     }
   }
 );*/
+
+/*-------------------------STACK NAVIGATOR FOR ALL DRAWER OPTIONS----------------------*/
 const StackMyCart = createStackNavigator(
   {
     //RouteConfig Param
     MyCart: MyCart,
   },
+    //Configuration options
     defaultConfig
 );
 
 const StackTable = createStackNavigator(
   {
-    //RouteConfig Param
     Table: Table,
+    ProductDetail: ProductDetail,
   },
-    defaultConfig
+    defaultConfig,
 );
 
 const StackSofas = createStackNavigator(
   {
-    //RouteConfig Param
     Sofas: Sofas,
+    ProductDetail: ProductDetail,
   },
     defaultConfig
 );
 
 const StackChairs = createStackNavigator(
   {
-    //RouteConfig Param
     Chairs: Chairs,
+    ProductDetail: ProductDetail,
   },
     defaultConfig
 );
 
 const StackCupboards = createStackNavigator(
   {
-    //RouteConfig Param
     Cupboards: Cupboards,
+    ProductDetail: ProductDetail,
   },
     defaultConfig
 );
 
 const StackMyAccount = createStackNavigator(
   {
-    //RouteConfig Param
     MyAccount: MyAccount,
   },
     defaultConfig
@@ -159,7 +157,6 @@ const StackMyAccount = createStackNavigator(
 
 const StackMyOrders = createStackNavigator(
   {
-    //RouteConfig Param
     MyOrders: MyOrders,
   },
     defaultConfig
@@ -167,7 +164,6 @@ const StackMyOrders = createStackNavigator(
 
 const StackStoreLocator = createStackNavigator(
   {
-    //RouteConfig Param
     StoreLocator: StoreLocator,
   },
     defaultConfig
@@ -180,6 +176,7 @@ const DashboardStackNavigator = createStackNavigator(
   defaultConfig
 );
 
+/*-----------------DRAWER NAVIGATION CALLED BY SWITCH NAVIGATOR-----------------*/
 const AppDrawerNavigator = createDrawerNavigator({
   Dashboard: { screen: DashboardStackNavigator},
   MyCart: { screen: StackMyCart},
@@ -195,9 +192,9 @@ const AppDrawerNavigator = createDrawerNavigator({
   DrawerConfig,
 );
 
-//Navigator for switching between pages starting from Login page
+/*-----------Navigator for switching between pages starting from Login page---------*/
 const AppSwitchNavigator = createSwitchNavigator({
-  Welcome: { screen: Login },
+  Welcome: { screen: Login },   //actual Screen: Login
   Dashboard: { screen: AppDrawerNavigator },
   Signup: { screen: Signup },
   Forgetpw: { screen: Forgetpw }

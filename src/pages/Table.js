@@ -1,14 +1,18 @@
 import React, {Component} from 'react';
 import { StyleSheet,
     Text,
-    TextInput,
     View,
     TouchableOpacity,
     FlatList,
     Image,
+    ActivityIndicator,
  } from 'react-native';
 
  import StarRating from '../components/StarRating';
+ import ProductDetail from './ProductDetail';
+ import Icon from '@expo/vector-icons/Ionicons';
+
+ type Props = {};
 
  export default class Table extends Component {
     static navigationOptions = {
@@ -18,43 +22,73 @@ import { StyleSheet,
             fontWeight: 'bold',
           },
       };
-    render(){
-        return(
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <FlatList 
-                numColumns={1}
-                data={[
-                    {key:require('../images/Table.png'),pth:'Table',pname:'Stylish Modern Dining Table',center:'Aron Table center',price:'27,000'},
-                    {key:require("../images/Sofas.png"),pth:'Sofas',pname:'4 Seater Dinning Table',center:'Future Furniture center',price:'25,000'},
-                    {key:require("../images/Chairs.png"),pth:'Chairs',pname:'6 Seater Dinning Table',center:'Aron Table center',price:'30,000'},
-                    {key:require("../images/Cupboards.png"),pth:'Cupboards',pname:' Stylish 4 Seater Dinning Table',center:'Aron Table center',price:'35,000'},
-                    {key:require("../images/Cupboards.png"),pth:'Cupboards',pname:' Stylish 4 Table',center:'Aron Table center',price:'10,000'},
-                    {key:require("../images/Cupboards.png"),pth:'Cupboards',pname:' Harkness Table for Office',center:'Future Table center',price:'40,000'},
-                ]}
+
+      constructor(props){
+        super(props);
+        this.state ={ isLoading: true}
+      }
     
+      componentDidMount(){
+        return fetch('http://staging.php-dev.in:8844/trainingapp/api/products/getList?product_category_id=1')
+          .then((response) => response.json())
+          .then((responseJson) => {
+    
+            this.setState({
+              isLoading: false,
+              dataSource: responseJson.data,
+            }, function(){
+    
+            });
+    
+          })
+          .catch((error) =>{
+            console.error(error);
+          });
+      }
+    render(){
+
+        if(this.state.isLoading){
+            return(
+              <View style={{flex: 1, padding: 20}}>
+                <ActivityIndicator/>
+              </View>
+            )
+          }
+
+          const ratingObj = {
+            ratings: 3,
+            views: 34000
+          }
+
+        return(
+            
+            <View style={{flex: 1, paddingTop:20}}>
+                <FlatList
+                data={this.state.dataSource}
                 renderItem={({item}) =>{
-                    const p=item.pth;
-                    return <View style={{flex:1,flexDirection:'row'}}><TouchableOpacity onPress={() => this.props.navigation.navigate(p)}>
-                        <Image 
-                            style={{ height: 90, width: 90,margin:5, }}
-                            source={item.key} />
-                    </TouchableOpacity>
-                    <View style={{flexDirection:'column', margin:15,}}>
-                        <Text style={{fontSize: 20,}}>{item.pname}</Text>
-                        <Text>{item.center}</Text>
-                        <View style={{flexDirection:'row',}}>
-                            <Text style={{marginTop:5,marginRight:100,color:'red',fontSize:20}}>Rs. {item.price}</Text>
-                            <StarRating/>
-                    </View>
-                    </View>
+                  const ratingObj = {
+                    ratings: item.rating,
+                    views: item.view_count
+                  }
+                    return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductDetail',{ pname:item.name, pid:item.id })}>
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <Image 
+                                style={{ height: 90, width: 90,margin:10, }}
+                                source={{uri:item.product_images}} />
                     
-                    </View>
+                            <View style={{flexDirection:'column', margin:15,}}>
+                                <Text style={{fontSize: 20,}}>{item.name}</Text>
+                                <Text>{item.producer}</Text>
+                                <View style={{flexDirection:'row',}}>
+                                    <Text style={{marginTop:5,marginRight:100,color:'red',fontSize:20}}>Rs. {item.cost}</Text>
+                                    <StarRating ratingObj={ratingObj}/>
+                                </View>
+                            </View>
+                        </View></TouchableOpacity>
                 }
             }
-            keyExtractor={
-                (index) => {return index }
-            }
-            />
+                keyExtractor={({id}, index) => id}
+                />
             </View>
         )
     }
