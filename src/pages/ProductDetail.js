@@ -7,7 +7,9 @@ import {
     FlatList,
     Image,
     ActivityIndicator,
+    TouchableHighlight,
 } from 'react-native';
+//import Modal from "./react-native-modal";
 
 import StarRating from '../components/StarRating';
 import ProductDetail from './ProductDetail';
@@ -27,11 +29,17 @@ export default class Table extends Component {
                     name="md-arrow-back"
                     size={30}
                 />),
-            headerRight: null,
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            },
+            headerRight: null
         };
+    };
+
+    //Modal 
+    state = {
+        isModalVisible: false
+    };
+
+    toggleModal = () => {
+        this.setState({ isModalVisible: !this.state.isModalVisible });
     };
 
     constructor(props) {
@@ -63,6 +71,8 @@ export default class Table extends Component {
             });
     }
     render() {
+
+        //Setting Product category
         const pcat = this.state.dataSource.product_category_id;
         let pcatval = " ";
         if (pcat == 1) {
@@ -86,57 +96,35 @@ export default class Table extends Component {
             )
         }
 
+        //getting rating
         const ratingObj = {
             ratings: this.state.dataSource.rating,
             views: this.state.dataSource.view_count
-          }
+        }
 
         return (
 
             <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
-                {/*<Text>{this.state.dataSource.name}</Text>
-                <Text>{this.state.dataSource.description}</Text>
-                <Text>{this.state.dataSource.cost}</Text>
-                <Text>{this.props.navigation.state.params.pid}</Text>
-
-                 <FlatList
-                    data={this.state.dataSource}
-                    renderItem={({ item }) => {
-
-                        return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductDetail')}>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-
-
-                                <View style={{ flexDirection: 'column', margin: 15, }}>
-                                    <Text style={{ fontSize: 20, }}>{item.name}</Text>
-                                    <Text>{item.producer}</Text>
-                                    <View style={{ flexDirection: 'row', }}>
-                                        <Text
-                                            style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: 20 }}>
-                                            Rs. {item.cost}
-                                        </Text>
-
-                                    </View>
-                                </View>
-                            </View></TouchableOpacity>
-                    }
-                    }
-                    keyExtractor={({ id }, index) => id}
-                /> */}
+                {/*<Modal isVisible={this.state.isModalVisible}>
+                    <View style={{ flex: 1 }}>
+                        <Text>Hello!</Text>
+                        <Button title="Hide modal" onPress={this.toggleModal} />
+                    </View>
+        </Modal>*/}
 
                 {/*Actual Design Layout of Product detail*/}
                 <View style={styles.box}>
                     <Text style={{ fontSize: 25, paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
                     <Text style={{ fontSize: 20, paddingLeft: 20, }}>Category - {pcatval}</Text>
-                    <View style={{ flex: 0, flexDirection: 'row',width: 420, }}>
-                        <View style={{ flex: 0, flexDirection: 'column',}}>
-                            
-                            <Text style={{ fontSize: 15, paddingLeft: 20, marginBottom: 10 ,marginRight:250}}>{this.state.dataSource.producer}</Text>
+                    <View style={{ flex: 0, flexDirection: 'row', width: 420, }}>
+                        <View style={{ flex: 0, flexDirection: 'column', }}>
+
+                            <Text style={{ fontSize: 15, paddingLeft: 20, marginBottom: 10, marginRight: 250 }}>{this.state.dataSource.producer}</Text>
                         </View>
-                        <View style={{ flexDirection:'row-reverse',}}>
-                            <StarRating ratingObj={ratingObj}/>
+                        <View style={{ flexDirection: 'row-reverse', }}>
+                            <StarRating ratingObj={ratingObj} />
                         </View>
-                        
+
                     </View>
 
                 </View>
@@ -180,7 +168,7 @@ export default class Table extends Component {
                 </View>
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Dashboard')}>
+                        <TouchableOpacity style={styles.button} onPress={() => { this.toggleModal }}>
                             <Text style={styles.Textbutton}>BUY NOW</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonRate} onPress={() => this.props.navigation.navigate('Dashboard')}>
@@ -202,7 +190,7 @@ const styles = StyleSheet.create({
     boxmid: {
         flex: 0,
         width: 400,
-        height: 425,
+        height: 405,
         backgroundColor: '#ffffff',
         borderRadius: 10,
 

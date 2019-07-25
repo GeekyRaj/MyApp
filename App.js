@@ -15,6 +15,10 @@ import Sofas from './src/pages/Sofas';
 import StoreLocator from './src/pages/StoreLocator';
 import DashboardScreen from './src/pages/DashboardScreen';
 import ProductDetail from './src/pages/ProductDetail';
+import Resetpw from './src/pages/Resetpw';
+import Orderid from './src/pages/Orderid';
+import AddressList from './src/pages/AddressList';
+import AddAddress from './src/pages/AddAddress';
 
 import MenuDrawer from './src/components/MenuDrawer';
 
@@ -111,6 +115,8 @@ const StackMyCart = createStackNavigator(
   {
     //RouteConfig Param
     MyCart: MyCart,
+    AddressList: AddressList,
+    AddAddress: AddAddress,
   },
     //Configuration options
     defaultConfig
@@ -151,6 +157,7 @@ const StackCupboards = createStackNavigator(
 const StackMyAccount = createStackNavigator(
   {
     MyAccount: MyAccount,
+    Resetpw: Resetpw,
   },
     defaultConfig
 );
@@ -158,6 +165,7 @@ const StackMyAccount = createStackNavigator(
 const StackMyOrders = createStackNavigator(
   {
     MyOrders: MyOrders,
+    Orderid: Orderid,
   },
     defaultConfig
 );

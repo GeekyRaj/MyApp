@@ -27,10 +27,6 @@ import Header from '../components/Header';
         backgroundColor: '#e91c1a',
       },
       headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          
-        }
     };
     
     render() {
@@ -41,7 +37,6 @@ import Header from '../components/Header';
      
         <View style={{ flex: 0, alignItems: 'center', justifyContent: 'center' }}>
           <ScrollView horizontal={true}
-          //contentContainerStyle={{height: imageHeight}}
           style={{
             height: 240,
           }}
