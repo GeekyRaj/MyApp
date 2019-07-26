@@ -202,7 +202,7 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 /*-----------Navigator for switching between pages starting from Login page---------*/
 const AppSwitchNavigator = createSwitchNavigator({
-  Welcome: { screen: Login },   //actual Screen: Login
+  Welcome: { screen: Login},   //actual Screen: Login
   Dashboard: { screen: AppDrawerNavigator },
   Signup: { screen: Signup },
   Forgetpw: { screen: Forgetpw }

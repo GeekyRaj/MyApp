@@ -5,11 +5,14 @@ import {
     View,
     TouchableOpacity,
     FlatList,
+    TextInput,
     Image,
     ActivityIndicator,
     TouchableHighlight,
+    ScrollView,
+    Modal,
 } from 'react-native';
-//import Modal from "./react-native-modal";
+
 
 import StarRating from '../components/StarRating';
 import ProductDetail from './ProductDetail';
@@ -46,21 +49,36 @@ export default class Table extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            dataSource: []
+            dataSource: [],
+            productImages: [],
+            largeImage: "",
+            quantityModalVisible: false,
+            ratingModalVisible: false
         }
 
+    }
+
+    setQuantityModalVisible(visible) {
+        this.setState({ quantityModalVisible: visible });
+    }
+
+    setRatingModalVisible(visible) {
+        this.setState({ ratingModalVisible: visible });
     }
 
     componentDidMount() {
         const { navigation } = this.props;
         const pid = navigation.getParam("pid", "1");
-        fetch('http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=7')
+        console.log("Product ID : ", pid);
+        fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
             .then((response) => response.json())
             .then((responseJson) => {
 
                 this.setState({
                     isLoading: false,
                     dataSource: responseJson.data,
+                    productImages: responseJson.data.product_images,
+                    largeImage: responseJson.data.product_images[0].image
                 }, function () {
 
                 });
@@ -70,6 +88,27 @@ export default class Table extends Component {
                 console.error(error);
             });
     }
+
+    renderImages() {
+        return this.state.productImages.map(item => {
+            return (
+                <TouchableOpacity onPress={() => this.setState({ largeImage: item.image })}>
+                    <Image style={{ width: 70, height: 70, marginTop: 15, margin: 5, borderColor: 'gray', borderWidth: 1 }} source={{ uri: item.image }} />
+                </TouchableOpacity>
+            );
+        });
+    }
+
+    renderLargeImage() {
+        if (this.state.largeImage.length > 1) {
+            return (
+                <Image style={{ width: 257, height: 175, alignItems: 'center', padding: 50 }}
+                    source={{ uri: this.state.largeImage }} />
+            )
+        }
+    }
+
+
     render() {
 
         //Setting Product category
@@ -115,7 +154,7 @@ export default class Table extends Component {
                 {/*Actual Design Layout of Product detail*/}
                 <View style={styles.box}>
                     <Text style={{ fontSize: 25, paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
-                    <Text style={{ fontSize: 20, paddingLeft: 20, }}>Category - {pcatval}</Text>
+                    <Text style={{ fontSize: 20, paddingLeft: 20, }}>Category - {pcatval} </Text>
                     <View style={{ flex: 0, flexDirection: 'row', width: 420, }}>
                         <View style={{ flex: 0, flexDirection: 'column', }}>
 
@@ -138,29 +177,20 @@ export default class Table extends Component {
                             size={30}
                         />
                     </View>
+
                     <View style={styles.image}>
-                        <Image
-                            style={{ height: 150, width: 300, marginTop: 5, }}
-                            source={this.state.dataSource.product_images[1].image}
-                        />
-                        <View style={{ flex: 0, flexDirection: 'row', alignContent: 'center' }}>
-                            <TouchableOpacity>
-                                <Image
-                                    style={styles.imageThumb}
-                                    source={require("../images/slider_img1.jpg")}
-                                /></TouchableOpacity>
-                            <TouchableOpacity><Image
-                                style={styles.imageThumb}
-                                source={require("../images/slider_img1.jpg")}
-                            />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Image
-                                    style={styles.imageThumb}
-                                    source={require("../images/slider_img1.jpg")}
-                                /></TouchableOpacity>
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            {this.renderLargeImage()}
+                        </View>
+                        <View style={{ flex: 0, flexDirection: 'row', alignContent: 'center', paddingLeft: 20 }}>
+                            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={true} nestedScrollEnabled>
+                                {this.renderImages()}
+                            </ScrollView>
+
                         </View>
                     </View>
+
+
                     <View style={{ flex: 0, }}>
                         <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: 20, fontWeight: "bold", }}> DESCRIPTION</Text>
                         <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: 15, }}> {this.state.dataSource.description}</Text>
@@ -168,7 +198,7 @@ export default class Table extends Component {
                 </View>
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <TouchableOpacity style={styles.button} onPress={() => { this.toggleModal }}>
+                        <TouchableOpacity style={styles.button} onPress={()=>{this.setQuantityModalVisible(true)}}>
                             <Text style={styles.Textbutton}>BUY NOW</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonRate} onPress={() => this.props.navigation.navigate('Dashboard')}>
@@ -176,6 +206,45 @@ export default class Table extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.quantityModalVisible}>
+
+                    <View style={{ flex: 1 }}>
+                        <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
+                            <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible)} style={{ flex: 1 }} />
+                        </View>
+
+                        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
+
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2C2B2B', paddingTop: 20 }}>{this.props.navigation.state.params.pname}</Text>
+                            <View style={{ marginTop: 33 }}>
+                                {this.renderLargeImage()}
+                            </View>
+
+                            <TextInput style={{ fontSize: 20, padding: 20 }} placeholder="Enter Quantity" />
+
+                            <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: 'red', borderRadius: 8,
+                                        padding: 10,
+                                        width: 176, height: 42,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                    onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible); }}>
+                                    <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+
+
             </View>
         )
     }

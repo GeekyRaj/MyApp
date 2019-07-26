@@ -44,14 +44,34 @@ export default class AddressList extends Component {
     render() {
 
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',absolute:0, }}>
+            <View style={{ flex: 1,width:400, alignItems: 'center', justifyContent: 'center',absolute:0, }}>
                 <Text>AddressList</Text>
                 <RadioForm
                     radio_props={radio_props}
                     initial={0}
                     onPress={(value) => { this.setState({ value: value }) }}
                 />
+                <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
+                        <Text style={styles.Textbutton}>PLACE ORDER</Text>
+                    </TouchableOpacity>
             </View>
         )
     }
 }
+const styles = StyleSheet.create({
+    Textbutton: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#ffffff',
+        textAlign: 'center',
+    },
+    button: {
+        width: 300,
+        backgroundColor: '#E91c1a',
+        borderRadius: 15,
+        marginVertical: 10,
+        paddingVertical: 10,
+        marginLeft:40,
+        marginTop:15,
+    },
+})

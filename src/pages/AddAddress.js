@@ -34,38 +34,51 @@ export default class AddAddress extends Component {
     render() {
 
         return (
-            <View style={{ flex: 1, justifyContent: 'center',backgroundColor:'#9b9e9c', }}>
-                <View style={{marginVertical:20,flexGrow: 1,alignItems: 'center',alignContent:'stretch'}}>
-                <Text>Address</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="Address"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
-                <Text>Landmark</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="Landmark"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
-                <Text>City</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="City"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
-                <Text>Zip Code</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="Zip Code"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
-                <Text>State</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="State"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
-                <Text>Country</Text>
-                <TextInput style={styles.inputBox}
-                    placeholder="Country"
-                    placeholderTextColor='#e91c1a'>
-                </TextInput>
+            <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#ebe8e8', }}>
+                <View style={{ margin: 15, flexGrow: 1, alignContent: 'stretch' }}>
+                    <Text style={styles.labl}>ADDRESS</Text>
+                    <TextInput style={styles.inputBoxAdd}
+                        multiline={true}
+                        onChangeText={text=>this.setState({value:text})}
+                        underlineColorAndroid='transparent'
+                        placeholder="Address"
+                        placeholderTextColor='black'>
+                    </TextInput>
+                    <Text style={styles.labl}>LANDMARK</Text>
+                    <TextInput style={styles.inputBox}
+                        placeholder="Landmark"
+                        placeholderTextColor='black'>
+                    </TextInput>
+                    <View style={{ flexDirection: 'row', }}>
+                        <View style={{ flexGrow: 1, height: 210, width: 170, }}>
+                            <Text style={styles.labl}>CITY</Text>
+                            <TextInput style={styles.inputBox}
+                                placeholder="City"
+                                placeholderTextColor='black'>
+                            </TextInput>
+                            <Text style={styles.labl}>ZIP CODE</Text>
+                            <TextInput style={styles.inputBox}
+                                placeholder="Zip Code"
+                                placeholderTextColor='black'>
+                            </TextInput>
+                        </View>
+
+                        <View style={{ flexGrow: 1, height: 210, width: 170, marginLeft: 20, }}>
+                            <Text style={styles.labl}>STATE</Text>
+                            <TextInput style={styles.inputBox}
+                                placeholder="State"
+                                placeholderTextColor='black'>
+                            </TextInput>
+                            <Text style={styles.labl}>COUNTRY</Text>
+                            <TextInput style={styles.inputBox}
+                                placeholder="Country"
+                                placeholderTextColor='black'>
+                            </TextInput>
+                        </View>
+                    </View>
+                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
+                        <Text style={styles.Textbutton}>SAVE ADDRESS</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -74,14 +87,42 @@ export default class AddAddress extends Component {
 
 const styles = StyleSheet.create({
     inputBox: {
-        //flex: 1,
-        //backgroundColor: 'rgba(255,255,255,0.3)',
-        //borderRadius: 25,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        padding: 10,
         fontSize: 16,
-        color: '#e91c1a',
+        color: 'black',
         marginVertical: 10,
-        backgroundColor:'white',
+        backgroundColor: 'white',
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+    inputBoxAdd: {
+        textAlignVertical: "top",
+        padding: 10,
+        fontSize: 16,
+        color: 'black',
+        //marginVertical: 10,
+        backgroundColor: 'white',
+        height: 100,
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+    labl: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop:10,
+    },
+    Textbutton: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#ffffff',
+        textAlign: 'center',
+    },
+    button: {
+        width: 300,
+        backgroundColor: '#E91c1a',
+        borderRadius: 15,
+        marginVertical: 10,
+        paddingVertical: 10,
+        marginLeft:40,
     },
 })
