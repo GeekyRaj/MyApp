@@ -94,20 +94,7 @@ export default class Logo extends Component {
                                 textAlign: 'left'}}>Gender
                 </Text>
                 
-                {/*<RadioGroup>
-                    <RadioButton value={'M'} >
-                        <Text>Male</Text>
-                    </RadioButton>
- 
-                    <RadioButton value={'F'}>
-                        <Text>Female</Text>
-                    </RadioButton>
-                </RadioGroup>*/}
-                {/*<RadioForm
-                    radio_props={options}
-                    initial={-1}
-                    onPress={(value) => {}}
-                />*/}
+                <RadioGender options={options}  />
 
                  <View style={styles.SectionStyle}>
                 <Icon

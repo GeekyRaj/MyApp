@@ -2,18 +2,25 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
-    Image,
-    TextInput,
     View,
     TouchableOpacity,
-    FlatList,
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import RadioButton from '../components/RadioButton'
 
-var radio_props = [
-    { label: <Text style={{ fontSize: 15, padding: 5, }}>Glen Dmello Neosoft Technologies 4th floor, The Ruby, 29 Senapati Bapat Marg, Dadar(west) Mumbai-400-028.INDIA</Text>, value: 0 },
-    { label: 'param2', value: 1 }
+
+
+const options = [
+    {
+        key: '1',
+        text:'NeoSOFT Technologies $th Floor, The Ruby, 29, Senapati Bapat marg, dadar (West) Mumbai- 400-026.India.',
+        head: 'Glen Dmello',
+    },
+    {
+        key: '2',
+        text:'NeoSOFT Technologies $th Floor, The Ruby, 29, Senapati Bapat marg, dadar (West) Mumbai- 400-026.India.',
+        head: 'Glen Dmello',
+    },
 ];
 
 
@@ -44,16 +51,13 @@ export default class AddressList extends Component {
     render() {
 
         return (
-            <View style={{ flex: 1,width:400, alignItems: 'center', justifyContent: 'center',absolute:0, }}>
-                <Text>AddressList</Text>
-                <RadioForm
-                    radio_props={radio_props}
-                    initial={0}
-                    onPress={(value) => { this.setState({ value: value }) }}
-                />
+            <View style={{ flex: 1, width: 400, alignItems: 'center', justifyContent: 'center', absolute: 0, }}>
+                
+                <RadioButton options={options}  />
+                
                 <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
-                        <Text style={styles.Textbutton}>PLACE ORDER</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.Textbutton}>PLACE ORDER</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         paddingVertical: 10,
-        marginLeft:40,
-        marginTop:15,
+        marginLeft: 40,
+        marginTop: 15,
     },
 })
