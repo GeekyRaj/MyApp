@@ -5,12 +5,9 @@ import { StyleSheet,
     View,
     TouchableOpacity,
  } from 'react-native';
- import { createStackNavigator, createAppContainer } from 'react-navigation';
  import Icon from '@expo/vector-icons/Ionicons';
 
 import Logo from '../components/Logo';
-import Form from '../components/form';
-import Signup from  './Signup';
 
 export default class Login extends Component {
     static navigationOptions = {
@@ -97,8 +94,6 @@ const styles = StyleSheet.create({
       },
     inputBox: {
         flex: 1,
-        //backgroundColor: 'rgba(255,255,255,0.3)',
-        //borderRadius: 25,
         paddingHorizontal: 20,
         paddingVertical: 10,
         fontSize: 16,

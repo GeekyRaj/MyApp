@@ -11,8 +11,8 @@ import {
     TouchableHighlight,
     ScrollView,
     Modal,
+    Easing,
 } from 'react-native';
-
 
 import StarRating from '../components/StarRating';
 import ProductDetail from './ProductDetail';
@@ -53,9 +53,20 @@ export default class Table extends Component {
             productImages: [],
             largeImage: "",
             quantityModalVisible: false,
-            ratingModalVisible: false
-        }
+            ratingModalVisible: false,
 
+            Default_Rating: 2,
+            //To set the default Star Selected
+            Max_Rating: 5,
+            //To set the max number of Stars
+        };
+        this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
+        this.Star_With_Border = 'http://aboutreact.com/wp-content/uploads/2018/08/star_corner.png';
+    }
+
+    UpdateRating(key) {
+        this.setState({ Default_Rating: key });
+        //Keeping the Rating Selected in state
     }
 
     setQuantityModalVisible(visible) {
@@ -111,6 +122,26 @@ export default class Table extends Component {
 
     render() {
 
+        let React_Native_Rating_Bar = [];
+        //Array to hold the filled or empty Stars
+        for (var i = 1; i <= this.state.Max_Rating; i++) {
+            React_Native_Rating_Bar.push(
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    key={i}
+                    onPress={this.UpdateRating.bind(this, i)}>
+                    <Image
+                        style={styles.StarImage}
+                        source={
+                            i <= this.state.Default_Rating
+                                ? { uri: this.Star }
+                                : { uri: this.Star_With_Border }
+                        }
+                    />
+                </TouchableOpacity>
+            );
+        }
+
         //Setting Product category
         const pcat = this.state.dataSource.product_category_id;
         let pcatval = " ";
@@ -144,14 +175,6 @@ export default class Table extends Component {
         return (
 
             <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
-                {/*<Modal isVisible={this.state.isModalVisible}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Hello!</Text>
-                        <Button title="Hide modal" onPress={this.toggleModal} />
-                    </View>
-        </Modal>*/}
-
-                {/*Actual Design Layout of Product detail*/}
                 <View style={styles.box}>
                     <Text style={{ fontSize: 25, paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
                     <Text style={{ fontSize: 20, paddingLeft: 20, }}>Category - {pcatval} </Text>
@@ -165,6 +188,7 @@ export default class Table extends Component {
                         </View>
 
                     </View>
+
 
                 </View>
                 <View style={styles.boxmid}>
@@ -195,56 +219,98 @@ export default class Table extends Component {
                         <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: 20, fontWeight: "bold", }}> DESCRIPTION</Text>
                         <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: 15, }}> {this.state.dataSource.description}</Text>
                     </View>
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.quantityModalVisible}>
+
+                        <View style={{ flex: 1 }}>
+                            <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
+                                <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible)} style={{ flex: 1 }} />
+                            </View>
+
+                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
+
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
+                                <View style={{ marginTop: 33 }}>
+                                    {this.renderLargeImage()}
+                                </View>
+
+                                <TextInput style={{ fontSize: 20, padding: 20 }} placeholder="Enter Quantity" />
+
+                                <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: 'red', borderRadius: 8,
+                                            padding: 10,
+                                            width: 176, height: 42,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                        onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible);  }}>
+                                        <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.ratingModalVisible}>
+
+                        <View style={{ flex: 1 }}>
+                            <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
+                                <TouchableOpacity onPress={() => this.setRatingModalVisible(!this.state.ratingModalVisible)} style={{ flex: 1 }} />
+                            </View>
+
+                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 420 }}>
+
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2C2B2B', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
+                                <View style={{ marginTop: 33 }}>
+                                    {this.renderLargeImage()}
+                                </View>
+                                {/* Taking Rating from user */}
+                                <View style={styles.childView}>{React_Native_Rating_Bar}</View>
+                                <Text style={styles.textStyle}>
+                                    {/*To show the rating selected*/}
+                                    {this.state.Default_Rating} / {this.state.Max_Rating}
+                                </Text>
+
+
+                                <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: 'red', borderRadius: 8,
+                                            padding: 10,
+                                            width: 176, height: 42,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible); console.log('Rating : ',this.state.Default_Rating) }}>
+                                        <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold' }}>RATE NOW</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+
+
                 </View>
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <TouchableOpacity style={styles.button} onPress={()=>{this.setQuantityModalVisible(true)}}>
+                        <TouchableOpacity style={styles.button} onPress={() => { this.setQuantityModalVisible(true) }}>
                             <Text style={styles.Textbutton}>BUY NOW</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonRate} onPress={() => this.props.navigation.navigate('Dashboard')}>
+                        <TouchableOpacity style={styles.buttonRate} onPress={() => { this.setRatingModalVisible(true); }}>
                             <Text style={styles.TextbuttonRate}>RATE</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-
-
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.quantityModalVisible}>
-
-                    <View style={{ flex: 1 }}>
-                        <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
-                            <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible)} style={{ flex: 1 }} />
-                        </View>
-
-                        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
-
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2C2B2B', paddingTop: 20 }}>{this.props.navigation.state.params.pname}</Text>
-                            <View style={{ marginTop: 33 }}>
-                                {this.renderLargeImage()}
-                            </View>
-
-                            <TextInput style={{ fontSize: 20, padding: 20 }} placeholder="Enter Quantity" />
-
-                            <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: 'red', borderRadius: 8,
-                                        padding: 10,
-                                        width: 176, height: 42,
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                    }}
-                                    onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible); }}>
-                                    <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
-
             </View>
         )
     }
@@ -295,6 +361,23 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignContent: "center",
     },
+    StarImage: {
+        width: 40,
+        height: 40,
+        resizeMode: 'cover',
+    },
+    childView: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: 30,
+    },
+    textStyle: {
+        textAlign: 'center',
+        fontSize: 18,
+        color: '#000',
+        marginTop: 5,
+        marginBottom:10,
+      },
     Textbutton: {
         fontSize: 18,
         fontWeight: '500',
