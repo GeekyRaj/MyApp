@@ -27,20 +27,43 @@ export default class Login extends Component {
         super();
         this.state = {
             username: ' ',
-            password: ' '
+            password: ' ',
+            //Border for invalid data
+            userVal: true,
+            passVal: true,
+            error: 0,
+            errmsg: ' ',
         }
     }
 
     updateValue(text, field) {
+        alph = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        passreg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (field == 'username') {
-            this.setState({
-                username: text,
-            })
+            if (alph.test(text)) {
+                this.setState({
+                    username: text,
+                    userVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid Username');
+                this.setState({ errmsg: 'Enter valid email address / Username !', error: 1, userVal: false, })
+            }
         }
         else if (field == 'password') {
-            this.setState({
-                password: text,
-            })
+            if (passreg.test(text)) {
+                this.setState({
+                    password: text,
+                    passVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid password');
+                this.setState({ errmsg: 'Enter Minimum eight characters, at least one letter and one number !', error: 1, passVal: false, })
+            }
         }
     }
 
@@ -50,28 +73,35 @@ export default class Login extends Component {
             collection.password = this.state.password
         console.log(collection);
 
-        fetch('http://staging.php-dev.in:8844/trainingapp/api/users/login', {
-            method: 'POST',
-            headers: {
+        if (this.state.error == 0) {
+            fetch('http://staging.php-dev.in:8844/trainingapp/api/users/login', {
+                method: 'POST',
+                headers: {
 
-                'access_token': "5d2eb4b6ca059",
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body:
-                `email=${collection.username}&password=${collection.password}`
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson)
-                const msg = responseJson.user_msg
-                const status = responseJson.status
-                if (status == 200) {
-                    this.props.navigation.navigate('Dashboard')
-                }
-                else {
-                    alert(msg)
-                }
+                    'access_token': "5d2eb4b6ca059",
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body:
+                    `email=${collection.username}&password=${collection.password}`
+            }).then((response) => response.json())
+                .then((responseJson) => {
+                    console.log(responseJson)
+                    const msg = responseJson.user_msg
+                    const status = responseJson.status
+                    if (status == 200) {
+                        this.props.navigation.navigate('Dashboard')
+                    }
+                    else
+                    {
+                        alert(msg);
+                    }
+                })
+        }
+        else{
+            alert(this.state.errmsg);
+        }
 
-            })
+
     }
 
 
@@ -80,7 +110,7 @@ export default class Login extends Component {
             <View style={styles.container}>
                 <Logo />
                 <View style={styles.LoginForm}>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.userVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-person"
@@ -93,7 +123,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'username')}
                         />
                     </View>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-lock"
@@ -143,7 +173,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 300,
-        height: 60,
+        height: 50,
         margin: 10,
         backgroundColor: 'rgba(255,255,255,0.3)',
         borderRadius: 25,
@@ -154,7 +184,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         fontSize: 16,
         color: '#ffffff',
-        marginVertical: 10,
+        marginVertical: 5,
     },
     Textbutton: {
         fontSize: 18,
@@ -184,5 +214,9 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 16,
         fontWeight: '500',
+    },
+    error: {
+        borderWidth: 2,
+        borderColor: 'orange',
     }
 });

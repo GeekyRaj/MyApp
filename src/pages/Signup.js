@@ -41,74 +41,146 @@ export default class Login extends Component {
             cpass: ' ',
             gender: 'M',
             pno: ' ',
+            errmsg: ' ',
+            error: 0,
+            //ShowErrorBorder var Validate
+            fnameVal: true,
+            lnameVal: true,
+            emailVal: true,
+            passVal: true,
+            cpassVal: true,
+            pnoVal: true,
         }
     }
     updateValue(text, field) {
+        alph = /^[a-zA-Z]+$/;
+        mailreg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        passreg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        phonereg = /^\d{3}\d{3}\d{4}$/;
+
         if (field == 'fname') {
-            this.setState({
-                fname: text,
-            })
+            if (alph.test(text)) {
+                this.setState({
+                    fname: text,
+                    fnameVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid First name');
+                this.setState({ errmsg: 'Enter Only alphabets for First Name !', error: 1, fnameVal: false, })
+            }
+
         }
         else if (field == 'lname') {
-            this.setState({
-                lname: text,
-            })
+            if (alph.test(text)) {
+                this.setState({
+                    lname: text,
+                    lnameVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid last name');
+                this.setState({ errmsg: 'Enter Only alphabets for last Name !', error: 1, lnameVal: false, })
+            }
         }
         else if (field == 'email') {
-            this.setState({
-                email: text,
-            })
+            if (mailreg.test(text)) {
+                this.setState({
+                    email: text,
+                    emailVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid Email ID');
+                this.setState({ errmsg: 'Enter valid email address !', error: 1, emailVal: false, })
+            }
         }
         else if (field == 'pass') {
-            this.setState({
-                pass: text,
-            })
+            if (passreg.test(text)) {
+                this.setState({
+                    pass: text,
+                    passVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid password');
+                this.setState({ errmsg: 'Enter Minimum eight characters, at least one letter and one number !', error: 1, passVal: false, })
+            }
         }
         else if (field == 'cpass') {
-            this.setState({
-                cpass: text,
-            })
+            if (this.state.pass == text) {
+                this.setState({
+                    cpass: text,
+                    cpassVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log(' password mismatch');
+                this.setState({ errmsg: 'paassword doesnt match !', error: 1, cpassVal: false, })
+            }
         }
         else if (field == 'pno') {
-            this.setState({
-                pno: text,
-            })
+            if (phonereg.test(text)) {
+                this.setState({
+                    pno: text,
+                    pnoVal: true,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('Inavlid Phone Number');
+                this.setState({ errmsg: 'Enter 10 digit Contact Number!', error: 1, pnoVal: false, })
+            }
         }
     }
 
     Register() {
+        console.log(this.state.errmsg);
+        console.log(this.state.error);
         let collection = {}
         collection.fname = this.state.fname,
-        collection.lname = this.state.lname,
-        collection.email = this.state.email,
-        collection.pass = this.state.pass,
-        collection.cpass = this.state.cpass,
-        collection.gender = this.state.gender,
-        collection.pno = this.state.pno,
-        console.log(collection);
+            collection.lname = this.state.lname,
+            collection.email = this.state.email,
+            collection.pass = this.state.pass,
+            collection.cpass = this.state.cpass,
+            collection.gender = this.state.gender,
+            collection.pno = this.state.pno,
+            console.log(collection);
 
-        fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
-            method: 'POST',
-            headers: {
+        if (this.state.error == 0) 
+        {
+            fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
+                method: 'POST',
+                headers: {
 
-                'access_token': "5d3ed6f3b6333",
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body:
-                `first_name=${collection.fname}&last_name=${collection.lname}&email=${collection.email}&password=${collection.pass}&confirm_password=${collection.cpass}&gender=${collection.gender}&phone_no=${collection.pno}`
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson)
-                const msg = responseJson.user_msg
-                const status = responseJson.status
-                if (status == 200) {
-                    alert('Registration Sucessfull..! Try Logging in.');
-                }
-                else {
-                    alert(msg)
-                }
-
-            })
+                    'access_token': "5d3ed6f3b6333",
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body:
+                    `first_name=${collection.fname}&last_name=${collection.lname}&email=${collection.email}&password=${collection.pass}&confirm_password=${collection.cpass}&gender=${collection.gender}&phone_no=${collection.pno}`
+            }).then((response) => response.json())
+                .then((responseJson) => {
+                    console.log(responseJson)
+                    const msg = responseJson.user_msg
+                    const status = responseJson.status
+                    const msgerr = responseJson.message
+                    if (status == 200) {
+                        alert('Registration Sucessfull..! Try Logging in.');
+                    }
+                    else {
+                        alert(msg);
+                    }
+                })
+        }
+        else
+        {
+            alert(this.state.errmsg);
+        }
     }
 
     render() {
@@ -116,7 +188,7 @@ export default class Login extends Component {
             <View style={styles.containerMain}>
                 <Logo />
                 <View style={styles.container}>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-person"
@@ -129,7 +201,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'fname')}
                         />
                     </View>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-person"
@@ -142,7 +214,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'lname')}
                         />
                     </View>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-mail"
@@ -155,7 +227,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'email')}
                         />
                     </View>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-lock"
@@ -169,7 +241,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'pass')}
                         />
                     </View>
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.cpassVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-lock"
@@ -184,7 +256,7 @@ export default class Login extends Component {
                         />
                     </View>
 
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                         <Text style={{
                             fontSize: 16,
                             color: '#ffffff',
@@ -196,7 +268,7 @@ export default class Login extends Component {
                         <RadioGender options={options} />
                     </View>
 
-                    <View style={styles.SectionStyle}>
+                    <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
                         <Icon
                             style={{ paddingLeft: 16, color: '#ffffff' }}
                             name="md-phone-portrait"
@@ -298,5 +370,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 10,
+    },
+    error: {
+        borderWidth: 2,
+        borderColor: 'orange',
     }
 });
