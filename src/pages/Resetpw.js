@@ -40,42 +40,50 @@ export default class Resetpw extends Component {
             oldpass: '',
             pass: "",
             confirmpass: "",
+            error: 0,
         }
         //this.GetUserData();
     }
 
     updateValue(text, field) {
+        passreg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (field == 'oldpass') {
-            /*if (mailreg.test(text)) {
+            if (passreg.test(text)) {
                 this.setState({
-                    email: text,
-                    
+                    oldpass: text,
+                    error: 0,
+
                 })
             }
             else {
-                console.log('inavlid Email ID');
-                this.setState({ errmsg: 'Enter valid email address !', error: 1, emailVal: false, })
+                console.log('inavlid old password');
+                this.setState({ errmsg: 'Enter Minimum eight characters, at least one letter and one number !', error: 1, oldpassVal: false, })
             }
-        }*/
-        this.setState({
-            oldpass: text,
-            
-        })
-    }
-    else if(field == 'pass')
-    {
-        this.setState({
-            pass: text,
-            
-        })
-    }
-    else if(field == 'cpass')
-    {
-        this.setState({
-            confirmpass: text,
-            
-        })
-    }
+        }
+        else if (field == 'pass') {
+            if (passreg.test(text)) {
+                this.setState({
+                    pass: text,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('inavlid password');
+                this.setState({ errmsg: 'Enter Minimum eight characters, at least one letter and one number !', error: 1, passVal: false, })
+            }
+        }
+        else if (field == 'cpass') {
+            if (this.state.pass == text) {
+                this.setState({
+                    confirmpass: text,
+                    error: 0,
+                })
+            }
+            else {
+                console.log('password mismatch');
+                this.setState({ errmsg: 'Password doesnt match !', error: 1, cpassVal: false, })
+            }
+        }
     }
 
     onPressButton = () => {
@@ -94,41 +102,41 @@ export default class Resetpw extends Component {
         const confirmPass = this.state.confirmpass;
         const token = await AsyncStorage.getItem("@user_at");
 
-        console.log(' '+oldPass+' '+pass+' '+confirmPass+' '+token);
-    
+        console.log(' ' + oldPass + ' ' + pass + ' ' + confirmPass + ' ' + token);
+
         const fetchConfig = {
-          method: "POST",
-          headers: {
-            access_token: token,
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `old_password=${oldPass}&password=${pass}&confirm_password=${confirmPass}`
+            method: "POST",
+            headers: {
+                access_token: token,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `old_password=${oldPass}&password=${pass}&confirm_password=${confirmPass}`
         };
         return fetch(
-          `http://staging.php-dev.in:8844/trainingapp/api/users/change`,
-          fetchConfig
+            `http://staging.php-dev.in:8844/trainingapp/api/users/change`,
+            fetchConfig
         )
-          .then(response => response.json())
-          .then(responseJson => {
-            this.setState({ dataSource: responseJson }, function() {}),
-              this.Prompt();
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-    
-      Prompt() {
+            .then(response => response.json())
+            .then(responseJson => {
+                this.setState({ dataSource: responseJson }, function () { }),
+                    this.Prompt();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    Prompt() {
         if (this.state.dataSource.status == 200) {
-          alert("" + this.state.dataSource.user_msg);
+            alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 401) {
-          alert("" + this.state.dataSource.user_msg);
+            alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 400) {
-          alert("" + this.state.dataSource.user_msg);
+            alert("" + this.state.dataSource.user_msg);
         } else {
-          alert("Something Went Wrong");
+            alert("Something Went Wrong");
         }
-      }
+    }
 
 
     render() {
@@ -139,6 +147,7 @@ export default class Resetpw extends Component {
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Current Password"
+                        secureTextEntry={true}
                         placeholderTextColor='#ffffff'
                         onChangeText={(text) => this.updateValue(text, 'oldpass')}
                     />
@@ -156,7 +165,7 @@ export default class Resetpw extends Component {
                         placeholderTextColor='#ffffff'
                         onChangeText={(text) => this.updateValue(text, 'cpass')}
                     />
-                    <TouchableOpacity style={styles.button} onPress={() => this.resetPass()}>
+                    <TouchableOpacity style={styles.button} onPress={() => this.onPressButton()}>
                         <Text style={styles.Textbutton}>Reset Password</Text>
                     </TouchableOpacity>
 
