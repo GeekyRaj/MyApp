@@ -225,6 +225,7 @@ export default class Login extends Component {
                             placeholder="Email"
                             placeholderTextColor='#ffffff'
                             onChangeText={(text) => this.updateValue(text, 'email')}
+                            keyboardType="email-address"
                         />
                     </View>
                     <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
@@ -280,6 +281,7 @@ export default class Login extends Component {
                             secureTextEntry={true}
                             placeholderTextColor='#ffffff'
                             onChangeText={(text) => this.updateValue(text, 'pno')}
+                            keyboardType="number-pad"
                         />
                     </View>
                     <View style={{

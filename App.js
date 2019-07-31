@@ -89,6 +89,7 @@ class LogOut extends Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>LogOut</Text>
+        {this.props.navigation.navigate(Login)}
       </View>
     );
   }
@@ -177,9 +178,14 @@ const StackStoreLocator = createStackNavigator(
     defaultConfig
 );
 
+
+
+
+
 const DashboardStackNavigator = createStackNavigator(
   {
     DashboardTabNavigator: DashboardScreen,
+    Login: Login,
   },
   defaultConfig
 );
@@ -195,7 +201,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   MyAccount: { screen: StackMyAccount },
   StoreLocator: { screen: StackStoreLocator},
   MyOrders: { screen: StackMyOrders },
-  LogOut: { screen: LogOut}
+  LogOut: { screen: Login}   //Actual LogOut screen StackLogOut
 },
   DrawerConfig,
 );

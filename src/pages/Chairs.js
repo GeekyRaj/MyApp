@@ -63,7 +63,7 @@ import { StyleSheet,
                       ratings: item.rating,
                       views: item.view_count
                     }
-                    return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductDetail',{ pname:item.name, pid:item.id })}>
+                    return <TouchableOpacity  onPress={() => this.props.navigation.navigate('ProductDetail',{ pname:item.name, pid:item.id })}>
                         <View style={{flex:1,flexDirection:'row'}}>
                             <Image 
                                 style={{ height: 90, width: 90,margin:10, }}
@@ -80,7 +80,9 @@ import { StyleSheet,
                         </View></TouchableOpacity>
                 }
             }
-                keyExtractor={({id}, index) => id}
+            keyExtractor={
+              (item, index) => index.toString()
+            }
                 />
             </View>
         )

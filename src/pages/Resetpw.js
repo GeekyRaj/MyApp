@@ -1,11 +1,13 @@
-import React, {Component} from 'react';
-import { StyleSheet,
+import React, { Component } from 'react';
+import {
+    StyleSheet,
     Text,
     TextInput,
     View,
     TouchableOpacity,
- } from 'react-native';
- import { createStackNavigator, createAppContainer } from 'react-navigation';
+    AsyncStorage,
+} from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import Logo from '../components/Logo';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -14,49 +16,152 @@ import Icon from '@expo/vector-icons/Ionicons';
 export default class Resetpw extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
-        title: 'Reset Password',
-        headerLeft:
-        (<Icon
-            style={{ paddingLeft: 16, color: '#ffffff' }}
-            onPress={() => navigation.pop()}
-            name="md-arrow-back"
-            size={30}
-        />),
-        headerRight: null,
-        headerStyle: {
-            backgroundColor: '#e91c1a',
-          },
-          headerTintColor: '#fff',
+            title: 'Reset Password',
+            headerLeft:
+                (<Icon
+                    style={{ paddingLeft: 16, color: '#ffffff' }}
+                    onPress={() => navigation.pop()}
+                    name="md-arrow-back"
+                    size={30}
+                />),
+            headerRight: null,
+            headerStyle: {
+                backgroundColor: '#e91c1a',
+            },
+            headerTintColor: '#fff',
         };
-      };
-    render(){
-        return(
-            <View style={styles.container}>
-               
-                <View style={styles.LoginForm}>
-                <TextInput 
-                    style={styles.inputBox}
-                    placeholder = "Current Password"
-                    placeholderTextColor ='#ffffff'
-                 />
-                 <TextInput 
-                    style={styles.inputBox}
-                    placeholder = "New Password"
-                    secureTextEntry={true}
-                    placeholderTextColor ='#ffffff'
-                 />
-                 <TextInput 
-                    style={styles.inputBox}
-                    placeholder = "Confirm Password"
-                    secureTextEntry={true}
-                    placeholderTextColor ='#ffffff'
-                 />
-                 <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Dashboard')}>
-                     <Text style={styles.Textbutton}>Reset Password</Text>
-                 </TouchableOpacity>
+    };
+
+    constructor() {
+        super();
+        this.state = {
+            dataSource: [],
+            token: '',
+            oldpass: '',
+            pass: "",
+            confirmpass: "",
+        }
+        //this.GetUserData();
+    }
+
+    updateValue(text, field) {
+        if (field == 'oldpass') {
+            /*if (mailreg.test(text)) {
+                this.setState({
+                    email: text,
+                    
+                })
+            }
+            else {
+                console.log('inavlid Email ID');
+                this.setState({ errmsg: 'Enter valid email address !', error: 1, emailVal: false, })
+            }
+        }*/
+        this.setState({
+            oldpass: text,
             
-            </View>
-                
+        })
+    }
+    else if(field == 'pass')
+    {
+        this.setState({
+            pass: text,
+            
+        })
+    }
+    else if(field == 'cpass')
+    {
+        this.setState({
+            confirmpass: text,
+            
+        })
+    }
+    }
+
+    onPressButton = () => {
+        if (this.state.error == 0) {
+            //& update the data in api
+            this.resetPass();
+        }
+        else {
+            alert(this.state.errmsg);
+        }
+    }
+
+    async resetPass() {
+        const oldPass = this.state.oldpass;
+        const pass = this.state.pass;
+        const confirmPass = this.state.confirmpass;
+        const token = await AsyncStorage.getItem("@user_at");
+
+        console.log(' '+oldPass+' '+pass+' '+confirmPass+' '+token);
+    
+        const fetchConfig = {
+          method: "POST",
+          headers: {
+            access_token: token,
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `old_password=${oldPass}&password=${pass}&confirm_password=${confirmPass}`
+        };
+        return fetch(
+          `http://staging.php-dev.in:8844/trainingapp/api/users/change`,
+          fetchConfig
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            this.setState({ dataSource: responseJson }, function() {}),
+              this.Prompt();
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    
+      Prompt() {
+        if (this.state.dataSource.status == 200) {
+          alert("" + this.state.dataSource.user_msg);
+        } else if (this.state.dataSource.status == 401) {
+          alert("" + this.state.dataSource.user_msg);
+        } else if (this.state.dataSource.status == 400) {
+          alert("" + this.state.dataSource.user_msg);
+        } else {
+          alert("Something Went Wrong");
+        }
+      }
+
+
+    render() {
+        return (
+            <View style={styles.container}>
+
+                <View style={styles.LoginForm}>
+                    <TextInput
+                        style={styles.inputBox}
+                        placeholder="Current Password"
+                        placeholderTextColor='#ffffff'
+                        onChangeText={(text) => this.updateValue(text, 'oldpass')}
+                    />
+                    <TextInput
+                        style={styles.inputBox}
+                        placeholder="New Password"
+                        secureTextEntry={true}
+                        placeholderTextColor='#ffffff'
+                        onChangeText={(text) => this.updateValue(text, 'pass')}
+                    />
+                    <TextInput
+                        style={styles.inputBox}
+                        placeholder="Confirm Password"
+                        secureTextEntry={true}
+                        placeholderTextColor='#ffffff'
+                        onChangeText={(text) => this.updateValue(text, 'cpass')}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={() => this.resetPass()}>
+                        <Text style={styles.Textbutton}>Reset Password</Text>
+                    </TouchableOpacity>
+
+                </View>
+
             </View>
         )
     }
@@ -64,16 +169,16 @@ export default class Resetpw extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#e91C1A',
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        backgroundColor: '#e91C1A',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     LoginForm: {
-        marginVertical:20,
+        marginVertical: 20,
         flexGrow: 1,
         alignItems: 'center',
-        marginTop:100,
+        marginTop: 100,
     },
     inputBox: {
         width: 300,
@@ -82,8 +187,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         fontSize: 16,
-        color: '#ffffff' ,
-        marginVertical :10, 
+        color: '#ffffff',
+        marginVertical: 10,
     },
     Textbutton: {
         fontSize: 18,
@@ -95,23 +200,23 @@ const styles = StyleSheet.create({
         width: 300,
         backgroundColor: '#ffffff',
         borderRadius: 25,
-        marginVertical :10,
+        marginVertical: 10,
         paddingVertical: 10,
     },
     signupTextCont: {
-      flexGrow: 1,
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      paddingVertical: 16,
-      flexDirection:'row',
+        flexGrow: 1,
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        paddingVertical: 16,
+        flexDirection: 'row',
     },
     signupText: {
         color: 'rgba(255,255,255,0.6)',
         fontSize: 16,
     },
-    signupButton:{
-        color:'#ffffff',
-        fontSize:16,
-        fontWeight:'500',
+    signupButton: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: '500',
     }
-  });
+});

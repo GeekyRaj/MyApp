@@ -5,8 +5,10 @@ import {
     TextInput,
     View,
     TouchableOpacity,
+    AsyncStorage
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
+//import AsyncStorage from '@react-native-community/async-storage';
 
 import Logo from '../components/Logo';
 
@@ -33,6 +35,9 @@ export default class Login extends Component {
             passVal: true,
             error: 0,
             errmsg: ' ',
+            //Retrieve json data
+            dataLogin: [],
+            token: '',
         }
     }
 
@@ -78,7 +83,7 @@ export default class Login extends Component {
                 method: 'POST',
                 headers: {
 
-                    'access_token': "5d2eb4b6ca059",
+                    //'access_token': "5d2eb4b6ca059",
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body:
@@ -86,24 +91,55 @@ export default class Login extends Component {
             }).then((response) => response.json())
                 .then((responseJson) => {
                     console.log(responseJson)
+                    this.setState({ dataLogin: responseJson.data, })
+
+                    this.setState({
+                        token: this.state.dataLogin.access_token
+                    })
+                    console.log(this.state.token);
+
                     const msg = responseJson.user_msg
                     const status = responseJson.status
+
+
+                    this.saveUserData(
+                        "" + this.state.dataLogin.first_name,
+                        "" + this.state.dataLogin.last_name,
+                        "" + this.state.dataLogin.email,
+                        "" + this.state.dataLogin.phone_no,
+                        "" + this.state.dataLogin.access_token
+                    )
+
+
                     if (status == 200) {
                         this.props.navigation.navigate('Dashboard')
                     }
-                    else
-                    {
+                    else {
                         alert(msg);
                     }
                 })
         }
-        else{
+        else {
             alert(this.state.errmsg);
         }
 
 
     }
 
+    async saveUserData(value1, value2, value3, value4, value5) {
+        const fname = ["@user_fname", value1];
+        const lname = ["@user_lname", value2];
+        const email = ["@user_email", value3];
+        const phoneno = ["@user_phoneno", value4];
+        const access_token = ["@user_at", value5];
+        try {
+            await AsyncStorage.multiSet([fname, lname, email, phoneno, access_token]);
+        } catch (e) {
+            console.log("Error Saving data" + error);
+        }
+
+        console.log("User Login Data Saved.");
+    }
 
     render() {
         return (
