@@ -48,7 +48,10 @@ export default class Table extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            pid:0,
             isLoading: true,
+            rating: [],
+            addcart: [],
             dataSource: [],
             productImages: [],
             largeImage: "",
@@ -69,17 +72,59 @@ export default class Table extends Component {
         //Keeping the Rating Selected in state
     }
 
+    //Add Quantity
     setQuantityModalVisible(visible) {
         this.setState({ quantityModalVisible: visible });
     }
 
+    /*--------User Rating Set----------*/
     setRatingModalVisible(visible) {
         this.setState({ ratingModalVisible: visible });
+        console.log('Rating : ',this.state.Default_Rating);
+        this.setRating();
     }
 
+    setRating() {
+        const { navigation } = this.props;
+        const user_rating = this.state.Default_Rating;
+        const product_id = this.state.pid;
+        console.log('Rating : '+user_rating+'  Product Id:  '+product_id);
+        const fetchConfig = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `product_id=${product_id}&rating=${user_rating}`
+        };
+        //console.log(fetchConfig);
+        return fetch(
+          `http://staging.php-dev.in:8844/trainingapp/api/products/setRating`,
+          fetchConfig
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            this.setState({
+                rating: responseJson.data,
+            }, function () {
+
+            });
+            if(responseJson.status == 200)
+            {
+                console.log(responseJson.message);
+            }
+            //console.log(responseJson);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
+    //Retrieve product details
     componentDidMount() {
         const { navigation } = this.props;
         const pid = navigation.getParam("pid", "1");
+        this.setState({ pid: pid});
         console.log("Product ID : ", pid);
         fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
             .then((response) => response.json())
@@ -290,7 +335,7 @@ export default class Table extends Component {
                                             justifyContent: 'center',
                                             alignItems: 'center'
                                         }}
-                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible); console.log('Rating : ',this.state.Default_Rating) }}>
+                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible);  }}>
                                         <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold' }}>RATE NOW</Text>
                                     </TouchableOpacity>
                                 </View>

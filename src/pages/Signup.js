@@ -157,8 +157,6 @@ export default class Login extends Component {
             fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
                 method: 'POST',
                 headers: {
-
-                    'access_token': "5d3ed6f3b6333",
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body:
