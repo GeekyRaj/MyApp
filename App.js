@@ -19,6 +19,7 @@ import Resetpw from './src/pages/Resetpw';
 import Orderid from './src/pages/Orderid';
 import AddressList from './src/pages/AddressList';
 import AddAddress from './src/pages/AddAddress';
+import EditProfile from './src/pages/EditProfile';
 
 import MenuDrawer from './src/components/MenuDrawer';
 
@@ -158,6 +159,7 @@ const StackCupboards = createStackNavigator(
 const StackMyAccount = createStackNavigator(
   {
     MyAccount: MyAccount,
+    EditProfile: EditProfile,
     Resetpw: Resetpw,
   },
     defaultConfig
