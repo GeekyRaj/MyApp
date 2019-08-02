@@ -55,7 +55,7 @@ export default class MyCart extends Component {
             access_token: "",
             dataSource: [],
             cartCount: "",
-            cartTotal: "",
+            cartTotal: "00000",
             tempProductId: "",
             editCartQuantity: "",
             activeRowKey: null,
@@ -276,7 +276,7 @@ export default class MyCart extends Component {
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
                         <Text style={{ fontSize: 25, fontWeight: "bold",paddingRight:30, }}> Rs. {this.state.cartTotal} </Text>
-                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
+                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
                         <Text style={styles.Textbutton}>ORDER NOW</Text>
                     </TouchableOpacity>
                     </View>

@@ -7,6 +7,7 @@ import {
     View,
     TouchableOpacity,
     FlatList,
+    AsyncStorage
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
@@ -30,6 +31,56 @@ export default class AddAddress extends Component {
         };
     };
 
+    constructor() {
+        super();
+        this.state = {
+            dataSource: [],
+            address: ' ',
+            landmark: ' ',
+            city: ' ',
+            statec: ' ',
+            zip:'',
+            country: ' ',
+        }
+    }
+
+    async placeOrder() {
+        const Address = '' + this.state.address + ', ' + this.state.landmark + ', ' + this.state.city + ': ' + this.state.zip + ', ' + this.state.statec + ', ' + this.state.country;
+        console.log(Address);
+        const token = await AsyncStorage.getItem("@user_at");
+        const fetchConfig = {
+            method: "POST",
+            headers: {
+                access_token: token,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `address=${Address}`
+        };
+        return fetch(
+            `http://staging.php-dev.in:8844/trainingapp/api/order`,
+            fetchConfig
+        )
+        .then(response => response.json())
+        .then(responseJson => {
+            this.setState({ dataSource : responseJson }, function() {}),
+              this.Prompt();
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
+    Prompt() {
+        const { navigate } = this.props.navigation;
+        if (this.state.dataSource.status == 200) {
+          setTimeout(function() {
+            navigate("Home");
+          }, 2000);
+          alert("" + this.state.dataSource.user_msg);
+        } else if (this.state.dataSource.status == 401) {
+          alert("" + this.state.dataSource.user_msg);
+        } 
+      }
 
     render() {
 
@@ -39,27 +90,31 @@ export default class AddAddress extends Component {
                     <Text style={styles.labl}>ADDRESS</Text>
                     <TextInput style={styles.inputBoxAdd}
                         multiline={true}
-                        onChangeText={text=>this.setState({value:text})}
+                        onChangeText={text => this.setState({ value: text })}
                         underlineColorAndroid='transparent'
                         placeholder="Address"
-                        placeholderTextColor='black'>
+                        placeholderTextColor='black'
+                        onChangeText={address => this.setState({ address })}>
                     </TextInput>
                     <Text style={styles.labl}>LANDMARK</Text>
                     <TextInput style={styles.inputBox}
                         placeholder="Landmark"
-                        placeholderTextColor='black'>
+                        placeholderTextColor='black'
+                        onChangeText={landmark => this.setState({ landmark })}>
                     </TextInput>
                     <View style={{ flexDirection: 'row', }}>
                         <View style={{ flexGrow: 1, height: 210, width: 170, }}>
                             <Text style={styles.labl}>CITY</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="City"
-                                placeholderTextColor='black'>
+                                placeholderTextColor='black'
+                                onChangeText={city => this.setState({ city })}>
                             </TextInput>
                             <Text style={styles.labl}>ZIP CODE</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="Zip Code"
-                                placeholderTextColor='black'>
+                                placeholderTextColor='black'
+                                onChangeText={zip => this.setState({ zip })}>
                             </TextInput>
                         </View>
 
@@ -67,17 +122,19 @@ export default class AddAddress extends Component {
                             <Text style={styles.labl}>STATE</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="State"
-                                placeholderTextColor='black'>
+                                placeholderTextColor='black'
+                                onChangeText={statec => this.setState({ statec })}>
                             </TextInput>
                             <Text style={styles.labl}>COUNTRY</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="Country"
-                                placeholderTextColor='black'>
+                                placeholderTextColor='black'
+                                onChangeText={country => this.setState({ country })}>
                             </TextInput>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
-                        <Text style={styles.Textbutton}>SAVE ADDRESS</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => this.placeOrder()}>
+                        <Text style={styles.Textbutton}>PLACE ORDER</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -109,7 +166,7 @@ const styles = StyleSheet.create({
     labl: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginTop:10,
+        marginTop: 10,
     },
     Textbutton: {
         fontSize: 18,
@@ -123,6 +180,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         paddingVertical: 10,
-        marginLeft:40,
+        marginLeft: 40,
     },
 })
