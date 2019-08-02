@@ -79,7 +79,7 @@ export default class MyOrders extends Component {
           data={this.state.dataSource}
           renderItem={({ item }) =>
 
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Orderid')}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Orderid',{oid:item.id})}>
               <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
                 <View style={{ flexGrow: 1, flexDirection: 'column', marginRight: 10, }}>
                   <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}>Order ID {item.id}</Text>
