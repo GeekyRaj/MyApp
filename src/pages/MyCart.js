@@ -22,13 +22,21 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#ffffff',
         textAlign: 'center',
+        paddingVertical: 10,
+    },
+    boxend: {
+        flex: 0,
+        width: '100%',
+        height: 60,
+        backgroundColor: '#ffffff',
+        position: 'absolute',
+        bottom: 0,
     },
     button: {
-        width: 300,
-        backgroundColor: '#E91c1a',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 10,
+        width: 190,
+        height: 45,
+        backgroundColor: '#e91c1a',
+        borderRadius: 10,
     },
 });
 
@@ -53,6 +61,7 @@ export default class MyCart extends Component {
             activeRowKey: null,
             pid: null,
             rowIndex: null,
+            value: null,
         };
         this.getCartData();
         console.log('in Mycart')
@@ -162,6 +171,38 @@ export default class MyCart extends Component {
             });
     }
 
+    //Update Quantity
+    UpdateQty(value, id){
+        const token = this.state.access_token;
+        const qty=value;
+        const pid=id;
+        console.log(pid+' '+qty);
+
+        const fetchConfig = {
+            method: "POST",
+            headers: {
+                access_token: token,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `product_id=${pid}&quantity=${qty}`
+        };
+        return fetch(
+            `http://staging.php-dev.in:8844/trainingapp/api/editCart`,
+            fetchConfig
+        )
+            .then(response => response.json())
+            .then(responseJson => {
+                console.log(responseJson);
+                if (responseJson.status == 200) {
+                    console.log(responseJson.status);
+                    this.getCartData();
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
 
     render() {
 
@@ -204,10 +245,22 @@ export default class MyCart extends Component {
                                             <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
                                         </View>
                                         <NumericInput
-                                            value={item.quantity}
+                                            //value={item.quantity}
+                                            initValue={item.quantity}
+                                            //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
                                             totalWidth={70}
                                             totalHeight={30}
-                                            onChange={value => console.log(value)} />
+                                            iconSize={25}
+                                            minValue={1}
+                                            maxValue={8}
+                                            step={1}
+                                            valueType='integer'
+                                            rounded
+                                            textColor='black'
+                                            iconStyle={{ color: 'black' }}
+                                            rightButtonBackgroundColor='red'
+                                            leftButtonBackgroundColor='white'
+                                            onChange={value=> this.UpdateQty(value, item.product.id)} />
                                     </View>
                                 </View>
                                 <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
@@ -220,13 +273,14 @@ export default class MyCart extends Component {
                     }
                     keyExtractor={(item, index) => index.toString()}
                 />
-                <View style={{ flex: 1, flexDirection: 'row', }}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold", paddingRight: 150, }}> TOTAL </Text>
-                    <Text style={{ fontSize: 20, fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
+                <View style={styles.boxend}>
+                    <View style={{ flexDirection: 'row', margin: 10, }}>
+                        <Text style={{ fontSize: 25, fontWeight: "bold",paddingRight:30, }}> Rs. {this.state.cartTotal} </Text>
+                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
+                        <Text style={styles.Textbutton}>ORDER NOW</Text>
+                    </TouchableOpacity>
+                    </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddressList')}>
-                    <Text style={styles.Textbutton}>ORDER NOW</Text>
-                </TouchableOpacity>
             </View>
         );
     }

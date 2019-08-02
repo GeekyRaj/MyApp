@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  AsyncStorage
 } from 'react-native';
 const data = [
   { id: '1234', date: '07 Aug 2018', amt: '30000' },
@@ -16,12 +17,6 @@ const data = [
 export default class MyOrders extends Component {
   static navigationOptions = {
     title: 'My Orders',
-    /*headerLeft:(<Icon
-      style={{ paddingLeft:15,paddingRight: 16 , color: '#ffffff'}}
-      onPress={() => this.props.navigation.dispatch(DraerActions.openDrawer())}
-      name="md-menu"
-      size={30}
-    />),*/
     headerStyle: {
       backgroundColor: '#e91c1a',
     },
@@ -32,29 +27,73 @@ export default class MyOrders extends Component {
     }
   };
 
+  constructor() {
+    super();
+    this.state = {
+      access_token: "",
+      dataSource: []
+    };
+  }
+
+  async componentDidMount() {
+    this.getOrderList();
+  }
+
+  async getOrderList() {
+    const token = await AsyncStorage.getItem("@user_at");
+    this.setState({ access_token: token })
+    console.log(this.state.access_token);
+    const fetchConfig = {
+      method: "GET",
+      headers: {
+        access_token: token,
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+    return fetch(
+      `http://staging.php-dev.in:8844/trainingapp/api/orderList`,
+      fetchConfig
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          dataSource: responseJson.data,
+        });
+        console.log(responseJson);
+        try {
+          console.log('OrderList retreived');
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   render() {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <FlatList
-          data={data}
-          renderItem={({ item }) => 
-    
+          data={this.state.dataSource}
+          renderItem={({ item }) =>
+
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Orderid')}>
-                <View style={{flex:1,flexDirection:'row',marginTop:20,marginRight:10,}}>
-                  <View style={{flexGrow:1,flexDirection:'column',marginRight:10,}}>
-                    <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}>Order ID {item.id}</Text>
-                    <Text style={{ fontSize: 15, paddingTop:10, }}>Ordered date {item.date}</Text>
-                  </View>
-                  <View style={{flexGrow:1,marginLeft:10,}}>
-                    <Text style={{ fontSize: 20, paddingLeft: 30,paddingTop:30, fontWeight: "bold", }}>Rs. {item.amt}</Text>
-                  </View>
+              <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
+                <View style={{ flexGrow: 1, flexDirection: 'column', marginRight: 10, }}>
+                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}>Order ID {item.id}</Text>
+                  <Text style={{ fontSize: 15, paddingTop: 10, }}>Ordered date {item.created}</Text>
                 </View>
-                <View style={{width:380,height:1,backgroundColor:'gray',marginTop:5,}}></View>
+                <View style={{ flexGrow: 1, marginLeft: 10, }}>
+                  <Text style={{ fontSize: 20, paddingLeft: 30, paddingTop: 30, fontWeight: "bold", }}>Rs. {item.cost}</Text>
+                </View>
+              </View>
+              <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
             </TouchableOpacity>
-          
+
           }
-          keyExtractor={({id}, index) => id}
+          keyExtractor={({ id }, index) => id}
         />
       </View>
     )
