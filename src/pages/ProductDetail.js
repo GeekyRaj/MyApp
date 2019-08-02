@@ -12,6 +12,7 @@ import {
     ScrollView,
     Modal,
     Easing,
+    AsyncStorage,
 } from 'react-native';
 
 import StarRating from '../components/StarRating';
@@ -48,7 +49,7 @@ export default class Table extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pid:0,
+            pid: null,
             isLoading: true,
             rating: [],
             addcart: [],
@@ -57,6 +58,8 @@ export default class Table extends Component {
             largeImage: "",
             quantityModalVisible: false,
             ratingModalVisible: false,
+
+            qty:null,
 
             Default_Rating: 2,
             //To set the default Star Selected
@@ -75,12 +78,52 @@ export default class Table extends Component {
     //Add Quantity
     setQuantityModalVisible(visible) {
         this.setState({ quantityModalVisible: visible });
+        console.log(this.state.qty);
+        this.addToCart();
     }
+
+    async addToCart() {
+        const token = await AsyncStorage.getItem("@user_at");
+        const quantity = this.state.qty;
+        const product_id = this.state.pid;
+        const fetchConfig = {
+          method: "POST",
+          headers: {
+            access_token: token,
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `product_id=${product_id}&quantity=${quantity}`
+        };
+        //console.log(fetchConfig);
+        return fetch(
+          `http://staging.php-dev.in:8844/trainingapp/api/addToCart`,
+          fetchConfig
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            //console.log(responseJson);
+            if (responseJson.status == 200) {
+                console.log(responseJson.message);
+                alert(responseJson.message+'Check My Cart to Confirm / Delete order.');
+                try {
+                    AsyncStorage.setItem('@user_addcart', 'yes');
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            else{
+                AsyncStorage.setItem('@user_addcart', 'no');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
 
     /*--------User Rating Set----------*/
     setRatingModalVisible(visible) {
         this.setState({ ratingModalVisible: visible });
-        console.log('Rating : ',this.state.Default_Rating);
+        console.log('Rating : ', this.state.Default_Rating);
         this.setRating();
     }
 
@@ -88,43 +131,48 @@ export default class Table extends Component {
         const { navigation } = this.props;
         const user_rating = this.state.Default_Rating;
         const product_id = this.state.pid;
-        console.log('Rating : '+user_rating+'  Product Id:  '+product_id);
+        console.log('Rating : ' + user_rating + '  Product Id:  ' + product_id);
         const fetchConfig = {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `product_id=${product_id}&rating=${user_rating}`
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `product_id=${product_id}&rating=${user_rating}`
         };
         //console.log(fetchConfig);
         return fetch(
-          `http://staging.php-dev.in:8844/trainingapp/api/products/setRating`,
-          fetchConfig
+            `http://staging.php-dev.in:8844/trainingapp/api/products/setRating`,
+            fetchConfig
         )
-          .then(response => response.json())
-          .then(responseJson => {
-            this.setState({
-                rating: responseJson.data,
-            }, function () {
+            .then(response => response.json())
+            .then(responseJson => {
+                this.setState({
+                    rating: responseJson.data,
+                }, function () {
 
+                });
+                if (responseJson.status == 200) {
+                    console.log(responseJson.message);
+                }
+                //console.log(responseJson);
+            })
+            .catch(error => {
+                console.error(error);
             });
-            if(responseJson.status == 200)
-            {
-                console.log(responseJson.message);
-            }
-            //console.log(responseJson);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+    }
+
+    handleCloseModal () {
+        this.setState({ 
+            quantityModalVisible: false,
+            ratingModalVisible: false, });
       }
 
     //Retrieve product details
     componentDidMount() {
         const { navigation } = this.props;
         const pid = navigation.getParam("pid", "1");
-        this.setState({ pid: pid});
+        this.setState({ pid: pid });
         console.log("Product ID : ", pid);
         fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
             .then((response) => response.json())
@@ -268,7 +316,8 @@ export default class Table extends Component {
                     <Modal
                         animationType="slide"
                         transparent={true}
-                        visible={this.state.quantityModalVisible}>
+                        visible={this.state.quantityModalVisible}
+                        onRequestClose={this.handleCloseModal}>
 
                         <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
@@ -282,7 +331,11 @@ export default class Table extends Component {
                                     {this.renderLargeImage()}
                                 </View>
 
-                                <TextInput style={{ fontSize: 20, padding: 20 }} placeholder="Enter Quantity" />
+                                <TextInput
+                                    style={{ fontSize: 20, padding: 20 }}
+                                    placeholder="Enter Quantity"
+                                    onChangeText={qty => this.setState({ qty: qty })}
+                                    />
 
                                 <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
                                     <TouchableOpacity
@@ -293,7 +346,7 @@ export default class Table extends Component {
                                             justifyContent: 'center',
                                             alignItems: 'center'
                                         }}
-                                        onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible);  }}>
+                                        onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible); }}>
                                         <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -305,7 +358,8 @@ export default class Table extends Component {
                     <Modal
                         animationType="slide"
                         transparent={true}
-                        visible={this.state.ratingModalVisible}>
+                        visible={this.state.ratingModalVisible}
+                        onRequestClose={this.handleCloseModal}>
 
                         <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
@@ -335,7 +389,7 @@ export default class Table extends Component {
                                             justifyContent: 'center',
                                             alignItems: 'center'
                                         }}
-                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible);  }}>
+                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible); }}>
                                         <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold' }}>RATE NOW</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -421,8 +475,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#000',
         marginTop: 5,
-        marginBottom:10,
-      },
+        marginBottom: 10,
+    },
     Textbutton: {
         fontSize: 18,
         fontWeight: '500',
