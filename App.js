@@ -180,10 +180,6 @@ const StackStoreLocator = createStackNavigator(
     defaultConfig
 );
 
-
-
-
-
 const DashboardStackNavigator = createStackNavigator(
   {
     DashboardTabNavigator: DashboardScreen,

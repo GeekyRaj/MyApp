@@ -5,7 +5,8 @@ import {
     TextInput,
     View,
     TouchableOpacity,
-    AsyncStorage
+    AsyncStorage,
+    Image,
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 //import AsyncStorage from '@react-native-community/async-storage';
@@ -38,16 +39,20 @@ export default class Login extends Component {
             //Retrieve json data
             dataLogin: [],
             token: '',
+            hidePassword: true,
         }
         this.CheckIfAlreadyLogin()
     }
 
-    async CheckIfAlreadyLogin(){
+    managePasswordVisibility = () => {
+        this.setState({ hidePassword: !this.state.hidePassword });
+    }
+
+    async CheckIfAlreadyLogin() {
         const email = await AsyncStorage.getItem("@user_at");
         //const pass = await AsyncStorage.getItem("@user_pass");
-        if(email != null)
-        {
-            console.log('User data already exist '+email);
+        if (email != null) {
+            console.log('User data already exist ' + email);
             this.props.navigation.navigate('Dashboard');
         }
     }
@@ -179,10 +184,14 @@ export default class Login extends Component {
                         <TextInput
                             style={styles.inputBox}
                             placeholder="Password"
-                            secureTextEntry={true}
+                            underlineColorAndroid= 'transparent'
+                            secureTextEntry={this.state.hidePassword}
                             placeholderTextColor='#ffffff'
                             onChangeText={(text) => this.updateValue(text, 'password')}
                         />
+                        <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                            <Image source={(this.state.hidePassword) ? require('../images/hide.png') : require('../images/view.png')} style={styles.btnImage} />
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={styles.button} onPress={() => this.submit()}>
                         <Text style={styles.Textbutton}>LOGIN</Text>
@@ -265,5 +274,20 @@ const styles = StyleSheet.create({
     error: {
         borderWidth: 2,
         borderColor: 'orange',
-    }
+    },
+    visibilityBtn:
+  {
+    position: 'absolute',
+    right: 3,
+    height: 40,
+    width: 35,
+    padding: 5
+  },
+ 
+  btnImage:
+  {
+    resizeMode: 'contain',
+    height: '100%',
+    width: '100%'
+  }
 });

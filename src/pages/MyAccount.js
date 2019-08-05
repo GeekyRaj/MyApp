@@ -26,7 +26,10 @@ export default class MyAccount extends Component {
         this.state = {
             dataSource: [],
             seconds: 0,
+            TextInputEnable: false,
         }
+        //this.getData();
+        console.log('**** My Account ****');
     }
 
     tick() {
@@ -36,6 +39,7 @@ export default class MyAccount extends Component {
     }
 
     async componentDidMount() {
+        console.log('---- Component Did Mount ----')
         this.getData();
         //this.interval = setInterval(() => this.tick(), 10);
     }

@@ -9,11 +9,9 @@ import {
     FlatList,
     Alert,
     AsyncStorage,
-    RefreshControl,
 } from 'react-native';
-import NumericInput from 'react-native-numeric-input'
+import NumericInput from 'react-native-numeric-input';
 import Icon from '@expo/vector-icons/Ionicons';
-import { Dropdown } from 'react-native-material-dropdown';
 import Swipeout from 'react-native-swipeout';
 
 const styles = StyleSheet.create({
@@ -37,6 +35,7 @@ const styles = StyleSheet.create({
         height: 45,
         backgroundColor: '#e91c1a',
         borderRadius: 10,
+        marginRight: 20,
     },
 });
 
@@ -62,33 +61,41 @@ export default class MyCart extends Component {
             pid: null,
             rowIndex: null,
             value: null,
+            cartStatus:'Cart Empty...!',
+            cartupdate:'',
         };
-        this.getCartData();
-        console.log('in Mycart')
+        //this.getCartData();
+        console.log('\n **** In Mycart ****')
     }
 
     /* ------------ Get CART details----------- */
     async componentDidMount() {
+        console.log('----Component Did Mounnt----');
         this.getCartData();
     }
-    async componentWillMount() {
+    /*async componentWillMount() {
         this.getCartData();
-    }
+    }*/
 
     //CHECK IF ANY UPDATE IN CART
     async componentDidUpdate() {
         const cartupdate = await AsyncStorage.getItem("@user_addcart");
         if (cartupdate == 'yes') {
             this.getCartData();
-            console.log('Cart updated')
+            console.log('----Componenet DidUpdate----');
             AsyncStorage.setItem('@user_addcart', 'no');
         }
+    }
+
+    componentWillUnmount()
+    {
+        console.log('My cart unmounted');
     }
 
     async getCartData() {
         const token = await AsyncStorage.getItem("@user_at");
         this.setState({ access_token: token })
-        console.log(this.state.access_token);
+        //console.log(this.state.access_token);
         const fetchConfig = {
             method: "GET",
             headers: {
@@ -108,8 +115,14 @@ export default class MyCart extends Component {
                     cartTotal: responseJson.total
                 });
                 //console.log(responseJson);
+                if(responseJson.message == 'Cart Empty')
+                {
+                    this.setState({ cartStatus: 'Cart Empty..!'})
+                }
+                else{ this.setState({ cartStatus: ''})}
+
                 try {
-                    console.log('Cart Data retreived');
+                    console.log('getCartData() : Cart Data retreived');
                 } catch (error) {
                     console.log(error);
                     // Error saving data
@@ -172,11 +185,11 @@ export default class MyCart extends Component {
     }
 
     //Update Quantity
-    UpdateQty(value, id){
+    UpdateQty(value, id) {
         const token = this.state.access_token;
-        const qty=value;
-        const pid=id;
-        console.log(pid+' '+qty);
+        const qty = value;
+        const pid = id;
+        console.log(pid + ' ' + qty);
 
         const fetchConfig = {
             method: "POST",
@@ -203,8 +216,21 @@ export default class MyCart extends Component {
             });
     }
 
+    async getStatus(){
+        this.setState({ 
+        cartupdate : await AsyncStorage.getItem("@user_addcart"), }) 
+        if (this.state.cartupdate == 'yes') {
+            AsyncStorage.setItem('@user_addcart', 'no');
+            this.setState({ cartupdate: 'no'})
+            console.log('----Componenet Render----')
+            this.getCartData();
+        }
+    }
 
     render() {
+        //{this.getStatus()}
+        //const cartupdate = await AsyncStorage.getItem("@user_addcart");
+        
 
         const swipeoutBtns = [
             {
@@ -217,6 +243,7 @@ export default class MyCart extends Component {
 
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{fontSize:20, color:'red'}}>{this.state.cartStatus}</Text>
                 <FlatList
                     data={this.state.dataSource}
                     extraData={this.state.rowIndex}
@@ -260,7 +287,7 @@ export default class MyCart extends Component {
                                             iconStyle={{ color: 'black' }}
                                             rightButtonBackgroundColor='red'
                                             leftButtonBackgroundColor='white'
-                                            onChange={value=> this.UpdateQty(value, item.product.id)} />
+                                            onChange={value => this.UpdateQty(value, item.product.id)} />
                                     </View>
                                 </View>
                                 <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
@@ -275,10 +302,12 @@ export default class MyCart extends Component {
                 />
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <Text style={{ fontSize: 25, fontWeight: "bold",paddingRight:30, }}> Rs. {this.state.cartTotal} </Text>
+
                         <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
-                        <Text style={styles.Textbutton}>ORDER NOW</Text>
-                    </TouchableOpacity>
+                            <Text style={styles.Textbutton}>ORDER NOW</Text>
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 25, fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
+
                     </View>
                 </View>
             </View>

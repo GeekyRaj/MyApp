@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Icon from '@expo/vector-icons/Ionicons';
+import {ImagePicker, Permissions, Constants} from 'expo';
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -45,6 +46,7 @@ export default class EditProfile extends Component {
             lnameVal: true,
             emailVal: true,
             pnoVal: true,
+            image: null,
         }
         this.GetUserData();
     }
@@ -152,6 +154,8 @@ export default class EditProfile extends Component {
         const email = this.state.email;
         const phone_no = this.state.pno;
         const dob = this.state.date;
+        const profpic = this.state.image;
+        console.log(profpic);
     
         const fetchConfig = {
           method: "POST",
@@ -159,7 +163,7 @@ export default class EditProfile extends Component {
             access_token: token,
             "Content-Type": "application/x-www-form-urlencoded"
           },
-          body: `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic={"test.png"}&phone_no=${phone_no}`
+          body: `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic=${profpic}&phone_no=${phone_no}`
         };
         return fetch(
           `http://staging.php-dev.in:8844/trainingapp/api/users/update`,
@@ -192,12 +196,50 @@ export default class EditProfile extends Component {
         }
       }
 
+      UpdateProfilePath()
+      {
+          alert('Image clicked');
+      }
+
+      componentDidMount() {
+        this.getPermissionAsync();
+      }
+    
+      getPermissionAsync = async () => {
+        if (Constants.platform.ios) {
+          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
+        }
+      }
+    
+      _pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          this.setState({ image: result.uri });
+        }
+        console.log('Image path : '+this.state.image);
+      };
+
     render() {
+
+        let { image } = this.state;
+
         return (
             <View style={styles.container}>
 
                 <View style={styles.imgView}>
-                    <Image style={styles.img} source={require('../images/profile.jpg')} />
+                    <TouchableOpacity onPress={() => this._pickImage()}>
+                        <Image style={styles.img} source={require('../images/profile.jpg')} />
+                    </TouchableOpacity>
                 </View>
                 <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
                     <Image style={styles.imgIcon} source={require('../images/username_icon.png')} />

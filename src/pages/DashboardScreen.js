@@ -39,7 +39,7 @@ export default class DashboardScreen extends Component {
       token: ' ',
       fname: ' ',
     }
-    this._retrieveData();
+
   }
 
     _retrieveData = async () => {
@@ -48,17 +48,55 @@ export default class DashboardScreen extends Component {
           item: await AsyncStorage.getItem('@user_at'),
           fname: await AsyncStorage.getItem('@user_fname')
         })
-        console.log('in home')
+        console.log('\n *** HOME ***')
       } catch (e) {
         console.log(e);
       }
       console.log('Stored value : ', this.state.item, ' Fname ', this.state.fname);
     }
+
+    async getData() {
+      const token = await AsyncStorage.getItem("@user_at");
+      const fetchConfig = {
+          method: "GET",
+          headers: {
+              access_token: token,
+              "Content-Type": "application/x-www-form-urlencoded"
+          }
+      };
+      return fetch(
+          `http://staging.php-dev.in:8844/trainingapp/api/users/getUserData`,
+          fetchConfig
+      )
+          .then(response => response.json())
+          .then(responseJson => {
+              this.setState({
+                  dataSource: responseJson.data.user_data
+              });
+              console.log(responseJson);
+              console.log(this.state.dataSource.profile_pic);
+              try {
+                  AsyncStorage.setItem('@user_profile', this.state.dataSource.profile_pic);
+              } catch (error) {
+                  // Error saving data
+              }
+          })
+          .catch(error => {
+              console.error(error);
+          });
+  }
+
+  async componentDidMount() {
+    console.log('Home DidMount Method');
+    this.getData();
+}
+
   render() {
     YellowBox.ignoreWarnings(["Warning: componentWillUpdate is deprecated"]);
     let dimensions = Dimensions.get("window");
     let imageHeight = Math.round((dimensions.width * 9) / 16);
     let imageWidth = dimensions.width;
+  
 
 
     //const access_id= this.props.navigation.getParam("access_id",1);

@@ -37,15 +37,15 @@ export default class MenuDrawer extends Component {
 
     async userLogout() {
         try {
-          await AsyncStorage.clear();
-          {
-            this.props.navigation.navigate('Login');
-          }
+            await AsyncStorage.clear();
+            {
+                this.props.navigation.navigate('LogOut');
+            }
         } catch (e) {
-          console.log("Error Clearing user data" + e);
+            console.log("Error Clearing user data" + e);
         }
         console.log("User Data cleared.");
-      }
+    }
 
     async getData() {
         try {
@@ -65,11 +65,12 @@ export default class MenuDrawer extends Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: 'gray' }}>
-
                 <View style={styles.topLinks}>
                     <View style={styles.profile}>
                         <View style={styles.imgView}>
-                            <Image style={styles.img} source={require('../images/profile.jpg')} />
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('MyAccount')}>
+                                <Image style={styles.img} source={require('../images/profile.jpg')} />
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.profileText}>
                             <Text style={styles.name}>{this.state.name}</Text>
