@@ -8,9 +8,10 @@ import {
   FlatList,
   AsyncStorage
 } from 'react-native';
+import { withNavigation } from "react-navigation";
 
 
-export default class MyOrders extends Component {
+ class MyOrders extends Component {
   static navigationOptions = {
     title: 'My Orders',
     headerStyle: {
@@ -33,7 +34,12 @@ export default class MyOrders extends Component {
   }
 
   async componentDidMount() {
-    this.getOrderList();
+    const { navigation } = this.props;
+        this.focusListener = navigation.addListener("didFocus", () => {
+            // The screen is focused
+            // Call any action
+            this.getOrderList();
+          });
   }
 
   /*async  componentDidUpdate() {
@@ -76,8 +82,6 @@ export default class MyOrders extends Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TouchableOpacity style={{ marginTop:10,width: 190,height: 45,backgroundColor: 'gray',borderRadius: 10,}} onPress={() =>this.setState({ update: 'yes'})}>
-                    <Text style={styles.Textbutton}>Update Order ?</Text></TouchableOpacity>
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) =>
@@ -119,3 +123,5 @@ const styles = StyleSheet.create({
       marginRight: 20,
   },
 });
+
+export default withNavigation(MyOrders);
