@@ -13,6 +13,7 @@ import {
 import NumericInput from 'react-native-numeric-input';
 import Swipeout from 'react-native-swipeout';
 import Icon from '@expo/vector-icons/Ionicons';
+import { withNavigation } from "react-navigation";
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -74,15 +75,25 @@ class MyCart extends Component {
             cartupdate: '',
             update: 'no',
         };
-        //this.getCartData();
         console.log('\n **** In Mycart ****')
     }
 
     /* ------------ Get CART details----------- */
     componentDidMount() {
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener("didFocus", () => {
+            // The screen is focused
+            // Call any action
+            this.getCartData();
+          });
         console.log('----Component Did Mounnt----');
-        this.getCartData();
+        
     }
+
+    componentWillUnmount() {
+        // Remove the event listener
+        this.focusListener.remove();
+      }
 
     //CHECK IF ANY UPDATE IN CART
     async  componentDidUpdate() {
@@ -224,7 +235,7 @@ class MyCart extends Component {
     }
 
     async getStatus() {
-        this.setState({
+        /*this.setState({
             cartupdate: await AsyncStorage.getItem("@user_addcart"),
         })
         console.log(this.state.cartupdate);
@@ -234,13 +245,19 @@ class MyCart extends Component {
             console.log(this.state.cartupdate);
             console.log('----Componenet Render----')
             this.getCartData();
-        }
+        }*/
+        let cartupdate = this.props.navigation.getParam('cart','No Data');
+        console.log(cartupdate);
+        this.setState({
+            //update: await AsyncStorage.getItem("@user_addcart"),
+        })
     }
 
     render() {
         //{this.getStatus()}
        // <NavigationEvents onDidFocus={()=>alert("Hello, I'm focused!")} />
         {console.log('My Cart Render');}
+        
 
 
         const swipeoutBtns = [
@@ -254,8 +271,6 @@ class MyCart extends Component {
 
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                <TouchableOpacity style={{ marginTop:10,width: 190,height: 45,backgroundColor: 'gray',borderRadius: 10,}} onPress={() =>this.setState({ update: 'yes'})}>
-                    <Text style={styles.Textbutton}>Update Cart ?</Text></TouchableOpacity>
                 <Text style={{ fontSize: 20, color: 'red' }}>{this.state.cartStatus}</Text>
                 <FlatList
                     data={this.state.dataSource}
@@ -325,4 +340,4 @@ class MyCart extends Component {
         );
     }
 }
-export default MyCart
+export default withNavigation(MyCart);

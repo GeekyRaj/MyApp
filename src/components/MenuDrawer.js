@@ -30,6 +30,7 @@ export default class MenuDrawer extends Component {
             token: ' ',
             name: ' ',
             email: ' ',
+            iscart: ' ',
         }
 
         this.getData();
@@ -50,9 +51,10 @@ export default class MenuDrawer extends Component {
     async getData() {
         try {
             const email = await AsyncStorage.getItem("@user_email");
+            const cart = await AsyncStorage.getItem("@user_addcart");
             const fname = this.Capitalize(await AsyncStorage.getItem("@user_fname"));
             const lname = this.Capitalize(await AsyncStorage.getItem("@user_lname"));
-            this.setState({ email: email, name: fname + " " + lname });
+            this.setState({ email: email, name: fname + " " + lname, iscart: cart });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -82,7 +84,10 @@ export default class MenuDrawer extends Component {
                 <View style={styles.bottomLinks}>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/shopping_cart.png')} />
-                        {this.navLink('MyCart', 'My Cart')}
+                        {/*this.navLink('MyCart', 'My Cart')*/}
+                        <TouchableOpacity style={{ height: 50 }} onPress={() => this.props.navigation.navigate('MyCart',{cart:this.state.iscart})}>
+                            <Text style={styles.link}>My Cart</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/table.png')} />
