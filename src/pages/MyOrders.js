@@ -8,11 +8,7 @@ import {
   FlatList,
   AsyncStorage
 } from 'react-native';
-const data = [
-  { id: '1234', date: '07 Aug 2018', amt: '30000' },
-  { id: '2456', date: '02 Sep 2018', amt: '25000' },
-  { id: '9854', date: '02 Sep 2018', amt: '25000' },
-]
+
 
 export default class MyOrders extends Component {
   static navigationOptions = {
@@ -31,13 +27,18 @@ export default class MyOrders extends Component {
     super();
     this.state = {
       access_token: "",
-      dataSource: []
+      dataSource: [],
+      update: 'no',
     };
   }
 
   async componentDidMount() {
     this.getOrderList();
   }
+
+  /*async  componentDidUpdate() {
+    this.getOrderList();
+}*/
 
   async getOrderList() {
     const token = await AsyncStorage.getItem("@user_at");
@@ -59,7 +60,7 @@ export default class MyOrders extends Component {
         this.setState({
           dataSource: responseJson.data,
         });
-        console.log(responseJson);
+        //console.log(responseJson);
         try {
           console.log('OrderList retreived');
         } catch (error) {
@@ -75,6 +76,8 @@ export default class MyOrders extends Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity style={{ marginTop:10,width: 190,height: 45,backgroundColor: 'gray',borderRadius: 10,}} onPress={() =>this.setState({ update: 'yes'})}>
+                    <Text style={styles.Textbutton}>Update Order ?</Text></TouchableOpacity>
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) =>
@@ -99,3 +102,20 @@ export default class MyOrders extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  Textbutton: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: '#ffffff',
+      textAlign: 'center',
+      paddingVertical: 10,
+  },
+  button: {
+      width: 190,
+      height: 45,
+      backgroundColor: '#e91c1a',
+      borderRadius: 10,
+      marginRight: 20,
+  },
+});

@@ -188,6 +188,8 @@ const DashboardStackNavigator = createStackNavigator(
   defaultConfig
 );
 
+
+
 /*-----------------DRAWER NAVIGATION CALLED BY SWITCH NAVIGATOR-----------------*/
 const AppDrawerNavigator = createDrawerNavigator({
   Dashboard: { screen: DashboardStackNavigator},
@@ -204,6 +206,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   DrawerConfig,
 );
 
+
 /*-----------Navigator for switching between pages starting from Login page---------*/
 const AppSwitchNavigator = createSwitchNavigator({
   Welcome: { screen: Login},   //actual Screen: Login
@@ -211,6 +214,7 @@ const AppSwitchNavigator = createSwitchNavigator({
   Signup: { screen: Signup },
   Forgetpw: { screen: Forgetpw }
 });
+
 
 const AppContainer = createAppContainer(AppSwitchNavigator);
 

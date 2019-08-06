@@ -73,7 +73,7 @@ export default class DashboardScreen extends Component {
               this.setState({
                   dataSource: responseJson.data.user_data
               });
-              console.log(responseJson);
+              //console.log(responseJson);
               console.log(this.state.dataSource.profile_pic);
               try {
                   AsyncStorage.setItem('@user_profile', this.state.dataSource.profile_pic);

@@ -101,10 +101,11 @@ export default class Table extends Component {
         )
           .then(response => response.json())
           .then(responseJson => {
-            //console.log(responseJson);
+            console.log(responseJson);
             if (responseJson.status == 200) {
                 console.log(responseJson.message);
                 alert(responseJson.message+'Check My Cart to Confirm / Delete order.');
+                this.props.navigation.navigate('Dashboard')
                 try {
                     AsyncStorage.setItem('@user_addcart', 'yes');
                 } catch (error) {
@@ -177,15 +178,13 @@ export default class Table extends Component {
         fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
             .then((response) => response.json())
             .then((responseJson) => {
-
+                console.log(responseJson);
                 this.setState({
                     isLoading: false,
                     dataSource: responseJson.data,
                     productImages: responseJson.data.product_images,
                     largeImage: responseJson.data.product_images[0].image
-                }, function () {
-
-                });
+                })
 
             })
             .catch((error) => {
@@ -335,6 +334,7 @@ export default class Table extends Component {
                                     style={{ fontSize: 20, padding: 20 }}
                                     placeholder="Enter Quantity"
                                     onChangeText={qty => this.setState({ qty: qty })}
+                                    keyboardType='numeric'
                                     />
 
                                 <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>

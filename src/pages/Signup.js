@@ -181,6 +181,10 @@ export default class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        console.log('----Sign up Component Did Mounnt----');
+    }
+
     render() {
         return (
             <View style={styles.containerMain}>

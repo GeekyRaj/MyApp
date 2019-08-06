@@ -11,8 +11,8 @@ import {
     AsyncStorage,
 } from 'react-native';
 import NumericInput from 'react-native-numeric-input';
-import Icon from '@expo/vector-icons/Ionicons';
 import Swipeout from 'react-native-swipeout';
+import Icon from '@expo/vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -39,13 +39,22 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class MyCart extends Component {
-    static navigationOptions = {
+class MyCart extends Component {
+    static navigationOptions = ({ navigation }) => {
+        return {
         title: 'My Cart',
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold',
         },
+        headerLeft:
+                (<Icon
+                    style={{ paddingLeft: 16, color: '#ffffff' }}
+                    onPress={() => navigation.navigate('Dashboard')}
+                    name="md-arrow-back"
+                    size={30}
+                />),
+    };
     };
 
     constructor() {
@@ -61,76 +70,74 @@ export default class MyCart extends Component {
             pid: null,
             rowIndex: null,
             value: null,
-            cartStatus:'Cart Empty...!',
-            cartupdate:'',
+            cartStatus: 'Cart Empty...!',
+            cartupdate: '',
+            update: 'no',
         };
         //this.getCartData();
         console.log('\n **** In Mycart ****')
     }
 
     /* ------------ Get CART details----------- */
-    async componentDidMount() {
+    componentDidMount() {
         console.log('----Component Did Mounnt----');
         this.getCartData();
     }
-    /*async componentWillMount() {
-        this.getCartData();
-    }*/
 
     //CHECK IF ANY UPDATE IN CART
-    async componentDidUpdate() {
-        const cartupdate = await AsyncStorage.getItem("@user_addcart");
-        if (cartupdate == 'yes') {
-            this.getCartData();
-            console.log('----Componenet DidUpdate----');
-            AsyncStorage.setItem('@user_addcart', 'no');
-        }
-    }
-
-    componentWillUnmount()
-    {
-        console.log('My cart unmounted');
-    }
-
-    async getCartData() {
-        const token = await AsyncStorage.getItem("@user_at");
-        this.setState({ access_token: token })
-        //console.log(this.state.access_token);
-        const fetchConfig = {
-            method: "GET",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
+    async  componentDidUpdate() {
+            const cartupdate = await AsyncStorage.getItem("@user_addcart");
+            if (cartupdate == 'yes') {
+                this.getCartData();
+                console.log('----Componenet DidUpdate----');
+                AsyncStorage.setItem('@user_addcart', 'no');
             }
-        };
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/cart`,
-            fetchConfig
-        )
-            .then(response => response.json())
-            .then(responseJson => {
-                this.setState({
-                    dataSource: responseJson.data,
-                    cartCount: responseJson.count,
-                    cartTotal: responseJson.total
-                });
-                //console.log(responseJson);
-                if(responseJson.message == 'Cart Empty')
-                {
-                    this.setState({ cartStatus: 'Cart Empty..!'})
-                }
-                else{ this.setState({ cartStatus: ''})}
+    }
 
-                try {
-                    console.log('getCartData() : Cart Data retreived');
-                } catch (error) {
-                    console.log(error);
-                    // Error saving data
+     getCartData=async()=> {
+         try{
+            const token = await AsyncStorage.getItem("@user_at");
+            this.setState({ access_token: token })
+            //console.log(this.state.access_token);
+            const fetchConfig = {
+                method: "GET",
+                headers: {
+                    access_token: token,
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+            };
+            return fetch(
+                `http://staging.php-dev.in:8844/trainingapp/api/cart`,
+                fetchConfig
+            )
+                .then(response => response.json())
+                .then(responseJson => {
+                    //console.log(responseJson);
+                    this.setState({
+                        dataSource: responseJson.data,
+                        cartCount: responseJson.count,
+                        cartTotal: responseJson.total
+                    });
+                    
+                    if (responseJson.message == 'Cart Empty') {
+                        this.setState({ cartStatus: 'Cart Empty..!' })
+                    }
+                    else { this.setState({ cartStatus: '' }) }
+    
+                    try {
+                        console.log('getCartData() : Cart Data retreived');
+                    } catch (error) {
+                        console.log(error);
+                        // Error saving data
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+         }catch(error){
+             console.log(error)
+         }
+       
     }
 
     //SwipeOut for deleting cart 
@@ -205,7 +212,7 @@ export default class MyCart extends Component {
         )
             .then(response => response.json())
             .then(responseJson => {
-                console.log(responseJson);
+                //console.log(responseJson);
                 if (responseJson.status == 200) {
                     console.log(responseJson.status);
                     this.getCartData();
@@ -216,12 +223,15 @@ export default class MyCart extends Component {
             });
     }
 
-    async getStatus(){
-        this.setState({ 
-        cartupdate : await AsyncStorage.getItem("@user_addcart"), }) 
+    async getStatus() {
+        this.setState({
+            cartupdate: await AsyncStorage.getItem("@user_addcart"),
+        })
+        console.log(this.state.cartupdate);
         if (this.state.cartupdate == 'yes') {
             AsyncStorage.setItem('@user_addcart', 'no');
-            this.setState({ cartupdate: 'no'})
+            this.setState({ cartupdate: 'no' })
+            console.log(this.state.cartupdate);
             console.log('----Componenet Render----')
             this.getCartData();
         }
@@ -229,8 +239,9 @@ export default class MyCart extends Component {
 
     render() {
         //{this.getStatus()}
-        //const cartupdate = await AsyncStorage.getItem("@user_addcart");
-        
+       // <NavigationEvents onDidFocus={()=>alert("Hello, I'm focused!")} />
+        {console.log('My Cart Render');}
+
 
         const swipeoutBtns = [
             {
@@ -242,14 +253,14 @@ export default class MyCart extends Component {
         ];
 
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{fontSize:20, color:'red'}}>{this.state.cartStatus}</Text>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                <TouchableOpacity style={{ marginTop:10,width: 190,height: 45,backgroundColor: 'gray',borderRadius: 10,}} onPress={() =>this.setState({ update: 'yes'})}>
+                    <Text style={styles.Textbutton}>Update Cart ?</Text></TouchableOpacity>
+                <Text style={{ fontSize: 20, color: 'red' }}>{this.state.cartStatus}</Text>
                 <FlatList
                     data={this.state.dataSource}
                     extraData={this.state.rowIndex}
                     renderItem={({ item, index }) => {
-
-                        /*<FlatListItem item={item} index={index} />*/
 
                         return (<Swipeout
                             right={swipeoutBtns} backgroundColor={'white'}
@@ -314,3 +325,4 @@ export default class MyCart extends Component {
         );
     }
 }
+export default MyCart

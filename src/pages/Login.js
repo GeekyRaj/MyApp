@@ -157,6 +157,10 @@ export default class Login extends Component {
         console.log("User Login Data Saved.");
     }
 
+    componentDidMount() {
+        console.log('----Login Component Did Mounnt----');
+    }
+
     render() {
         return (
             <View style={styles.container}>
