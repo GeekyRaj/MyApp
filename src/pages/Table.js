@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 
 import StarRating from '../components/StarRating';
@@ -48,6 +49,11 @@ export default class Table extends Component {
   }
   render() {
 
+    let dimensions = Dimensions.get("window");
+    screenW = dimensions.width -10;
+    screenH = dimensions.height -10;
+    console.log(screenW+' '+screenH);
+
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -63,7 +69,7 @@ export default class Table extends Component {
 
     return (
 
-      <View style={{ flex: 1, paddingTop: 20 }}>
+      <View style={{ flex: 1, paddingTop: 20, height:screenH, width:screenW }}>
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) => {
@@ -81,7 +87,7 @@ export default class Table extends Component {
                   <Text style={{ fontSize: 20, }}>{item.name}</Text>
                   <Text>{item.producer}</Text>
                   <View style={{ flexDirection: 'row', }}>
-                    <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: 20 }}>Rs. {item.cost}</Text>
+                    <Text style={{ marginTop: 5, marginRight: 80, color: 'red', fontSize: 20 }}>Rs. {item.cost}</Text>
                     <StarRating ratingObj={ratingObj} />
                   </View>
                 </View>

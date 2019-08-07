@@ -4,19 +4,16 @@ import {
     Text,
     View,
     TouchableOpacity,
-    FlatList,
     TextInput,
     Image,
     ActivityIndicator,
-    TouchableHighlight,
     ScrollView,
     Modal,
-    Easing,
     AsyncStorage,
+    Dimensions,
 } from 'react-native';
 
 import StarRating from '../components/StarRating';
-import ProductDetail from './ProductDetail';
 import Icon from '@expo/vector-icons/Ionicons';
 
 
@@ -59,7 +56,7 @@ export default class Table extends Component {
             quantityModalVisible: false,
             ratingModalVisible: false,
 
-            qty:null,
+            qty: null,
 
             Default_Rating: 2,
             //To set the default Star Selected
@@ -87,39 +84,39 @@ export default class Table extends Component {
         const quantity = this.state.qty;
         const product_id = this.state.pid;
         const fetchConfig = {
-          method: "POST",
-          headers: {
-            access_token: token,
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `product_id=${product_id}&quantity=${quantity}`
+            method: "POST",
+            headers: {
+                access_token: token,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `product_id=${product_id}&quantity=${quantity}`
         };
         //console.log(fetchConfig);
         return fetch(
-          `http://staging.php-dev.in:8844/trainingapp/api/addToCart`,
-          fetchConfig
+            `http://staging.php-dev.in:8844/trainingapp/api/addToCart`,
+            fetchConfig
         )
-          .then(response => response.json())
-          .then(responseJson => {
-            console.log(responseJson);
-            if (responseJson.status == 200) {
-                console.log(responseJson.message);
-                alert(responseJson.message+'Check My Cart to Confirm / Delete order.');
-                this.props.navigation.navigate('Dashboard')
-                try {
-                    AsyncStorage.setItem('@user_addcart', 'yes');
-                } catch (error) {
-                    console.log(error);
+            .then(response => response.json())
+            .then(responseJson => {
+                //console.log(responseJson);
+                if (responseJson.status == 200) {
+                    console.log(responseJson.message);
+                    alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
+                    this.props.navigation.navigate('Dashboard')
+                    try {
+                        AsyncStorage.setItem('@user_addcart', 'yes');
+                    } catch (error) {
+                        console.log(error);
+                    }
                 }
-            }
-            else{
-                AsyncStorage.setItem('@user_addcart', 'no');
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
+                else {
+                    AsyncStorage.setItem('@user_addcart', 'no');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 
     /*--------User Rating Set----------*/
     setRatingModalVisible(visible) {
@@ -163,11 +160,12 @@ export default class Table extends Component {
             });
     }
 
-    handleCloseModal () {
-        this.setState({ 
+    handleCloseModal() {
+        this.setState({
             quantityModalVisible: false,
-            ratingModalVisible: false, });
-      }
+            ratingModalVisible: false,
+        });
+    }
 
     //Retrieve product details
     componentDidMount() {
@@ -178,7 +176,7 @@ export default class Table extends Component {
         fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
             .then((response) => response.json())
             .then((responseJson) => {
-                console.log(responseJson);
+                //console.log(responseJson);
                 this.setState({
                     isLoading: false,
                     dataSource: responseJson.data,
@@ -213,6 +211,9 @@ export default class Table extends Component {
 
 
     render() {
+        let dimensions = Dimensions.get("window");
+        screenW = dimensions.width - 10;
+        screenH = dimensions.height - 10;
 
         let React_Native_Rating_Bar = [];
         //Array to hold the filled or empty Stars
@@ -335,7 +336,7 @@ export default class Table extends Component {
                                     placeholder="Enter Quantity"
                                     onChangeText={qty => this.setState({ qty: qty })}
                                     keyboardType='numeric'
-                                    />
+                                />
 
                                 <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
                                     <TouchableOpacity
@@ -385,7 +386,7 @@ export default class Table extends Component {
                                         style={{
                                             backgroundColor: 'red', borderRadius: 8,
                                             padding: 10,
-                                            width: 176, height: 42,
+                                            width: screenW/2, height: 42,
                                             justifyContent: 'center',
                                             alignItems: 'center'
                                         }}
@@ -417,13 +418,13 @@ export default class Table extends Component {
 const styles = StyleSheet.create({
     box: {
         flex: 0,
-        width: 420,
+        width: '100%',
         backgroundColor: '#ffffff',
         marginBottom: 10,
     },
     boxmid: {
         flex: 0,
-        width: 400,
+        width: '98%',
         height: 405,
         backgroundColor: '#ffffff',
         borderRadius: 10,
@@ -447,14 +448,14 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     button: {
-        width: 190,
+        width: 170,
         height: 45,
         backgroundColor: '#e91c1a',
         borderRadius: 10,
     },
     buttonRate: {
         marginLeft: 10,
-        width: 190,
+        width: 170,
         height: 45,
         backgroundColor: '#9c908f',
         borderRadius: 10,

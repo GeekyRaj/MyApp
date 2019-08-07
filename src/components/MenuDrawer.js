@@ -90,7 +90,7 @@ export default class MenuDrawer extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Image style={styles.imgIcon} source={require('../images/table.png')} />
+                        <Image style={styles.imgIcon} source={require('../images/tables_icon.png')} />
                         {this.navLink('Table', 'Tables')}
                     </View>
                     <View style={styles.SectionStyle}>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     img: {
         height: 70,
         width: 70,
-        borderRadius: 50,
+        borderRadius: 35,
     },
     imgIcon: {
         height: 25,

@@ -1,28 +1,14 @@
 import React, { Component, } from 'react';
-import { DraerActions } from 'react-navigation';
 import {
-  StyleSheet,
-  Text,
   View,
   ScrollView,
   Image,
   Dimensions,
   FlatList,
-  Button,
   TouchableOpacity,
   YellowBox,
   AsyncStorage
 } from 'react-native';
-//import AsyncStorage from '@react-native-community/async-storage';
-import Icon from '@expo/vector-icons/Ionicons';
-import { Row } from 'native-base';
-import Sofas from './Sofas';
-import Chairs from './Chairs';
-import Cupboards from './Cupboards';
-import Table from './Table';
-
-import Header from '../components/Header';
-const { width } = Dimensions.get('window');
 
 export default class DashboardScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -96,6 +82,9 @@ export default class DashboardScreen extends Component {
     let dimensions = Dimensions.get("window");
     let imageHeight = Math.round((dimensions.width * 9) / 16);
     let imageWidth = dimensions.width;
+    let typewidth= dimensions.width/2.3;
+    let typeheight = dimensions.height/4.3;
+    console.log(dimensions.height+' '+typeheight);
   
 
 
@@ -131,7 +120,7 @@ export default class DashboardScreen extends Component {
         <FlatList
           numColumns={2}
           data={[
-            { key: 1, ur: require('../images/Table.png'), pth: 'Table' },
+            { key: 1, ur: require("../images/Table.png"), pth: 'Table' },
             { key: 2, ur: require("../images/Sofas.png"), pth: 'Sofas' },
             { key: 3, ur: require("../images/Chairs.png"), pth: 'Chairs' },
             { key: 4, ur: require("../images/Cupboards.png"), pth: 'Cupboards' },
@@ -140,7 +129,7 @@ export default class DashboardScreen extends Component {
             const p = item.pth;
             return <TouchableOpacity key={item.key} onPress={() => this.props.navigation.navigate(p)}>
               <Image
-                style={{ height: 160, width: 180, margin: 10, }}
+                style={{ height: typeheight, width: typewidth, margin: 10, }}
                 source={item.ur} />
             </TouchableOpacity>
           }

@@ -3,11 +3,9 @@ import {
     StyleSheet,
     Text,
     Image,
-    TextInput,
     View,
     TouchableOpacity,
     FlatList,
-    Alert,
     AsyncStorage,
 } from 'react-native';
 import NumericInput from 'react-native-numeric-input';
@@ -86,8 +84,7 @@ class MyCart extends Component {
             // Call any action
             this.getCartData();
           });
-        console.log('----Component Did Mounnt----');
-        
+        console.log('----Component Did Mounnt----');  
     }
 
     componentWillUnmount() {
@@ -234,32 +231,9 @@ class MyCart extends Component {
             });
     }
 
-    async getStatus() {
-        /*this.setState({
-            cartupdate: await AsyncStorage.getItem("@user_addcart"),
-        })
-        console.log(this.state.cartupdate);
-        if (this.state.cartupdate == 'yes') {
-            AsyncStorage.setItem('@user_addcart', 'no');
-            this.setState({ cartupdate: 'no' })
-            console.log(this.state.cartupdate);
-            console.log('----Componenet Render----')
-            this.getCartData();
-        }*/
-        let cartupdate = this.props.navigation.getParam('cart','No Data');
-        console.log(cartupdate);
-        this.setState({
-            //update: await AsyncStorage.getItem("@user_addcart"),
-        })
-    }
-
     render() {
-        //{this.getStatus()}
-       // <NavigationEvents onDidFocus={()=>alert("Hello, I'm focused!")} />
         {console.log('My Cart Render');}
         
-
-
         const swipeoutBtns = [
             {
                 text: 'Delete',

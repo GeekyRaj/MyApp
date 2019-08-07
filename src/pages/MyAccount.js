@@ -8,8 +8,9 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native';
+import { withNavigation } from "react-navigation";
 
-export default class MyAccount extends Component {
+class MyAccount extends Component {
     static navigationOptions = {
         title: 'My Account',
         headerTintColor: '#fff',
@@ -38,10 +39,11 @@ export default class MyAccount extends Component {
         }));
     }
 
-    async componentDidMount() {
-        console.log('---- Component Did Mount ----')
-        this.getData();
-        //this.interval = setInterval(() => this.tick(), 10);
+    componentDidMount() {
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener("didFocus", () => {
+            this.getData();
+          }); 
     }
 
     componentWillUnmount() {
@@ -220,3 +222,5 @@ const styles = StyleSheet.create({
         borderColor: 'orange',
     }
 });
+
+export default withNavigation(MyAccount);

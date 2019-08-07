@@ -176,6 +176,7 @@ export default class Login extends Component {
                             style={styles.inputBox}
                             placeholder="Username"
                             placeholderTextColor='#ffffff'
+                            autoCapitalize='none'
                             onChangeText={(text) => this.updateValue(text, 'username')}
                         />
                     </View>
@@ -191,6 +192,7 @@ export default class Login extends Component {
                             underlineColorAndroid= 'transparent'
                             secureTextEntry={this.state.hidePassword}
                             placeholderTextColor='#ffffff'
+                            autoCapitalize='none'
                             onChangeText={(text) => this.updateValue(text, 'password')}
                         />
                         <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
