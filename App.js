@@ -201,7 +201,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   MyAccount: { screen: StackMyAccount },
   StoreLocator: { screen: StackStoreLocator},
   MyOrders: { screen: StackMyOrders },
-  LogOut: { screen: Login}   //Actual LogOut screen StackLogOut
+  LogOut: { screen: Login}  
 },
   DrawerConfig,
 );

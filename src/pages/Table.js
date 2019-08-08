@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -11,19 +10,27 @@ import {
 } from 'react-native';
 
 import StarRating from '../components/StarRating';
-import ProductDetail from './ProductDetail';
-import Icon from '@expo/vector-icons/Ionicons';
 import API from '../components/API';
+import Icon from '@expo/vector-icons/Ionicons';
 
 //type Props = {};
 
 export default class Table extends Component {
-  static navigationOptions = {
-    title: 'Tables',
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Tables',
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerLeft:
+        (<Icon
+          style={{ paddingLeft: 16, color: '#ffffff' }}
+          onPress={() => navigation.navigate('Dashboard')}
+          name="md-arrow-back"
+          size={30}
+        />),
+    };
   };
 
   constructor(props) {
@@ -32,17 +39,14 @@ export default class Table extends Component {
   }
 
   componentDidMount() {
-    const url ='products/getList?product_category_id=1';
-    return API(url,null,null)
+    const url = 'products/getList?product_category_id=1';
+    return API(url, null, null)
       .then((responseJson) => {
 
         this.setState({
           isLoading: false,
           dataSource: responseJson.data,
-        }, function () {
-
-        });
-
+        }, function () { });
       })
       .catch((error) => {
         console.error(error);
@@ -51,9 +55,9 @@ export default class Table extends Component {
   render() {
 
     let dimensions = Dimensions.get("window");
-    screenW = dimensions.width -10;
-    screenH = dimensions.height -10;
-    console.log(screenW+' '+screenH);
+    screenW = dimensions.width - 10;
+    screenH = dimensions.height - 10;
+    console.log(screenW + ' ' + screenH);
 
     if (this.state.isLoading) {
       return (
@@ -63,14 +67,11 @@ export default class Table extends Component {
       )
     }
 
-    const ratingObj = {
-      ratings: 3,
-      views: 34000
-    }
+
 
     return (
 
-      <View style={{ flex: 1, paddingTop: 20, height:screenH, width:screenW }}>
+      <View style={{ flex: 1, paddingTop: 20, height: screenH, width: screenW }}>
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) => {
@@ -78,7 +79,7 @@ export default class Table extends Component {
               ratings: item.rating,
               views: item.view_count
             }
-            return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductDetail', { pname: item.name, pid: item.id })}>
+            return <TouchableOpacity key={item.id} onPress={() => this.props.navigation.navigate('ProductDetail', { pname: item.name, pid: item.id })}>
               <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Image
                   style={{ height: 90, width: 90, margin: 10, }}
@@ -92,7 +93,9 @@ export default class Table extends Component {
                     <StarRating ratingObj={ratingObj} />
                   </View>
                 </View>
-              </View></TouchableOpacity>
+              </View>
+              <View style={{ width: 360, height: 1, backgroundColor: 'gray', marginLeft: 5, }}></View>
+            </TouchableOpacity>
           }
           }
           keyExtractor={

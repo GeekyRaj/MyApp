@@ -2,44 +2,18 @@ import React, { Component } from 'react';
 import {
 	StyleSheet,
 	View,
-    Text,
     Image,
 } from 'react-native';
 
-type Props = {
+/*type Props = {
     ratingobj : {
         ratings: Number;
         vews: Number;
     }
-};
+};*/
 
 export default class StarRating extends Component{
-	render() /*{
-
-        let ratingObj = this.props.ratingObj;
-		return (
-			<View style={ styles.container }>
-                <Image
-                    style={styles.star}
-                    source={require('../images/star_check.png')} />
-                <Image
-                    style={styles.star}
-                    source={require('../images/star_check.png')} />
-                <Image
-                    style={styles.star}
-                    source={require('../images/star_check.png')} />
-                <Image
-                    style={styles.star}
-                    source={require('../images/star_unchek.png')} />
-                <Image
-                    style={styles.star}
-                    source={require('../images/star_unchek.png')} />
-			</View>
-		);
-	}
-}*/
-
-    {
+	render() {
         // Recieve the ratings object from the props
         let ratingObj = this.props.ratingObj;
 
@@ -55,7 +29,7 @@ export default class StarRating extends Component{
                 path = require('../images/star_unchek.png');
             }
 
-            stars.push((<Image style={styles.image} source={path} />));
+            stars.push((<Image key={i} style={styles.image} source={path} />));
         }
 
         return (

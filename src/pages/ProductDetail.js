@@ -194,7 +194,7 @@ export default class Table extends Component {
     renderImages() {
         return this.state.productImages.map(item => {
             return (
-                <TouchableOpacity onPress={() => this.setState({ largeImage: item.image })}>
+                <TouchableOpacity onPress={() => this.setState({ largeImage: item.image })} key={item.image}>
                     <Image style={{ width: 70, height: 70, marginTop: 15, margin: 5, borderColor: 'gray', borderWidth: 1 }} source={{ uri: item.image }} />
                 </TouchableOpacity>
             );

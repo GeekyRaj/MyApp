@@ -92,7 +92,7 @@ export default class DashboardScreen extends Component {
           ]}
           renderItem={({ item }) => {
             // const p = item.pth;
-            return <TouchableOpacity key={item.key} onPress={() => this.props.navigation.navigate(item.pth)}>
+            return <TouchableOpacity  onPress={() => this.props.navigation.navigate(item.pth)}>
               <Image
                 style={{ height: typeheight, width: typewidth, margin: 10, }}
                 source={item.ur} />

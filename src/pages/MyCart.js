@@ -42,19 +42,19 @@ const styles = StyleSheet.create({
 class MyCart extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
-        title: 'My Cart',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-        headerLeft:
+            title: 'My Cart',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerLeft:
                 (<Icon
                     style={{ paddingLeft: 16, color: '#ffffff' }}
                     onPress={() => navigation.navigate('Dashboard')}
                     name="md-arrow-back"
                     size={30}
                 />),
-    };
+        };
     };
 
     constructor() {
@@ -83,30 +83,30 @@ class MyCart extends Component {
         this.focusListener = navigation.addListener("didFocus", () => {
             // The screen is focused
             this.getCartData();
-          });
-        console.log('----MyCart Did Mounnt----');  
+        });
+        console.log('----MyCart Did Mounnt----');
     }
 
     componentWillUnmount() {
         // Remove the event listener
         this.focusListener.remove();
-      }
+    }
 
     //CHECK IF ANY UPDATE IN CART
     async  componentDidUpdate() {
-            const cartupdate = await AsyncStorage.getItem("@user_addcart");
-            if (cartupdate == 'yes') {
-                this.getCartData();
-                console.log('----Componenet DidUpdate----');
-                AsyncStorage.setItem('@user_addcart', 'no');
-            }
+        const cartupdate = await AsyncStorage.getItem("@user_addcart");
+        if (cartupdate == 'yes') {
+            this.getCartData();
+            console.log('----Componenet DidUpdate----');
+            AsyncStorage.setItem('@user_addcart', 'no');
+        }
     }
 
-     getCartData=async()=> {
-         try{
+    getCartData = async () => {
+        try {
             const url = "cart";
             method = "GET";
-            return API(url,method,null)
+            return API(url, method, null)
                 .then(responseJson => {
                     console.log(responseJson);
                     this.setState({
@@ -114,7 +114,7 @@ class MyCart extends Component {
                         cartCount: responseJson.count,
                         cartTotal: responseJson.total
                     });
-                    
+
                     if (responseJson.message == 'Cart Empty') {
                         this.setState({ cartStatus: 'Cart Empty..!' })
                     }
@@ -124,10 +124,10 @@ class MyCart extends Component {
                 .catch(error => {
                     console.error(error);
                 });
-         }catch(error){
-             console.log(error)
-         }
-       
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     //SwipeOut for deleting cart 
@@ -154,12 +154,12 @@ class MyCart extends Component {
         const url = "deleteCart";
         const method = "POST";
         const body = `product_id=${product_id}`;
-        return API(url,method,body)
+        return API(url, method, body)
             .then(responseJson => {
                 //console.log(responseJson);
                 if (responseJson.status == 200) {
                     this.getCartData();
-                    this.setState({ update : 1 });
+                    this.setState({ update: 1 });
                     console.log(responseJson.status);
                 }
             })
@@ -177,13 +177,14 @@ class MyCart extends Component {
         const url = "editCart";
         const method = "POST";
         body = `product_id=${pid}&quantity=${qty}`;
-        return API(url,method,body)
+        return API(url, method, body)
             .then(responseJson => {
                 console.log(responseJson);
+                this.getCartData();
                 if (responseJson.status == 200) {
                     console.log(responseJson.status);
-                    this.getCartData();
-                    this.setState({ update : 1 });
+
+                    this.setState({ update: 1 });
                 }
             })
             .catch(error => {
@@ -192,14 +193,15 @@ class MyCart extends Component {
     }
 
     render() {
-        {console.log('My Cart Render');
-        if(this.state.update == 1){
-            console.log('UPDATE');
-            this.getCartData();
-            this.setState({ update: 0,})
+        {
+            console.log('My Cart Render'); console.disableYellowBox = true;
+            if (this.state.update == 1) {
+                console.log('UPDATE');
+                this.getCartData();
+                this.setState({ update: 0, })
+            }
         }
-    }
-        
+
         const swipeoutBtns = [
             {
                 text: 'Delete',

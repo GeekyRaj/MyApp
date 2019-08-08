@@ -9,16 +9,26 @@ import { StyleSheet,
  } from 'react-native';
 
  import StarRating from '../components/StarRating';
+ import Icon from '@expo/vector-icons/Ionicons';
 import API from '../components/API';
 
  export default class Cupboards extends Component {
-    static navigationOptions = {
-        title: 'Cupboards',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Cupboards',
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerLeft:
+        (<Icon
+          style={{ paddingLeft: 16, color: '#ffffff' }}
+          onPress={() => navigation.navigate('Dashboard')}
+          name="md-arrow-back"
+          size={30}
+        />),
+    };
+  };
 
       constructor(props){
         super(props);
@@ -76,7 +86,9 @@ import API from '../components/API';
                                     <StarRating ratingObj={ratingObj}/>
                                 </View>
                             </View>
-                        </View></TouchableOpacity>
+                        </View>
+                        <View style={{ width: 360, height: 1, backgroundColor: 'gray',marginLeft:5,  }}></View>
+                        </TouchableOpacity>
                 }
             }
             keyExtractor={

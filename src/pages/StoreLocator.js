@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
-  TextInput,
   View,
   Image,
   TouchableOpacity,
   FlatList,
+  Dimensions
 } from 'react-native';
-import Icon from '@expo/vector-icons/Ionicons';
 
 const data = [
   { name: 'SKYLAND STORE', add: '6355 Edgewood Road Reisterstown, MD 21136'},
@@ -21,12 +19,6 @@ const data = [
 export default class StoreLocator extends Component {
   static navigationOptions = {
     title: 'Store Locator',
-    /*headerLeft:(<Icon
-      style={{ paddingLeft:15,paddingRight: 16 , color: '#ffffff'}}
-      onPress={() => this.props.navigation.dispatch(DraerActions.openDrawer())}
-      name="md-menu"
-      size={30}
-    />),*/
     headerStyle: {
       backgroundColor: '#e91c1a',
     },
@@ -37,14 +29,19 @@ export default class StoreLocator extends Component {
     }
   };
   render() {
+    {console.disableYellowBox = true;}
+    let dimensions = Dimensions.get("window");
+    let Height = dimensions.width-10;
+    let Width = dimensions.width-10;
+
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',height:Height,width:Width }}>
         <Image  style={{height: 280,width: 410,}} source={require('../images/map.png')} />
         <FlatList
           data={data}
           renderItem={({ item }) =>
             
-            <TouchableOpacity>
+            <TouchableOpacity key={item.name}>
               <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
                 <Image  style={{height: 30,width: 30,color:'gray'}} source={require('../images/locator_icon.png')} />
                 <View style={{ flexGrow: 1, flexDirection: 'column', marginRight: 10, }}>
