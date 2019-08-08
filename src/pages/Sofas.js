@@ -11,6 +11,7 @@ import { StyleSheet,
  import StarRating from '../components/StarRating';
  import ProductDetail from './ProductDetail';
  import Icon from '@expo/vector-icons/Ionicons';
+import API from '../components/API';
 
  export default class Sofas extends Component {
     static navigationOptions = {
@@ -27,8 +28,8 @@ import { StyleSheet,
       }
     
       componentDidMount(){
-        return fetch('http://staging.php-dev.in:8844/trainingapp/api/products/getList?product_category_id=3')
-          .then((response) => response.json())
+        const url ='products/getList?product_category_id=3';
+        return API(url,null,null)
           .then((responseJson) => {
     
             this.setState({

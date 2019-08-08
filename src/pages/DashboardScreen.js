@@ -24,8 +24,9 @@ export default class DashboardScreen extends Component {
     this.state = {
       token: ' ',
       fname: ' ',
+      dataSource: [],
     }
-
+    this._retrieveData();
   }
 
     _retrieveData = async () => {
@@ -40,42 +41,6 @@ export default class DashboardScreen extends Component {
       }
       console.log('Stored value : ', this.state.item, ' Fname ', this.state.fname);
     }
-
-    async getData() {
-      const token = await AsyncStorage.getItem("@user_at");
-      const fetchConfig = {
-          method: "GET",
-          headers: {
-              access_token: token,
-              "Content-Type": "application/x-www-form-urlencoded"
-          }
-      };
-      return fetch(
-          `http://staging.php-dev.in:8844/trainingapp/api/users/getUserData`,
-          fetchConfig
-      )
-          .then(response => response.json())
-          .then(responseJson => {
-              this.setState({
-                  dataSource: responseJson.data.user_data
-              });
-              //console.log(responseJson);
-              console.log(this.state.dataSource.profile_pic);
-              try {
-                  AsyncStorage.setItem('@user_profile', this.state.dataSource.profile_pic);
-              } catch (error) {
-                  // Error saving data
-              }
-          })
-          .catch(error => {
-              console.error(error);
-          });
-  }
-
-  async componentDidMount() {
-    console.log('Home DidMount Method');
-    this.getData();
-}
 
   render() {
     YellowBox.ignoreWarnings(["Warning: componentWillUpdate is deprecated"]);
@@ -126,8 +91,8 @@ export default class DashboardScreen extends Component {
             { key: 4, ur: require("../images/Cupboards.png"), pth: 'Cupboards' },
           ]}
           renderItem={({ item }) => {
-            const p = item.pth;
-            return <TouchableOpacity key={item.key} onPress={() => this.props.navigation.navigate(p)}>
+            // const p = item.pth;
+            return <TouchableOpacity key={item.key} onPress={() => this.props.navigation.navigate(item.pth)}>
               <Image
                 style={{ height: typeheight, width: typewidth, margin: 10, }}
                 source={item.ur} />

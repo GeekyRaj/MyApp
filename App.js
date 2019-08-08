@@ -72,7 +72,7 @@ import {
   createSwitchNavigator,
   createAppContainer,
   createDrawerNavigator,
-  createBottomTabNavigator,
+  //createBottomTabNavigator,
   createStackNavigator
 } from 'react-navigation';
 

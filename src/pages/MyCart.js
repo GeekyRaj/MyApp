@@ -12,6 +12,7 @@ import NumericInput from 'react-native-numeric-input';
 import Swipeout from 'react-native-swipeout';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
+import API from '../components/API';
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -71,7 +72,7 @@ class MyCart extends Component {
             value: null,
             cartStatus: 'Cart Empty...!',
             cartupdate: '',
-            update: 'no',
+            update: 0,
         };
         console.log('\n **** In Mycart ****')
     }
@@ -81,10 +82,9 @@ class MyCart extends Component {
         const { navigation } = this.props;
         this.focusListener = navigation.addListener("didFocus", () => {
             // The screen is focused
-            // Call any action
             this.getCartData();
           });
-        console.log('----Component Did Mounnt----');  
+        console.log('----MyCart Did Mounnt----');  
     }
 
     componentWillUnmount() {
@@ -104,23 +104,11 @@ class MyCart extends Component {
 
      getCartData=async()=> {
          try{
-            const token = await AsyncStorage.getItem("@user_at");
-            this.setState({ access_token: token })
-            //console.log(this.state.access_token);
-            const fetchConfig = {
-                method: "GET",
-                headers: {
-                    access_token: token,
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
-            };
-            return fetch(
-                `http://staging.php-dev.in:8844/trainingapp/api/cart`,
-                fetchConfig
-            )
-                .then(response => response.json())
+            const url = "cart";
+            method = "GET";
+            return API(url,method,null)
                 .then(responseJson => {
-                    //console.log(responseJson);
+                    console.log(responseJson);
                     this.setState({
                         dataSource: responseJson.data,
                         cartCount: responseJson.count,
@@ -131,13 +119,7 @@ class MyCart extends Component {
                         this.setState({ cartStatus: 'Cart Empty..!' })
                     }
                     else { this.setState({ cartStatus: '' }) }
-    
-                    try {
-                        console.log('getCartData() : Cart Data retreived');
-                    } catch (error) {
-                        console.log(error);
-                        // Error saving data
-                    }
+                    console.log('getCartData() : Cart Data retreived');
                 })
                 .catch(error => {
                     console.error(error);
@@ -168,30 +150,17 @@ class MyCart extends Component {
 
     swipeHandleDelete(id) {
         const product_id = id;
-        const token = this.state.access_token;
         console.log('Pid delete :' + product_id);
-
-        const fetchConfig = {
-            method: "POST",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `product_id=${product_id}`
-        };
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/deleteCart`,
-            fetchConfig
-        )
-            .then(response => response.json())
+        const url = "deleteCart";
+        const method = "POST";
+        const body = `product_id=${product_id}`;
+        return API(url,method,body)
             .then(responseJson => {
-                this.setState({
-                    //dataSource: responseJson.data,
-                });
-                console.log(responseJson);
+                //console.log(responseJson);
                 if (responseJson.status == 200) {
-                    console.log(responseJson.status);
                     this.getCartData();
+                    this.setState({ update : 1 });
+                    console.log(responseJson.status);
                 }
             })
             .catch(error => {
@@ -201,29 +170,20 @@ class MyCart extends Component {
 
     //Update Quantity
     UpdateQty(value, id) {
-        const token = this.state.access_token;
+        //const token = this.state.access_token;
         const qty = value;
         const pid = id;
         console.log(pid + ' ' + qty);
-
-        const fetchConfig = {
-            method: "POST",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `product_id=${pid}&quantity=${qty}`
-        };
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/editCart`,
-            fetchConfig
-        )
-            .then(response => response.json())
+        const url = "editCart";
+        const method = "POST";
+        body = `product_id=${pid}&quantity=${qty}`;
+        return API(url,method,body)
             .then(responseJson => {
-                //console.log(responseJson);
+                console.log(responseJson);
                 if (responseJson.status == 200) {
                     console.log(responseJson.status);
                     this.getCartData();
+                    this.setState({ update : 1 });
                 }
             })
             .catch(error => {
@@ -232,7 +192,13 @@ class MyCart extends Component {
     }
 
     render() {
-        {console.log('My Cart Render');}
+        {console.log('My Cart Render');
+        if(this.state.update == 1){
+            console.log('UPDATE');
+            this.getCartData();
+            this.setState({ update: 0,})
+        }
+    }
         
         const swipeoutBtns = [
             {

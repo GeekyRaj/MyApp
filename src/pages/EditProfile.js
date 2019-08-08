@@ -11,6 +11,7 @@ import {
 import DatePicker from 'react-native-datepicker';
 import Icon from '@expo/vector-icons/Ionicons';
 import {ImagePicker, Permissions, Constants} from 'expo';
+import API from '../components/API';
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -148,7 +149,6 @@ export default class EditProfile extends Component {
     }
 
     async updateUser() {
-        const token = this.state.token;
         const first_name = this.state.fname;
         const last_name = this.state.lname;
         const email = this.state.email;
@@ -156,20 +156,10 @@ export default class EditProfile extends Component {
         const dob = this.state.date;
         const profpic = this.state.image;
         console.log(profpic);
-    
-        const fetchConfig = {
-          method: "POST",
-          headers: {
-            access_token: token,
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic=${profpic}&phone_no=${phone_no}`
-        };
-        return fetch(
-          `http://staging.php-dev.in:8844/trainingapp/api/users/update`,
-          fetchConfig
-        )
-          .then(response => response.json())
+        const method = "POST";
+        const url = "users/update";
+        const body = `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic=${profpic}&phone_no=${phone_no}`
+        return API(url,method,body)
           .then(responseJson => {
             this.setState({ dataSource: responseJson }, function() {})
             this.isSuccessfull();

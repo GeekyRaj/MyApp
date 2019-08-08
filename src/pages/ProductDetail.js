@@ -15,6 +15,7 @@ import {
 
 import StarRating from '../components/StarRating';
 import Icon from '@expo/vector-icons/Ionicons';
+import API from '../components/API';
 
 
 
@@ -173,8 +174,8 @@ export default class Table extends Component {
         const pid = navigation.getParam("pid", "1");
         this.setState({ pid: pid });
         console.log("Product ID : ", pid);
-        fetch(`http://staging.php-dev.in:8844/trainingapp/api/products/getDetail?product_id=${pid}`)
-            .then((response) => response.json())
+        const url =`products/getDetail?product_id=${pid}`;
+        return API(url,null,null)
             .then((responseJson) => {
                 //console.log(responseJson);
                 this.setState({

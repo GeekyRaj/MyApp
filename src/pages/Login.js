@@ -9,6 +9,7 @@ import {
     Image,
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
+import style from '../Styles';
 //import AsyncStorage from '@react-native-community/async-storage';
 
 import Logo from '../components/Logo';
@@ -173,7 +174,7 @@ export default class Login extends Component {
                             size={25}
                         />
                         <TextInput
-                            style={styles.inputBox}
+                            style={style.inputBox}
                             placeholder="Username"
                             placeholderTextColor='#ffffff'
                             autoCapitalize='none'
@@ -187,7 +188,7 @@ export default class Login extends Component {
                             size={25}
                         />
                         <TextInput
-                            style={styles.inputBox}
+                            style={style.inputBox}
                             placeholder="Password"
                             underlineColorAndroid= 'transparent'
                             secureTextEntry={this.state.hidePassword}
@@ -199,7 +200,7 @@ export default class Login extends Component {
                             <Image source={(this.state.hidePassword) ? require('../images/hide.png') : require('../images/view.png')} style={styles.btnImage} />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.button} onPress={() => this.submit()}>
+                    <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit()}>
                         <Text style={styles.Textbutton}>LOGIN</Text>
                     </TouchableOpacity>
 
@@ -240,26 +241,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.3)',
         borderRadius: 25,
     },
-    inputBox: {
-        flex: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        fontSize: 16,
-        color: '#ffffff',
-        marginVertical: 5,
-    },
     Textbutton: {
         fontSize: 18,
         fontWeight: '500',
         color: '#E91c1a',
         textAlign: 'center',
-    },
-    button: {
-        width: 300,
-        backgroundColor: '#ffffff',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 10,
     },
     signupTextCont: {
         flexGrow: 1,

@@ -13,6 +13,7 @@ import {
 import StarRating from '../components/StarRating';
 import ProductDetail from './ProductDetail';
 import Icon from '@expo/vector-icons/Ionicons';
+import API from '../components/API';
 
 //type Props = {};
 
@@ -31,8 +32,8 @@ export default class Table extends Component {
   }
 
   componentDidMount() {
-    return fetch('http://staging.php-dev.in:8844/trainingapp/api/products/getList?product_category_id=1')
-      .then((response) => response.json())
+    const url ='products/getList?product_category_id=1';
+    return API(url,null,null)
       .then((responseJson) => {
 
         this.setState({

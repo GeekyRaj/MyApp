@@ -3,19 +3,17 @@ import {
     StyleSheet,
     Text,
     View,
-    Platform,
     Dimensions,
     TouchableOpacity,
-    ScrollView,
     Image,
     AsyncStorage,
 } from 'react-native';
-import Icon from '@expo/vector-icons/Ionicons';
+import { withNavigation } from "react-navigation";
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export default class MenuDrawer extends Component {
+class MenuDrawer extends Component {
     navLink(nav, text) {
         return (
             <TouchableOpacity style={{ height: 50 }} onPress={() => this.props.navigation.navigate(nav)}>
@@ -31,6 +29,7 @@ export default class MenuDrawer extends Component {
             name: ' ',
             email: ' ',
             iscart: ' ',
+            count: '0',
         }
 
         this.getData();
@@ -64,6 +63,22 @@ export default class MenuDrawer extends Component {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    componentDidMount() {
+        const { navigation } = this.props;
+        this.focusListener = navigation.addListener("didFocus", () => {
+            // The screen is focused
+            // Call any action
+            this.getData();
+          });
+        console.log('---- MenuDrawer Component Did Mounnt----');  
+    }
+
+    componentWillUnmount() {
+        // Remove the event listener
+        this.focusListener.remove();
+      }
+
+
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: 'gray' }}>
@@ -85,9 +100,12 @@ export default class MenuDrawer extends Component {
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/shopping_cart.png')} />
                         {/*this.navLink('MyCart', 'My Cart')*/}
-                        <TouchableOpacity style={{ height: 50 }} onPress={() => this.props.navigation.navigate('MyCart',{cart:this.state.iscart})}>
+                        <TouchableOpacity style={{ height: 50, paddingRight:120, }} onPress={() => this.props.navigation.navigate('MyCart',{cart:this.state.iscart})}>
                             <Text style={styles.link}>My Cart</Text>
                         </TouchableOpacity>
+                        <View style={{height:30,width:30, borderRadius:20,backgroundColor:'red',alignContent:'center'}}>
+                            <Text style={{margin:8,color: 'white',fontWeight:'bold',}}>{this.state.count}</Text>
+                        </View>
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/tables_icon.png')} />
@@ -196,3 +214,5 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 })
+
+export default withNavigation(MenuDrawer);

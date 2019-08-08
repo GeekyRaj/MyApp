@@ -2,22 +2,17 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
-    Image,
     TextInput,
     View,
     TouchableOpacity,
-    FlatList,
     AsyncStorage
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-
-
+import API from '../components/API';
 
 export default class AddAddress extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
-            //title: navigation.getParam('pname', 'Product Detail'),
             title: "Add Address",
             headerTintColor: '#fff',
             headerLeft:
@@ -47,8 +42,12 @@ export default class AddAddress extends Component {
     async placeOrder() {
         const Address = '' + this.state.address + ', ' + this.state.landmark + ', ' + this.state.city + ': ' + this.state.zip + ', ' + this.state.statec + ', ' + this.state.country;
         console.log(Address);
-        const token = await AsyncStorage.getItem("@user_at");
-        const fetchConfig = {
+        const url = "order";
+        const method = "POST";
+        const body = `address=${Address}`;
+        return API(url,method,body)
+        //const token = await AsyncStorage.getItem("@user_at");
+        /*const fetchConfig = {
             method: "POST",
             headers: {
                 access_token: token,
@@ -60,7 +59,7 @@ export default class AddAddress extends Component {
             `http://staging.php-dev.in:8844/trainingapp/api/order`,
             fetchConfig
         )
-        .then(response => response.json())
+        .then(response => response.json())*/
         .then(responseJson => {
             this.setState({ dataSource : responseJson }, function() {}),
               this.Prompt();
@@ -103,7 +102,7 @@ export default class AddAddress extends Component {
                         onChangeText={landmark => this.setState({ landmark })}>
                     </TextInput>
                     <View style={{ flexDirection: 'row', }}>
-                        <View style={{ flexGrow: 1, height: 210, width: 170, }}>
+                        <View style={{ flexGrow: 1, height: 210, width: 160, }}>
                             <Text style={styles.labl}>CITY</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="City"
@@ -118,7 +117,7 @@ export default class AddAddress extends Component {
                             </TextInput>
                         </View>
 
-                        <View style={{ flexGrow: 1, height: 210, width: 170, marginLeft: 20, }}>
+                        <View style={{ flexGrow: 1, height: 210, width: 160, marginLeft: 20, }}>
                             <Text style={styles.labl}>STATE</Text>
                             <TextInput style={styles.inputBox}
                                 placeholder="State"

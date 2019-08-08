@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  TextInput,
   View,
   TouchableOpacity,
   FlatList,
-  AsyncStorage
 } from 'react-native';
 import { withNavigation } from "react-navigation";
+import API from '../components/API';
 
 
  class MyOrders extends Component {
@@ -37,41 +36,19 @@ import { withNavigation } from "react-navigation";
     const { navigation } = this.props;
         this.focusListener = navigation.addListener("didFocus", () => {
             // The screen is focused
-            // Call any action
             this.getOrderList();
           });
   }
 
-  /*async  componentDidUpdate() {
-    this.getOrderList();
-}*/
-
   async getOrderList() {
-    const token = await AsyncStorage.getItem("@user_at");
-    this.setState({ access_token: token })
-    console.log(this.state.access_token);
-    const fetchConfig = {
-      method: "GET",
-      headers: {
-        access_token: token,
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    };
-    return fetch(
-      `http://staging.php-dev.in:8844/trainingapp/api/orderList`,
-      fetchConfig
-    )
-      .then(response => response.json())
+    const url = "orderList";
+    method = "GET";
+    return API(url,method,null)
       .then(responseJson => {
         this.setState({
           dataSource: responseJson.data,
         });
-        //console.log(responseJson);
-        try {
-          console.log('OrderList retreived');
-        } catch (error) {
-          console.log(error);
-        }
+        console.log('OrderList retreived');
       })
       .catch(error => {
         console.error(error);
@@ -81,7 +58,7 @@ import { withNavigation } from "react-navigation";
   render() {
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin:10, }}>
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) =>

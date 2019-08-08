@@ -9,6 +9,7 @@ import {
     AsyncStorage,
 } from 'react-native';
 import { withNavigation } from "react-navigation";
+import API from '../components/API';
 
 class MyAccount extends Component {
     static navigationOptions = {
@@ -47,31 +48,23 @@ class MyAccount extends Component {
     }
 
     componentWillUnmount() {
-        //clearInterval(this.interval);
+        this.focusListener.remove();
     }
 
     async getData() {
-        const token = await AsyncStorage.getItem("@user_at");
-        const fetchConfig = {
-            method: "GET",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        };
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/users/getUserData`,
-            fetchConfig
-        )
-            .then(response => response.json())
+        const method = "GET";
+        const url ="users/getUserData";
+        return API(url, method, null)
             .then(responseJson => {
                 this.setState({
                     dataSource: responseJson.data.user_data
                 });
-                //console.log(responseJson);
                 try {
                     AsyncStorage.setItem('@user_phoneno', this.state.dataSource.phone_no);
                     AsyncStorage.setItem('@user_dob', this.state.dataSource.dob);
+                    AsyncStorage.setItem('@user_fname', this.state.dataSource.first_name);
+                    AsyncStorage.setItem('@user_lname', this.state.dataSource.last_name);
+                    console.log(this.state.dataSource.first_name+' '+this.state.dataSource.last_name);
                 } catch (error) {
                     // Error saving data
                 }
