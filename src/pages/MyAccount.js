@@ -140,7 +140,7 @@ class MyAccount extends Component {
                 </TouchableOpacity>
 
 
-                <View style={{ marginTop: 20, flexGrow: 1, width: '100%', justifyContent: 'center', height: 40, backgroundColor: '#ffffff', }}>
+                <View style={{ marginTop: 20, width: '100%', justifyContent: 'center',  backgroundColor: '#ffffff', height:60,bottom:0,position:"absolute" }}>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Resetpw')} >
                         <View style={{ justifyContent: 'center', alignItems: 'center', }}>
                             <Text style={{

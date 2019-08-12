@@ -363,7 +363,7 @@ export default class Table extends Component {
                         visible={this.state.ratingModalVisible}
                         onRequestClose={this.handleCloseModal}>
 
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1}}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
                                 <TouchableOpacity onPress={() => this.setRatingModalVisible(!this.state.ratingModalVisible)} style={{ flex: 1 }} />
                             </View>

@@ -13,6 +13,7 @@
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-datepicker": "^1.7.2",
+    "react-native-fs": "^2.14.1",
     "react-native-material-dropdown": "^0.11.1",
     "react-native-modal": "^11.2.0",
     "react-native-numeric-input": "^1.8.3",

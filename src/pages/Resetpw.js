@@ -7,9 +7,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import Logo from '../components/Logo';
 import Icon from '@expo/vector-icons/Ionicons';
 
 
@@ -129,6 +127,7 @@ export default class Resetpw extends Component {
     Prompt() {
         if (this.state.dataSource.status == 200) {
             alert("" + this.state.dataSource.user_msg);
+            this.props.navigation.navigate('LogOut')
         } else if (this.state.dataSource.status == 401) {
             alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 400) {

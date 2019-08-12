@@ -8,25 +8,26 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native';
+//import RNFS from 'react-native-fs';
 import DatePicker from 'react-native-datepicker';
 import Icon from '@expo/vector-icons/Ionicons';
-import {ImagePicker, Permissions, Constants} from 'expo';
+import { ImagePicker, Permissions, Constants } from 'expo';
 import API from '../components/API';
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
-        return{
-        title: 'Edit Profile',
-        headerTintColor: '#fff',
-        headerLeft:
+        return {
+            title: 'Edit Profile',
+            headerTintColor: '#fff',
+            headerLeft:
                 (<Icon
                     style={{ paddingLeft: 16, color: '#ffffff' }}
                     onPress={() => navigation.pop()}
                     name="md-arrow-back"
                     size={30}
                 />),
-        headerRight: null
-                };
+            headerRight: null
+        };
     };
 
     constructor() {
@@ -66,7 +67,7 @@ export default class EditProfile extends Component {
         } catch (e) {
             console.log(e);
         }
-        console.log('Value Retrieved for user :'+this.state.fname+' '+this.state.token);
+        console.log('Value Retrieved for user :' + this.state.fname + ' ' + this.state.token);
     }
 
     updateValue(text, field) {
@@ -135,14 +136,12 @@ export default class EditProfile extends Component {
             this.setState({ TextInputEnable: true })
         }
         if (this.state.TextInputEnable == true) {
-            if(this.state.error == 0)
-            {
+            if (this.state.error == 0) {
                 this.setState({ TextInputEnable: false })
                 //& update the data in api
                 this.updateUser();
             }
-            else
-            {
+            else {
                 alert(this.state.errmsg);
             }
         }
@@ -156,72 +155,81 @@ export default class EditProfile extends Component {
         const dob = this.state.date;
         const profpic = this.state.image;
         console.log(profpic);
+
+        /*RNFS.readFile(profpic, 'base64')
+            .then(res => {
+                console.log('BASE 64 : '+res);
+            });*/
+
         const method = "POST";
         const url = "users/update";
         const body = `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic=${profpic}&phone_no=${phone_no}`
-        return API(url,method,body)
-          .then(responseJson => {
-            this.setState({ dataSource: responseJson }, function() {})
-            this.isSuccessfull();
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
+        return API(url, method, body)
+            .then(responseJson => {
+                this.setState({ dataSource: responseJson }, function () { })
+                this.isSuccessfull();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 
-      isSuccessfull() {
+    isSuccessfull() {
         const { navigate } = this.props.navigation;
         if (this.state.dataSource.status == 200) {
-          
-          setTimeout(function() {
-            navigate("MyAccount");
-          }, 2000);
-          alert("" + this.state.dataSource.user_msg);
+
+            setTimeout(function () {
+                navigate("MyAccount");
+            }, 2000);
+            alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 401) {
-          alert("" + this.state.dataSource.user_msg);
+            alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 400) {
-          alert("" + this.state.dataSource.user_msg);
+            alert("" + this.state.dataSource.user_msg);
         } else {
-          alert("Something Went Wrong");
+            alert("Something Went Wrong");
         }
-      }
+    }
 
-      UpdateProfilePath()
-      {
-          alert('Image clicked');
-      }
+    UpdateProfilePath() {
+        alert('Image clicked');
+    }
 
-      componentDidMount() {
+    componentDidMount() {
         this.getPermissionAsync();
-      }
-    
-      getPermissionAsync = async () => {
+    }
+
+    getPermissionAsync = async () => {
         if (Constants.platform.ios) {
-          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-          }
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            }
         }
-      }
-    
-      _pickImage = async () => {
+    }
+
+    _pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
         });
-    
+
         console.log(result);
-    
+
         if (!result.cancelled) {
-          this.setState({ image: result.uri });
+            this.setState({ image: result.uri });
         }
-        console.log('Image path : '+this.state.image);
-      };
+        console.log('Image path : ' + this.state.image);
+    };
 
     render() {
 
-        let { image } = this.state;
+        let { image  } = this.state;
+        let imageUri = image  ? `data:image/jpg;base64,${image.base64}` : null;
+        imageUri && console.log({ uri: imageUri.slice(0, 100) });
+        console.log('BASE 64 : '+imageUri);
+        //let { image } = this.state;
 
         return (
             <View style={styles.container}>
@@ -232,7 +240,7 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
-                    <Image style={styles.imgIcon} source={require('../images/username_icon.png')} />
+                    <Image style={styles.imgIcon} source={this.state.image} />
                     <TextInput
                         style={styles.inputBox}
                         placeholder="First Name"
@@ -278,9 +286,9 @@ export default class EditProfile extends Component {
                     />
                 </View>
                 <View style={styles.SectionStyle}>
-                    
+
                     <DatePicker
-                        style={{ width: 270,borderColor:null,borderRadius:15 }}
+                        style={{ width: 270, borderColor: null, borderRadius: 15 }}
                         date={this.state.date} //initial date from state
                         mode="date" //The enum of date, datetime and time
                         placeholder="D.O.B"
@@ -306,20 +314,6 @@ export default class EditProfile extends Component {
                 <TouchableOpacity style={styles.button} onPress={this.onPressButton} >
                     <Text style={styles.Textbutton}>Edit Profile</Text>
                 </TouchableOpacity>
-
-
-                <View style={{ marginTop: 20, flexGrow: 1, width: '100%', justifyContent: 'center', height: 40, backgroundColor: '#ffffff', }}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Resetpw')} >
-                        <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                            <Text style={{
-                                fontSize: 18,
-                                fontWeight: '500',
-                                color: '#9c908f',
-                                //textAlign: 'center',
-                            }}>RESET PASSWORD</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
 
             </View>
         )

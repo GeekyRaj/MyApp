@@ -65,7 +65,6 @@ class MyCart extends Component {
             cartCount: "",
             cartTotal: "00000",
             tempProductId: "",
-            editCartQuantity: "",
             activeRowKey: null,
             pid: null,
             rowIndex: null,

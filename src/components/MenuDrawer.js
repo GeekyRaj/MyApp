@@ -30,6 +30,7 @@ class MenuDrawer extends Component {
             email: ' ',
             iscart: ' ',
             count: '0',
+            image: null,
         }
 
         this.getData();
@@ -86,7 +87,7 @@ class MenuDrawer extends Component {
                     <View style={styles.profile}>
                         <View style={styles.imgView}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('MyAccount')}>
-                                <Image style={styles.img} source={require('../images/profile.jpg')} />
+                                <Image style={styles.img} source={this.state.image != null? this.state.image : require('../images/profile.jpg')} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.profileText}>
