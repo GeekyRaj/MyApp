@@ -1,6 +1,7 @@
 import React, { Component, } from 'react';
 import {
   View,
+  Text,
   ScrollView,
   Image,
   Dimensions,
@@ -9,7 +10,7 @@ import {
   YellowBox,
   AsyncStorage
 } from 'react-native';
-
+import { background } from '../components/slider';
 export default class DashboardScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'NeoSTORE',
@@ -42,6 +43,17 @@ export default class DashboardScreen extends Component {
       console.log('Stored value : ', this.state.item, ' Fname ', this.state.fname);
     }
 
+    renderDots(){
+      return(
+        <View style={{ flex:0, flexDirection:'row', alignItems:'center',  }}>
+          <View style={{ flex:0, backgroundColor: 'gray', borderRadius: 8, width:8, height:8,marginRight:6,}}></View>
+          <View style={{ flex:0, backgroundColor: '#e8e3e3', borderRadius: 8, width:8, height:8,marginRight:6,}}></View>
+          <View style={{ flex:0, backgroundColor: '#e8e3e3', borderRadius: 8, width:8, height:8,marginRight:6,}}></View>
+          <View style={{ flex:0, backgroundColor: '#e8e3e3', borderRadius: 8, width:8, height:8,marginRight:6,}}></View>
+        </View>
+      )
+    }
+
   render() {
     YellowBox.ignoreWarnings(["Warning: componentWillUpdate is deprecated"]);
     let dimensions = Dimensions.get("window");
@@ -49,7 +61,7 @@ export default class DashboardScreen extends Component {
     let imageWidth = dimensions.width;
     let typewidth= dimensions.width/2.3;
     let typeheight = dimensions.height/4.3;
-    console.log(dimensions.height+' '+typeheight);
+    //console.log(dimensions.height+' '+typeheight);
   
 
 
@@ -57,31 +69,32 @@ export default class DashboardScreen extends Component {
 
     return (
 
-      <View style={{ flex: 0, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 0, alignItems: 'center', justifyContent: 'center',}}>
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={true}
+          pagingEnabled= {true}
+          scrollEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          decelerationRate={0}
+          scrollEventThrottle={16}
+          snapToAlignment="center"
           style={{
-            height: 240,
+            height: 230,
           }}
         >
-          <Image
-            style={{ height: imageHeight, width: imageWidth }}
-            source={require("../images/slider_img1.jpg")}
-          />
-          <Image
-            style={{ height: imageHeight, width: imageWidth }}
-            source={require("../images/slider_img2.jpg")}
-          />
-          <Image
-            style={{ height: imageHeight, width: imageWidth }}
-            source={require("../images/slider_img3.jpg")}
-          />
-          <Image
-            style={{ height: imageHeight, width: imageWidth }}
-            source={require("../images/slider_img4.jpg")}
-          />
-        </ScrollView>
+          {background.map((item,index) => (
+            <View key ={`img-${index}`}>
+              <Image
+              style={{ height: imageHeight, width: imageWidth }}
+              source={item.slider}
+            />
+            </View>
+          ))}
+              
+          </ScrollView>
+          {this.renderDots()}
+        
         <FlatList
           numColumns={2}
           data={[

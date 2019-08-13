@@ -155,11 +155,16 @@ class MyCart extends Component {
         const body = `product_id=${product_id}`;
         return API(url, method, body)
             .then(responseJson => {
-                //console.log(responseJson);
+                console.log(responseJson);
                 if (responseJson.status == 200) {
                     this.getCartData();
                     this.setState({ update: 1 });
                     console.log(responseJson.status);
+                    try {
+                        AsyncStorage.setItem('@user_cartcount', ''+responseJson.total_carts);
+                    } catch (error) {
+                        console.log(error);
+                    }
                 }
             })
             .catch(error => {

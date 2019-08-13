@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Image,
+    KeyboardAvoidingView
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import style from '../Styles';
@@ -165,7 +166,9 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
+                
                 <Logo />
+                <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.LoginForm}>
                     <View style={[styles.SectionStyle, !this.state.userVal ? styles.error : null]}>
                         <Icon
@@ -179,6 +182,7 @@ export default class Login extends Component {
                             placeholderTextColor='#ffffff'
                             autoCapitalize='none'
                             onChangeText={(text) => this.updateValue(text, 'username')}
+                            keyboardType="email-address"
                         />
                     </View>
                     <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
@@ -197,7 +201,7 @@ export default class Login extends Component {
                             onChangeText={(text) => this.updateValue(text, 'password')}
                         />
                         <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                            <Image source={(this.state.hidePassword) ? require('../images/hide.png') : require('../images/view.png')} style={styles.btnImage} />
+                            <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={25}/>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit()}>
@@ -208,12 +212,14 @@ export default class Login extends Component {
                         <Text style={{ fontSize: 16, color: '#ffffff' }}> Forgot Password?</Text>
                     </TouchableOpacity>
                 </View>
+                </KeyboardAvoidingView>
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>DONT HAVE AN ACCOUNT?</Text>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
                         <Text style={styles.signupButton}> SignUp</Text>
                     </TouchableOpacity>
                 </View>
+                
             </View>
         )
     }
@@ -276,10 +282,4 @@ const styles = StyleSheet.create({
     padding: 5
   },
  
-  btnImage:
-  {
-    resizeMode: 'contain',
-    height: '100%',
-    width: '100%'
-  }
 });

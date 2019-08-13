@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, View, StatusBar, TouchableOpacity, CheckBox, } from 'react-native';
+import { StyleSheet, Text, TextInput, View,KeyboardAvoidingView, TouchableOpacity, CheckBox, } from 'react-native';
 import Logo from '../components/Logo';
-import FormS from '../components/formSignup';
 import RadioGender from '../components/RadioGender';
 import Icon from '@expo/vector-icons/Ionicons';
 
@@ -52,6 +51,7 @@ export default class Login extends Component {
             pnoVal: true,
         }
     }
+
     updateValue(text, field) {
         alph = /^[a-zA-Z]+$/;
         mailreg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -152,8 +152,7 @@ export default class Login extends Component {
             collection.pno = this.state.pno,
             console.log(collection);
 
-        if (this.state.error == 0) 
-        {
+        if (this.state.error == 0) {
             fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
                 method: 'POST',
                 headers: {
@@ -175,8 +174,7 @@ export default class Login extends Component {
                     }
                 })
         }
-        else
-        {
+        else {
             alert(this.state.errmsg);
         }
     }
@@ -188,127 +186,130 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.containerMain}>
-                <Logo />
-                <View style={styles.container}>
-                    <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-person"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="First Name"
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'fname')}
-                        />
-                    </View>
-                    <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-person"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="Last Name"
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'lname')}
-                        />
-                    </View>
-                    <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-mail"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="Email"
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'email')}
-                            keyboardType="email-address"
-                        />
-                    </View>
-                    <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-lock"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="Password"
-                            secureTextEntry={true}
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'pass')}
-                        />
-                    </View>
-                    <View style={[styles.SectionStyle, !this.state.cpassVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-lock"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="Confirm Password"
-                            secureTextEntry={true}
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'cpass')}
-                        />
-                    </View>
+                <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+                    <Logo />
+                    <View style={styles.container}>
+                    
+                        <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-person"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="First Name"
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'fname')}
+                            />
+                        </View>
+                        <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-person"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="Last Name"
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'lname')}
+                            />
+                        </View>
+                        <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-mail"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="Email"
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'email')}
+                                keyboardType="email-address"
+                            />
+                        </View>
+                        <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-lock"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="Password"
+                                secureTextEntry={true}
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'pass')}
+                            />
+                        </View>
+                        <View style={[styles.SectionStyle, !this.state.cpassVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-lock"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="Confirm Password"
+                                secureTextEntry={true}
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'cpass')}
+                            />
+                        </View>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{
-                            fontSize: 16,
-                            color: '#ffffff',
-                            textAlign: 'left',
-                            paddingRight: 10,
-                        }}>Gender
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{
+                                fontSize: 16,
+                                color: '#ffffff',
+                                textAlign: 'left',
+                                paddingRight: 10,
+                            }}>Gender
                         </Text>
 
-                        <RadioGender options={options} />
-                    </View>
+                            <RadioGender options={options} />
+                        </View>
 
-                    <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-phone-portrait"
-                            size={25}
-                        />
-                        <TextInput
-                            style={styles.inputBox}
-                            placeholder="Phone Number"
-                            secureTextEntry={true}
-                            placeholderTextColor='#ffffff'
-                            onChangeText={(text) => this.updateValue(text, 'pno')}
-                            keyboardType="number-pad"
-                        />
-                    </View>
-                    <View style={{
-                        paddingVertical: 12,
-                        flexDirection: 'row'
-                    }}>
-                        <CheckBox checked={true} />
-                        <Text style={{
-                            fontSize: 16,
-                            color: '#ffffff',
-                            textAlign: 'left'
-                        }}>I agree the Terms and conditions.
+                        <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-phone-portrait"
+                                size={25}
+                            />
+                            <TextInput
+                                style={styles.inputBox}
+                                placeholder="Phone Number"
+                                secureTextEntry={true}
+                                placeholderTextColor='#ffffff'
+                                onChangeText={(text) => this.updateValue(text, 'pno')}
+                                keyboardType="number-pad"
+                            />
+                        </View>
+                        <View style={{
+                            paddingVertical: 12,
+                            flexDirection: 'row'
+                        }}>
+                            <CheckBox checked={true} />
+                            <Text style={{
+                                fontSize: 16,
+                                color: '#ffffff',
+                                textAlign: 'left'
+                            }}>I agree the Terms and conditions.
                     </Text>
-                    </View>
-                    <TouchableOpacity style={styles.button} onPress={() => this.Register()}>
-                        <Text style={styles.Textbutton}>REGISTER</Text>
-                    </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.button} onPress={() => this.Register()}>
+                            <Text style={styles.Textbutton}>REGISTER</Text>
+                        </TouchableOpacity>
 
-                </View>
+                    </View>
+            
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>ALREADY HAVE AN ACCOUNT?</Text>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Welcome')}>
                         <Text style={styles.signupButton}> SIGN IN</Text>
                     </TouchableOpacity>
-                </View>
+                </View></KeyboardAvoidingView>
             </View>
         )
     }

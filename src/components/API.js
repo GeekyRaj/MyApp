@@ -14,7 +14,7 @@ export default async function API(url, method, body) {
     },
     body: Fetch_body
   };
-  console.log(fetchURL, fetchConfig);
+  //console.log(fetchURL, fetchConfig);
   const res = await fetch(
     `http://staging.php-dev.in:8844/trainingapp/api/${fetchURL}`,
     fetchConfig

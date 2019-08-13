@@ -81,31 +81,22 @@ export default class Table extends Component {
     }
 
     async addToCart() {
-        const token = await AsyncStorage.getItem("@user_at");
         const quantity = this.state.qty;
         const product_id = this.state.pid;
-        const fetchConfig = {
-            method: "POST",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `product_id=${product_id}&quantity=${quantity}`
-        };
-        //console.log(fetchConfig);
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/addToCart`,
-            fetchConfig
-        )
-            .then(response => response.json())
+        url= "addToCart";
+        method= "POST";
+        body= `product_id=${product_id}&quantity=${quantity}`;
+        return API(url,method,body)
             .then(responseJson => {
                 //console.log(responseJson);
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
                     this.props.navigation.navigate('Dashboard')
+                    console.log('COUNT : '+responseJson.total_carts);
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');
+                        AsyncStorage.setItem('@user_cartcount', ''+responseJson.total_carts);
                     } catch (error) {
                         console.log(error);
                     }
@@ -131,20 +122,11 @@ export default class Table extends Component {
         const user_rating = this.state.Default_Rating;
         const product_id = this.state.pid;
         console.log('Rating : ' + user_rating + '  Product Id:  ' + product_id);
-        const fetchConfig = {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `product_id=${product_id}&rating=${user_rating}`
-        };
-        //console.log(fetchConfig);
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/products/setRating`,
-            fetchConfig
-        )
-            .then(response => response.json())
+
+        url= "products/setRating";
+        method ="POST";
+        body= `product_id=${product_id}&rating=${user_rating}`;
+        return API(url,method,body)
             .then(responseJson => {
                 this.setState({
                     rating: responseJson.data,
