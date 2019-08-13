@@ -57,9 +57,9 @@ export default class Table extends Component {
             quantityModalVisible: false,
             ratingModalVisible: false,
 
-            qty: null,
+            qty: 0,
 
-            Default_Rating: 2,
+            Default_Rating: 1,
             //To set the default Star Selected
             Max_Rating: 5,
             //To set the max number of Stars
@@ -77,7 +77,20 @@ export default class Table extends Component {
     setQuantityModalVisible(visible) {
         this.setState({ quantityModalVisible: visible });
         console.log(this.state.qty);
-        this.addToCart();
+        if(visible == false){
+            if(this.state.qty != 0){
+                if(this.state.qty >= 9){
+                    alert('Maximum 8 orders can be placed by a user!');
+                    this.setState({ qty: 0})
+                }
+                else{
+                    this.addToCart();
+                }
+            }
+            else {
+                alert('Enter number of quantity.')
+            }
+        }
     }
 
     async addToCart() {
@@ -114,7 +127,14 @@ export default class Table extends Component {
     setRatingModalVisible(visible) {
         this.setState({ ratingModalVisible: visible });
         console.log('Rating : ', this.state.Default_Rating);
-        this.setRating();
+        if(visible == false){
+            if(this.state.Default_Rating != 1){
+                this.setRating();
+            }
+            else {
+                alert('Please provide rating.!')
+            }
+        }
     }
 
     setRating() {
@@ -135,6 +155,7 @@ export default class Table extends Component {
                 });
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
+                    alert('Thanks for Rating..!');
                 }
                 //console.log(responseJson);
             })
@@ -300,7 +321,8 @@ export default class Table extends Component {
                         animationType="slide"
                         transparent={true}
                         visible={this.state.quantityModalVisible}
-                        onRequestClose={this.handleCloseModal}>
+                        onRequestClose = {() =>{ this.setState({ quantityModalVisible: false}) }}
+                        >
 
                         <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
@@ -343,7 +365,7 @@ export default class Table extends Component {
                         animationType="slide"
                         transparent={true}
                         visible={this.state.ratingModalVisible}
-                        onRequestClose={this.handleCloseModal}>
+                        onRequestClose = {() =>{ this.setState({ ratingModalVisible: false}) }}>
 
                         <View style={{ flex: 1}}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>

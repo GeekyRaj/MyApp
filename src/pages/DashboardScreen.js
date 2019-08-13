@@ -79,7 +79,6 @@ export default class DashboardScreen extends Component {
     let typeheight = dimensions.height / 4.3;
     //console.log(dimensions.height+' '+typeheight);
     const selectedIndex = this.state.selectedIndex;
-    console.log('INDEX :'+selectedIndex);
 
 
 
@@ -116,7 +115,7 @@ export default class DashboardScreen extends Component {
             {/* RENDER DOTS */}
         <View style={styles.circleDiv}>
           {background.map((item, i) => (
-            <View key={`item+${i}`} style={[styles.whiteCircle, { opacity: i == selectedIndex ? 0.5 : 1 }]}></View>
+            <View key={`item+${i}`} style={[styles.whiteCircle, { opacity: i == selectedIndex ? 1 : 0.5 }]}></View>
           ))}
         </View>
 

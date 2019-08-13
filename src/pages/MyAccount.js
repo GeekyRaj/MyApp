@@ -8,6 +8,7 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native';
+import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
 import API from '../components/API';
 
@@ -82,7 +83,7 @@ class MyAccount extends Component {
                     <Image style={styles.img} source={require('../images/profile.jpg')} />
                 </View>
                 <View style={styles.SectionStyle}>
-                    <Image style={styles.imgIcon} source={require('../images/username_icon.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="First Name"
@@ -92,7 +93,7 @@ class MyAccount extends Component {
                     />
                 </View>
                 <View style={styles.SectionStyle}>
-                    <Image style={styles.imgIcon} source={require('../images/username_icon.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Last Name"
@@ -102,7 +103,7 @@ class MyAccount extends Component {
                     />
                 </View>
                 <View style={styles.SectionStyle}>
-                    <Image style={styles.imgIcon} source={require('../images/email_icon.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Email"
@@ -113,7 +114,7 @@ class MyAccount extends Component {
                     />
                 </View>
                 <View style={styles.SectionStyle}>
-                    <Image style={styles.imgIcon} source={require('../images/cellphone.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Phone Number"
@@ -124,7 +125,7 @@ class MyAccount extends Component {
                     />
                 </View>
                 <View style={styles.SectionStyle}>
-                    <Image style={styles.imgIcon} source={require('../images/cake.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-time" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="D.O.B"
@@ -175,6 +176,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#ffffff',
         marginVertical: 5,
+        opacity: 0.5,
     },
     img: {
         paddingTop: 15,

@@ -34,7 +34,6 @@ export default class EditProfile extends Component {
         super();
         this.state = {
             dataSource: [],
-            TextInputEnable: false,
             token: '',
             fname: '',
             lname: '',
@@ -132,10 +131,6 @@ export default class EditProfile extends Component {
     }
 
     onPressButton = () => {
-        if (this.state.TextInputEnable == false) {
-            this.setState({ TextInputEnable: true })
-        }
-        if (this.state.TextInputEnable == true) {
             if (this.state.error == 0) {
                 this.setState({ TextInputEnable: false })
                 //& update the data in api
@@ -144,7 +139,6 @@ export default class EditProfile extends Component {
             else {
                 alert(this.state.errmsg);
             }
-        }
     }
 
     async updateUser() {
@@ -240,46 +234,42 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
-                    <Image style={styles.imgIcon} source={this.state.image} />
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="First Name"
                         placeholderTextColor='#ffffff'
-                        editable={this.state.TextInputEnable}
                         defaultValue={this.state.fname}
                         onChangeText={(text) => this.updateValue(text, 'fname')}
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
-                    <Image style={styles.imgIcon} source={require('../images/username_icon.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Last Name"
                         placeholderTextColor='#ffffff'
-                        editable={this.state.TextInputEnable}
                         defaultValue={this.state.lname}
                         onChangeText={(text) => this.updateValue(text, 'lname')}
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
-                    <Image style={styles.imgIcon} source={require('../images/email_icon.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Email"
                         placeholderTextColor='#ffffff'
-                        editable={this.state.TextInputEnable}
                         defaultValue={this.state.email}
                         onChangeText={(text) => this.updateValue(text, 'email')}
                         keyboardType="email-address"
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
-                    <Image style={styles.imgIcon} source={require('../images/cellphone.png')} />
+                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25}/>
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Phone Number"
                         placeholderTextColor='#ffffff'
-                        editable={this.state.TextInputEnable}
                         defaultValue={this.state.pno}
                         onChangeText={(text) => this.updateValue(text, 'pno')}
                         keyboardType="number-pad"
