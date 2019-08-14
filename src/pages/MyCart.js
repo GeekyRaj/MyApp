@@ -69,7 +69,7 @@ class MyCart extends Component {
             pid: null,
             rowIndex: null,
             value: null,
-            cartStatus: 'Cart Empty...!',
+            cartStatus: 1,
             cartupdate: '',
             update: 0,
         };
@@ -115,9 +115,9 @@ class MyCart extends Component {
                     });
 
                     if (responseJson.message == 'Cart Empty') {
-                        this.setState({ cartStatus: 'Cart Empty..!' })
+                        this.setState({ cartStatus: 0 })
                     }
-                    else { this.setState({ cartStatus: '' }) }
+                    else { this.setState({ cartStatus: 1 }) }
                     console.log('getCartData() : Cart Data retreived');
                 })
                 .catch(error => {
@@ -215,9 +215,7 @@ class MyCart extends Component {
             }
         ];
 
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                <Text style={{ fontSize: 20, color: 'red' }}>{this.state.cartStatus}</Text>
+        const Data = <View>
                 <FlatList
                     data={this.state.dataSource}
                     extraData={this.state.rowIndex}
@@ -282,6 +280,26 @@ class MyCart extends Component {
 
                     </View>
                 </View>
+        </View>
+        const Empty = <View style={{alignContent:'center'}}>
+            <Icon
+                style={{ paddingLeft: 16, color: 'black' }}
+                name="md-cart"
+                size={150}
+                />
+                <Text style={{ marginLeft:5, fontSize: 25,}}>Cart Empty!</Text>
+        </View>
+
+        let show = '';
+        if(this.state.cartStatus == 1 ){
+             show = Data
+        }
+        else{
+             show = Empty
+        }
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                {show}
             </View>
         );
     }
