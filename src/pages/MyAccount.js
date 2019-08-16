@@ -66,6 +66,7 @@ class MyAccount extends Component {
                     AsyncStorage.setItem('@user_fname', this.state.dataSource.first_name);
                     AsyncStorage.setItem('@user_lname', this.state.dataSource.last_name);
                     console.log(this.state.dataSource.first_name+' '+this.state.dataSource.last_name);
+                    console.log('Image : '+this.state.dataSource.profile_pic);
                 } catch (error) {
                     // Error saving data
                 }

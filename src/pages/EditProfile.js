@@ -147,13 +147,17 @@ export default class EditProfile extends Component {
         const email = this.state.email;
         const phone_no = this.state.pno;
         const dob = this.state.date;
-        const profpic = this.state.image;
-        console.log(profpic);
+        const profpic = this.state.imgpath;
+        //console.log(profpic);
 
-        /*RNFS.readFile(profpic, 'base64')
-            .then(res => {
-                console.log('BASE 64 : '+res);
-            });*/
+        let  image = this.state.image;
+        let imageUri = image  ? `data:image/jpg;base64,${image.base64}` : null;
+        imageUri && console.log({ uri: imageUri.slice(0, 100) });
+        //console.log('before slice : '+imageUri);
+        //console.log({ uri: imageUri.slice(0, 100) });
+        console.log('BASE 64 : '+imageUri);
+
+        //const profpic = imageUri;
 
         const method = "POST";
         const url = "users/update";
@@ -203,27 +207,23 @@ export default class EditProfile extends Component {
     }
 
     _pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
+        let image = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
+            base64: true,
             aspect: [4, 3],
         });
-
-        console.log(result);
-
-        if (!result.cancelled) {
-            this.setState({ image: result.uri });
+        console.log('in picker '+image);
+        if (!image.cancelled) {
+            this.setState({ image,});
         }
         console.log('Image path : ' + this.state.image);
     };
 
     render() {
 
-        let { image  } = this.state;
-        let imageUri = image  ? `data:image/jpg;base64,${image.base64}` : null;
-        imageUri && console.log({ uri: imageUri.slice(0, 100) });
-        console.log('BASE 64 : '+imageUri);
-        //let { image } = this.state;
+        
+        
 
         return (
             <View style={styles.container}>

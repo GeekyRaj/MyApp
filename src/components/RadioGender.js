@@ -23,6 +23,7 @@ export default class RadioButtons extends Component {
 										value: item.key,
 									});
 									console.log(value);
+									this.props.callbackFromParent(value);
 								}}
 							>
 								{value === item.key && <View style={styles.checkedCircle} />}

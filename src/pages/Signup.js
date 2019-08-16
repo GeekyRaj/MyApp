@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, View,KeyboardAvoidingView, TouchableOpacity, CheckBox, } from 'react-native';
+import { StyleSheet, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity, CheckBox, } from 'react-native';
 import Logo from '../components/Logo';
 import RadioGender from '../components/RadioGender';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -50,6 +50,11 @@ export default class Login extends Component {
             cpassVal: true,
             pnoVal: true,
         }
+    }
+
+    myCallback = (gd) => {
+        this.setState({ gender: gd });
+        //console.log('Callback : '+this.state.gender);
     }
 
     updateValue(text, field) {
@@ -184,12 +189,13 @@ export default class Login extends Component {
     }
 
     render() {
+        console.log('My Cart Render'); console.disableYellowBox = true;
         return (
             <View style={styles.containerMain}>
                 <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                     <Logo />
                     <View style={styles.container}>
-                    
+
                         <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
                             <Icon
                                 style={{ paddingLeft: 16, color: '#ffffff' }}
@@ -268,7 +274,9 @@ export default class Login extends Component {
                             }}>Gender
                         </Text>
 
-                            <RadioGender options={options} />
+                            <RadioGender
+                                options={options}
+                                callbackFromParent={this.myCallback} />
                         </View>
 
                         <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
@@ -303,13 +311,13 @@ export default class Login extends Component {
                         </TouchableOpacity>
 
                     </View>
-            
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>ALREADY HAVE AN ACCOUNT?</Text>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Welcome')}>
-                        <Text style={styles.signupButton}> SIGN IN</Text>
-                    </TouchableOpacity>
-                </View></KeyboardAvoidingView>
+
+                    <View style={styles.signupTextCont}>
+                        <Text style={styles.signupText}>ALREADY HAVE AN ACCOUNT?</Text>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Welcome')}>
+                            <Text style={styles.signupButton}> SIGN IN</Text>
+                        </TouchableOpacity>
+                    </View></KeyboardAvoidingView>
             </View>
         )
     }
