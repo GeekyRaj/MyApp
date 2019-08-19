@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 
 export default class RadioButtons extends Component {
 	state = {
-		value: 'M',
+		value: null,
 	};
 
 	render() {

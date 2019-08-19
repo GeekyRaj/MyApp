@@ -13,6 +13,7 @@ import DatePicker from 'react-native-datepicker';
 import Icon from '@expo/vector-icons/Ionicons';
 import { ImagePicker, Permissions, Constants } from 'expo';
 import API from '../components/API';
+import CartContext from '../context/CartContext';
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -130,18 +131,18 @@ export default class EditProfile extends Component {
         }
     }
 
-    onPressButton = () => {
-            if (this.state.error == 0) {
-                this.setState({ TextInputEnable: false })
-                //& update the data in api
-                this.updateUser();
-            }
-            else {
-                alert(this.state.errmsg);
-            }
+    onPressButton = (ContextVal) => {
+        if (this.state.error == 0) {
+            this.setState({ TextInputEnable: false })
+            //& update the data in api
+            this.updateUser(ContextVal);
+        }
+        else {
+            alert(this.state.errmsg);
+        }
     }
 
-    async updateUser() {
+    async updateUser(ContextVal) {
         const first_name = this.state.fname;
         const last_name = this.state.lname;
         const email = this.state.email;
@@ -150,12 +151,12 @@ export default class EditProfile extends Component {
         const profpic = this.state.imgpath;
         //console.log(profpic);
 
-        let  image = this.state.image;
-        let imageUri = image  ? `data:image/jpg;base64,${image.base64}` : null;
+        let image = this.state.image;
+        let imageUri = image ? `data:image/jpg;base64,${image.base64}` : null;
         imageUri && console.log({ uri: imageUri.slice(0, 100) });
         //console.log('before slice : '+imageUri);
         //console.log({ uri: imageUri.slice(0, 100) });
-        console.log('BASE 64 : '+imageUri);
+        console.log('BASE 64 : ' + imageUri);
 
         //const profpic = imageUri;
 
@@ -166,6 +167,7 @@ export default class EditProfile extends Component {
             .then(responseJson => {
                 this.setState({ dataSource: responseJson }, function () { })
                 this.isSuccessfull();
+                ContextVal.getUpdate();
             })
             .catch(error => {
                 console.error(error);
@@ -213,17 +215,17 @@ export default class EditProfile extends Component {
             base64: true,
             aspect: [4, 3],
         });
-        console.log('in picker '+image);
+        console.log('in picker ' + image);
         if (!image.cancelled) {
-            this.setState({ image,});
+            this.setState({ image, });
         }
         console.log('Image path : ' + this.state.image);
     };
 
     render() {
 
-        
-        
+
+
 
         return (
             <View style={styles.container}>
@@ -234,7 +236,7 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
                     <TextInput
                         style={styles.inputBox}
                         placeholder="First Name"
@@ -244,7 +246,7 @@ export default class EditProfile extends Component {
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
+                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Last Name"
@@ -254,7 +256,7 @@ export default class EditProfile extends Component {
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25}/>
+                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25} />
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Email"
@@ -265,7 +267,7 @@ export default class EditProfile extends Component {
                     />
                 </View>
                 <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25}/>
+                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25} />
                     <TextInput
                         style={styles.inputBox}
                         placeholder="Phone Number"
@@ -301,9 +303,17 @@ export default class EditProfile extends Component {
                         onDateChange={(date) => { this.setState({ date: date }) }}
                     />
                 </View>
-                <TouchableOpacity style={styles.button} onPress={this.onPressButton} >
-                    <Text style={styles.Textbutton}>Edit Profile</Text>
-                </TouchableOpacity>
+                <CartContext.Consumer>
+                    {ContextVal => (
+                        <TouchableOpacity style={styles.button} 
+                            onPress={()=>{
+                                this.onPressButton(ContextVal); 
+                            
+                                }}  >
+                            <Text style={styles.Textbutton}>Edit Profile</Text>
+                        </TouchableOpacity>
+                    )}
+                </CartContext.Consumer>
 
             </View>
         )

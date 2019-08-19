@@ -13,6 +13,7 @@ import Swipeout from 'react-native-swipeout';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
 import API from '../components/API';
+import CartContext from '../context/CartContext';
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -104,7 +105,7 @@ class MyCart extends Component {
     getCartData = async () => {
         try {
             const url = "cart";
-            method = "GET";
+            const method = "GET";
             return API(url, method, null)
                 .then(responseJson => {
                     console.log(responseJson);
@@ -214,6 +215,8 @@ class MyCart extends Component {
                 color: 'white',
             }
         ];
+        
+    
 
         const Data = <View>
                 <FlatList
@@ -221,49 +224,55 @@ class MyCart extends Component {
                     extraData={this.state.rowIndex}
                     renderItem={({ item, index }) => {
 
-                        return (<Swipeout
-                            right={swipeoutBtns} backgroundColor={'white'}
-                            onOpen={() => (this.onSwipeOpen(index, item.product.id))}
-                            close={this.state.rowIndex !== index}
-                            onClose={() => (this.onSwipeClose(index, item.product.id))}
-                            rowIndex={index}
-                            sectionId={0}
-                            autoClose={true}
-                        >
-                            <View>
-                                <View style={{ flex: 0, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
-                                    <Image
-                                        style={{ height: 90, width: 90, margin: 8, }}
-                                        source={{ uri: item.product.product_images }} />
-                                    <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
-                                        <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>
-                                            <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                        return (
+                        <CartContext.Consumer>
+                            {ContextVal => (
+                                <Swipeout
+                                right={swipeoutBtns} backgroundColor={'white'}
+                                onOpen={() => (this.onSwipeOpen(index, item.product.id))}
+                                close={this.state.rowIndex !== index}
+                                onClose={() => (this.onSwipeClose(index, item.product.id))}
+                                rowIndex={index}
+                                sectionId={0}
+                                autoClose={true}
+                            >
+                                <View>
+                                    <View style={{ flex: 0, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
+                                        <Image
+                                            style={{ height: 90, width: 90, margin: 8, }}
+                                            source={{ uri: item.product.product_images }} />
+                                        <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
+                                            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>
+                                                <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                                            </View>
+                                            <NumericInput
+                                                //value={item.quantity}
+                                                initValue={item.quantity}
+                                                //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                                                totalWidth={70}
+                                                totalHeight={30}
+                                                iconSize={25}
+                                                minValue={1}
+                                                maxValue={8}
+                                                step={1}
+                                                valueType='integer'
+                                                rounded
+                                                textColor='black'
+                                                iconStyle={{ color: 'black' }}
+                                                rightButtonBackgroundColor='red'
+                                                leftButtonBackgroundColor='white'
+                                                onChange={value => this.UpdateQty(value, item.product.id)} />
                                         </View>
-                                        <NumericInput
-                                            //value={item.quantity}
-                                            initValue={item.quantity}
-                                            //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                                            totalWidth={70}
-                                            totalHeight={30}
-                                            iconSize={25}
-                                            minValue={1}
-                                            maxValue={8}
-                                            step={1}
-                                            valueType='integer'
-                                            rounded
-                                            textColor='black'
-                                            iconStyle={{ color: 'black' }}
-                                            rightButtonBackgroundColor='red'
-                                            leftButtonBackgroundColor='white'
-                                            onChange={value => this.UpdateQty(value, item.product.id)} />
                                     </View>
-                                </View>
-                                <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
-
-                                </View>
-                            </View></Swipeout>);
+                                    <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
+    
+                                    </View>
+                                </View></Swipeout>
+                            )}
+                        </CartContext.Consumer>
+                        );
 
                     }
 

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, KeyboardAvoidingView, TouchableOpaci
 import Logo from '../components/Logo';
 import RadioGender from '../components/RadioGender';
 import Icon from '@expo/vector-icons/Ionicons';
+import API from '../components/API';
 
 
 const options = [
@@ -38,7 +39,7 @@ export default class Login extends Component {
             email: ' ',
             pass: ' ',
             cpass: ' ',
-            gender: 'M',
+            gender: null,
             pno: ' ',
             errmsg: ' ',
             error: 0,
@@ -158,14 +159,18 @@ export default class Login extends Component {
             console.log(collection);
 
         if (this.state.error == 0) {
-            fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body:
-                    `first_name=${collection.fname}&last_name=${collection.lname}&email=${collection.email}&password=${collection.pass}&confirm_password=${collection.cpass}&gender=${collection.gender}&phone_no=${collection.pno}`
-            }).then((response) => response.json())
+            const url ="users/register";
+            const method ="POST";
+            const body = `first_name=${collection.fname}&last_name=${collection.lname}&email=${collection.email}&password=${collection.pass}&confirm_password=${collection.cpass}&gender=${collection.gender}&phone_no=${collection.pno}`;
+            API(url,method,body)
+            // fetch('http://staging.php-dev.in:8844/trainingapp/api/users/register', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/x-www-form-urlencoded',
+            //     },
+            //     body:
+            //         `first_name=${collection.fname}&last_name=${collection.lname}&email=${collection.email}&password=${collection.pass}&confirm_password=${collection.cpass}&gender=${collection.gender}&phone_no=${collection.pno}`
+            // }).then((response) => response.json())
                 .then((responseJson) => {
                     console.log(responseJson)
                     const msg = responseJson.user_msg

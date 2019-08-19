@@ -22,6 +22,7 @@ import AddAddress from './src/pages/AddAddress';
 import EditProfile from './src/pages/EditProfile';
 
 import MenuDrawer from './src/components/MenuDrawer';
+import CartProvider from './src/context/CartProvider';
 
 
 const WIDTH = Dimensions.get('window').width;
@@ -78,7 +79,11 @@ import {
 
 class App extends Component {
   render() {
-    return <AppContainer />;
+    return(
+      <CartProvider>
+          <AppContainer />
+      </CartProvider>
+    );
   }
 }
 export default App;
@@ -96,21 +101,7 @@ class LogOut extends Component {
   }
 }
 
-/*const DashboardTabNavigator = createBottomTabNavigator(
-  {
-    Feed,
-    Profile,
-    Settings
-  },
-  {
-    navigationOptions: ({ navigation }) => {
-      const { routeName } = navigation.state.routes[navigation.state.index];
-      return {
-        headerTitle: routeName
-      };
-    }
-  }
-);*/
+
 
 /*-------------------------STACK NAVIGATOR FOR ALL DRAWER OPTIONS----------------------*/
 const StackMyCart = createStackNavigator(
@@ -217,12 +208,3 @@ const AppSwitchNavigator = createSwitchNavigator({
 
 
 const AppContainer = createAppContainer(AppSwitchNavigator);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: "#e91c1a"
-  }
-});

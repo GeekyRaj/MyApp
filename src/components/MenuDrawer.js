@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
+import API from './API';
+import CartCount from './CartCount';
+import CartContext from '../context/CartContext';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -17,7 +20,7 @@ const HEIGHT = Dimensions.get('window').height;
 class MenuDrawer extends Component {
     navLink(nav, text) {
         return (
-            <TouchableOpacity style={{ height: 50, width:300, }} onPress={() => this.props.navigation.navigate(nav)}>
+            <TouchableOpacity style={{ height: 50, width: 300, }} onPress={() => this.props.navigation.navigate(nav)}>
                 <Text style={styles.link}>{text}</Text>
             </TouchableOpacity>
         )
@@ -55,8 +58,8 @@ class MenuDrawer extends Component {
             const cart = await AsyncStorage.getItem("@user_addcart");
             const fname = this.Capitalize(await AsyncStorage.getItem("@user_fname"));
             const lname = this.Capitalize(await AsyncStorage.getItem("@user_lname"));
-            const count = await AsyncStorage.getItem("@user_cartcount");
-            this.setState({ email: email, name: fname + " " + lname, iscart: cart,count:count });
+            //const count = await AsyncStorage.getItem("@user_cartcount");
+            this.setState({ email: email, name: fname + " " + lname, iscart: cart, });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -70,14 +73,14 @@ class MenuDrawer extends Component {
         const { navigation } = this.props;
         this.focusListener = navigation.addListener("didFocus", () => {
             this.getData();
-          });
-        console.log('---- MenuDrawer Component Did Mounnt----');  
+        });
+        console.log('---- MenuDrawer Component Did Mounnt----');
     }
 
     componentWillUnmount() {
         // Remove the event listener
         this.focusListener.remove();
-      }
+    }
 
 
     render() {
@@ -87,26 +90,32 @@ class MenuDrawer extends Component {
                     <View style={styles.profile}>
                         <View style={styles.imgView}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('MyAccount')}>
-                                <Image style={styles.img} source={this.state.image != null? this.state.image : require('../images/profile.jpg')} />
+                                <Image style={styles.img} source={this.state.image != null ? this.state.image : require('../images/profile.jpg')} />
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.profileText}>
-                            <Text style={styles.name}>{this.state.name}</Text>
-                            <Text style={{ fontSize: 15, paddingBottom: 5, color: 'white', textAlign: 'left', }}>{this.state.email}</Text>
-                        </View>
+
+                        <CartContext.Consumer>
+                            {userVal => {
+                                return (
+                                    <View style={styles.profileText}>
+                                        <Text style={styles.name}>{userVal.state.name}</Text>
+                                        <Text style={{ fontSize: 15, paddingBottom: 5, color: 'white', textAlign: 'left', }}>{userVal.state.email}</Text>
+                                    </View>);
+                            }}
+                        </CartContext.Consumer>
+
+
                     </View>
                 </View>
                 {/*<ScrollView style={styles.scroller}>*/}
                 <View style={styles.bottomLinks}>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-cart" size={25}/>
+                        <Icon style={{ color: '#ffffff' }} name="md-cart" size={25} />
                         {/*this.navLink('MyCart', 'My Cart')*/}
-                        <TouchableOpacity style={{ height: 50, paddingRight:120, }} onPress={() => this.props.navigation.navigate('MyCart',{cart:this.state.iscart})}>
+                        <TouchableOpacity style={{ height: 50, paddingRight: 120, }} onPress={() => this.props.navigation.navigate('MyCart', { cart: this.state.iscart })}>
                             <Text style={styles.link}>My Cart</Text>
                         </TouchableOpacity>
-                        <View style={{height:35,width:35, borderRadius:20,backgroundColor:'red',alignItems:'center',justifyContent:'center', position:'absolute',right:15,bottom:15,zIndex:2000,}}>
-                            <Text style={{margin:8,color: 'white',fontWeight:'bold', fontSize: 20,}}>{this.state.count}</Text>
-                        </View>
+                        <CartCount />
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/tables_icon.png')} />
@@ -125,20 +134,20 @@ class MenuDrawer extends Component {
                         {this.navLink('Cupboards', 'Cupboards')}
                     </View>
                     <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
+                        <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
                         {this.navLink('MyAccount', 'My Account')}
                     </View>
                     <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-globe" size={25}/>
+                        <Icon style={{ color: '#ffffff' }} name="md-globe" size={25} />
                         {this.navLink('StoreLocator', 'Store Locator')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-basket" size={25}/> 
+                        <Icon style={{ color: '#ffffff' }} name="md-basket" size={25} />
                         {this.navLink('MyOrders', 'My Orders')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-exit" size={25}/>
-                        <TouchableOpacity style={{ height: 50,width:300, }} onPress={() => this.userLogout()}>
+                        <Icon style={{ color: '#ffffff' }} name="md-exit" size={25} />
+                        <TouchableOpacity style={{ height: 50, width: 300, }} onPress={() => this.userLogout()}>
                             <Text style={styles.link}>Logout</Text>
                         </TouchableOpacity>
                     </View>

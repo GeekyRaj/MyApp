@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#ffffff',
         marginVertical: 5,
-        opacity: 0.5,
+        opacity: 0.8,
     },
     img: {
         paddingTop: 15,

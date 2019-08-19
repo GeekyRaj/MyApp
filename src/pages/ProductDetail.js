@@ -16,8 +16,7 @@ import {
 import StarRating from '../components/StarRating';
 import Icon from '@expo/vector-icons/Ionicons';
 import API from '../components/API';
-
-
+import CartContext from '../context/CartContext';
 
 export default class Table extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -77,13 +76,13 @@ export default class Table extends Component {
     setQuantityModalVisible(visible) {
         this.setState({ quantityModalVisible: visible });
         console.log(this.state.qty);
-        if(visible == false){
-            if(this.state.qty != 0){
-                if(this.state.qty >= 9){
+        if (visible == false) {
+            if (this.state.qty != 0) {
+                if (this.state.qty >= 9) {
                     alert('Maximum 8 orders can be placed by a user!');
-                    this.setState({ qty: 0})
+                    this.setState({ qty: 0 })
                 }
-                else{
+                else {
                     this.addToCart();
                 }
             }
@@ -96,20 +95,20 @@ export default class Table extends Component {
     async addToCart() {
         const quantity = this.state.qty;
         const product_id = this.state.pid;
-        url= "addToCart";
-        method= "POST";
-        body= `product_id=${product_id}&quantity=${quantity}`;
-        return API(url,method,body)
+        url = "addToCart";
+        method = "POST";
+        body = `product_id=${product_id}&quantity=${quantity}`;
+        return API(url, method, body)
             .then(responseJson => {
                 //console.log(responseJson);
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
                     this.props.navigation.navigate('Dashboard')
-                    console.log('COUNT : '+responseJson.total_carts);
+                    console.log('COUNT : ' + responseJson.total_carts);
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');
-                        AsyncStorage.setItem('@user_cartcount', ''+responseJson.total_carts);
+                        AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
                     } catch (error) {
                         console.log(error);
                     }
@@ -127,8 +126,8 @@ export default class Table extends Component {
     setRatingModalVisible(visible) {
         this.setState({ ratingModalVisible: visible });
         console.log('Rating : ', this.state.Default_Rating);
-        if(visible == false){
-            if(this.state.Default_Rating != 1){
+        if (visible == false) {
+            if (this.state.Default_Rating != 1) {
                 this.setRating();
             }
             else {
@@ -143,10 +142,10 @@ export default class Table extends Component {
         const product_id = this.state.pid;
         console.log('Rating : ' + user_rating + '  Product Id:  ' + product_id);
 
-        url= "products/setRating";
-        method ="POST";
-        body= `product_id=${product_id}&rating=${user_rating}`;
-        return API(url,method,body)
+        url = "products/setRating";
+        method = "POST";
+        body = `product_id=${product_id}&rating=${user_rating}`;
+        return API(url, method, body)
             .then(responseJson => {
                 this.setState({
                     rating: responseJson.data,
@@ -177,8 +176,8 @@ export default class Table extends Component {
         const pid = navigation.getParam("pid", "1");
         this.setState({ pid: pid });
         console.log("Product ID : ", pid);
-        const url =`products/getDetail?product_id=${pid}`;
-        return API(url,null,null)
+        const url = `products/getDetail?product_id=${pid}`;
+        return API(url, null, null)
             .then((responseJson) => {
                 //console.log(responseJson);
                 this.setState({
@@ -321,8 +320,8 @@ export default class Table extends Component {
                         animationType="slide"
                         transparent={true}
                         visible={this.state.quantityModalVisible}
-                        onRequestClose = {() =>{ this.setState({ quantityModalVisible: false}) }}
-                        >
+                        onRequestClose={() => { this.setState({ quantityModalVisible: false }) }}
+                    >
 
                         <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
@@ -344,17 +343,23 @@ export default class Table extends Component {
                                 />
 
                                 <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            backgroundColor: 'red', borderRadius: 8,
-                                            padding: 10,
-                                            width: 176, height: 42,
-                                            justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}
-                                        onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible); }}>
-                                        <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
-                                    </TouchableOpacity>
+                                    <CartContext.Consumer>
+                                        {ContextVal => (
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: 'red', borderRadius: 8,
+                                                    padding: 10,
+                                                    width: 176, height: 42,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                                onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible);
+                                                ContextVal.onPlus(); }}>
+                                                <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </CartContext.Consumer>
+
                                 </View>
                             </View>
                         </View>
@@ -365,9 +370,9 @@ export default class Table extends Component {
                         animationType="slide"
                         transparent={true}
                         visible={this.state.ratingModalVisible}
-                        onRequestClose = {() =>{ this.setState({ ratingModalVisible: false}) }}>
+                        onRequestClose={() => { this.setState({ ratingModalVisible: false }) }}>
 
-                        <View style={{ flex: 1}}>
+                        <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
                                 <TouchableOpacity onPress={() => this.setRatingModalVisible(!this.state.ratingModalVisible)} style={{ flex: 1 }} />
                             </View>
@@ -391,7 +396,7 @@ export default class Table extends Component {
                                         style={{
                                             backgroundColor: 'red', borderRadius: 8,
                                             padding: 10,
-                                            width: screenW/2, height: 42,
+                                            width: screenW / 2, height: 42,
                                             justifyContent: 'center',
                                             alignItems: 'center'
                                         }}
