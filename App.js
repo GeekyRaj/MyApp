@@ -76,6 +76,7 @@ import {
   //createBottomTabNavigator,
   createStackNavigator
 } from 'react-navigation';
+import SplashScreen from './src/components/SplashScreen';
 
 class App extends Component {
   render() {
@@ -206,5 +207,12 @@ const AppSwitchNavigator = createSwitchNavigator({
   Forgetpw: { screen: Forgetpw }
 });
 
+const InitialNavigator = createSwitchNavigator({
+  Splash: SplashScreen,
+  App: AppSwitchNavigator 
+});
 
-const AppContainer = createAppContainer(AppSwitchNavigator);
+//export default createAppContainer(InitialNavigator);
+
+//const AppContainer = createAppContainer(AppSwitchNavigator);
+const AppContainer = createAppContainer(InitialNavigator);

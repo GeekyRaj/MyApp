@@ -16,6 +16,7 @@ import style from '../Styles';
 import Logo from '../components/Logo';
 import CartContext from '../context/CartContext';
 import API from '../components/API';
+import { SafeAreaView } from 'react-navigation';
 
 export default class Login extends Component {
     static navigationOptions = {
@@ -194,6 +195,7 @@ export default class Login extends Component {
 
     render() {
         return (
+            <SafeAreaView style={styles.container}>
             <View style={styles.container}>
 
                 <Logo />
@@ -213,6 +215,7 @@ export default class Login extends Component {
                                 onChangeText={(text) => this.updateValue(text, 'username')}
                                 keyboardType="email-address"
                                 returnKeyType='next'
+                                onSubmitEditing={()=> this.refs.pass.focus()}
                             />
                         </View>
                         <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
@@ -230,6 +233,7 @@ export default class Login extends Component {
                                 autoCapitalize='none'
                                 returnKeyType='go'
                                 onChangeText={(text) => this.updateValue(text, 'password')}
+                                ref="pass"
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
                                 <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={25} />
@@ -258,6 +262,7 @@ export default class Login extends Component {
                 </View>
 
             </View>
+        </SafeAreaView>
         )
     }
 }
