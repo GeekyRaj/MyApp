@@ -14,6 +14,8 @@ import style from '../Styles';
 //import AsyncStorage from '@react-native-community/async-storage';
 
 import Logo from '../components/Logo';
+import CartContext from '../context/CartContext';
+import API from '../components/API';
 
 export default class Login extends Component {
     static navigationOptions = {
@@ -90,7 +92,22 @@ export default class Login extends Component {
         }
     }
 
-    submit() {
+    getCount(ContextVal) {
+        const method = 'GET';
+        const url = 'users/getUserData';
+        return API(url, method, null)
+            .then(responseJson => {
+                if (responseJson.status == 200) {
+                    console.log('COUNT : ' + responseJson.data.total_carts)
+                    ContextVal.state.count = status;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    submit(ContextVal) {
         let collection = {}
         collection.username = this.state.username,
             collection.password = this.state.password
@@ -114,7 +131,7 @@ export default class Login extends Component {
                     this.setState({
                         token: this.state.dataLogin.access_token
                     })
-                    console.log(this.state.token);
+                    //console.log(this.state.token);
 
                     const msg = responseJson.user_msg
                     const status = responseJson.status
@@ -125,12 +142,25 @@ export default class Login extends Component {
                         "" + this.state.dataLogin.last_name,
                         "" + this.state.dataLogin.email,
                         "" + this.state.dataLogin.phone_no,
-                        "" + this.state.dataLogin.access_token
+                        "" + this.state.dataLogin.access_token,
                     )
 
 
                     if (status == 200) {
-                        this.props.navigation.navigate('Dashboard')
+                        this.props.navigation.navigate('Dashboard');
+                        //Set initial cart count from API
+                        const method = 'GET';
+                        const url = 'users/getUserData';
+                        return API(url, method, null)
+                            .then(responseJson => {
+                                if (responseJson.status == 200) {
+                                    console.log('COUNT : ' + responseJson.data.total_carts)
+                                    ContextVal.state.count = responseJson.data.total_carts;
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                     else {
                         alert(msg);
@@ -155,7 +185,6 @@ export default class Login extends Component {
         } catch (e) {
             console.log("Error Saving data" + error);
         }
-
         console.log("User Login Data Saved.");
     }
 
@@ -166,52 +195,60 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                
+
                 <Logo />
                 <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-                <View style={styles.LoginForm}>
-                    <View style={[styles.SectionStyle, !this.state.userVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-person"
-                            size={25}
-                        />
-                        <TextInput
-                            style={style.inputBox}
-                            placeholder="Username"
-                            placeholderTextColor='#ffffff'
-                            autoCapitalize='none'
-                            onChangeText={(text) => this.updateValue(text, 'username')}
-                            keyboardType="email-address"
-                        />
-                    </View>
-                    <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
-                        <Icon
-                            style={{ paddingLeft: 16, color: '#ffffff' }}
-                            name="md-lock"
-                            size={25}
-                        />
-                        <TextInput
-                            style={style.inputBox}
-                            placeholder="Password"
-                            underlineColorAndroid= 'transparent'
-                            secureTextEntry={this.state.hidePassword}
-                            placeholderTextColor='#ffffff'
-                            autoCapitalize='none'
-                            onChangeText={(text) => this.updateValue(text, 'password')}
-                        />
-                        <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                            <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={25}/>
+                    <View style={styles.LoginForm}>
+                        <View style={[styles.SectionStyle, !this.state.userVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-person"
+                                size={25}
+                            />
+                            <TextInput
+                                style={style.inputBox}
+                                placeholder="Username"
+                                placeholderTextColor='#ffffff'
+                                autoCapitalize='none'
+                                onChangeText={(text) => this.updateValue(text, 'username')}
+                                keyboardType="email-address"
+                                returnKeyType='next'
+                            />
+                        </View>
+                        <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
+                            <Icon
+                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                name="md-lock"
+                                size={25}
+                            />
+                            <TextInput
+                                style={style.inputBox}
+                                placeholder="Password"
+                                underlineColorAndroid='transparent'
+                                secureTextEntry={this.state.hidePassword}
+                                placeholderTextColor='#ffffff'
+                                autoCapitalize='none'
+                                returnKeyType='go'
+                                onChangeText={(text) => this.updateValue(text, 'password')}
+                            />
+                            <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                                <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={25} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <CartContext.Consumer>
+                            {ContextVal => (
+                                <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit(ContextVal)}>
+                                    <Text style={styles.Textbutton}>LOGIN</Text>
+                                </TouchableOpacity>
+                            )}
+                        </CartContext.Consumer>
+
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Forgetpw')}>
+                            <Text style={{ fontSize: 16, color: '#ffffff' }}> Forgot Password?</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit()}>
-                        <Text style={styles.Textbutton}>LOGIN</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Forgetpw')}>
-                        <Text style={{ fontSize: 16, color: '#ffffff' }}> Forgot Password?</Text>
-                    </TouchableOpacity>
-                </View>
                 </KeyboardAvoidingView>
                 <View style={styles.signupTextCont}>
                     <Text style={styles.signupText}>DONT HAVE AN ACCOUNT?</Text>
@@ -219,7 +256,7 @@ export default class Login extends Component {
                         <Text style={styles.signupButton}> SignUp</Text>
                     </TouchableOpacity>
                 </View>
-                
+
             </View>
         )
     }
@@ -274,12 +311,12 @@ const styles = StyleSheet.create({
         borderColor: 'orange',
     },
     visibilityBtn:
-  {
-    position: 'absolute',
-    right: 3,
-    height: 40,
-    width: 35,
-    padding: 5
-  },
- 
+    {
+        position: 'absolute',
+        right: 3,
+        height: 40,
+        width: 35,
+        padding: 5
+    },
+
 });

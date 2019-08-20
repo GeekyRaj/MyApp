@@ -146,10 +146,10 @@ class MyCart extends Component {
         const body = `product_id=${product_id}`;
         return API(url, method, body)
             .then(responseJson => {
-                //console.log(responseJson);
+                console.log(responseJson);
                 if (responseJson.status == 200) {
                     this.getCartData();
-                    ContextVal.onMinus();
+                    ContextVal.state.count= responseJson.total_carts;
                     this.setState({ update: 1 });
                     //console.log(responseJson.status);
                     try {

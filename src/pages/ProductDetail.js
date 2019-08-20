@@ -103,12 +103,13 @@ export default class Table extends Component {
         body = `product_id=${product_id}&quantity=${quantity}`;
         return API(url, method, body)
             .then(responseJson => {
-                //console.log(responseJson);
+                console.log(responseJson);
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
                     this.props.navigation.navigate('Dashboard');
-                    ContextVal.onPlus();
+                    //ContextVal.onPlus();
+                    ContextVal.state.count= responseJson.total_carts;
                     console.log('COUNT : ' + responseJson.total_carts);
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');

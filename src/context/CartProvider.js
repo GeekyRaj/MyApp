@@ -6,7 +6,7 @@ export default class CartProvider extends Component {
   constructor() {
     super();
     this.state = {
-      count: null,
+      count: 0,
       email: null,
       name: null
     };
@@ -19,9 +19,12 @@ export default class CartProvider extends Component {
     const url = 'users/getUserData';
     return API(url,method,null)
       .then(responseJson => {
-        this.setState({
-          count: responseJson.data.total_carts
-        });
+        if(responseJson.status == 200){
+          console.log('COUNT : '+responseJson.data.total_carts)
+          this.setState({
+            count: ''+responseJson.data.total_carts
+          });
+        }
       })
       .catch(error => {
         console.error(error);
@@ -44,13 +47,16 @@ export default class CartProvider extends Component {
     const url = 'users/getUserData';
     return API(url,method,null)
       .then(responseJson => {
+        if(responseJson.status == 200){
         this.setState({
           email: responseJson.data.user_data.email,
           name:'' +responseJson.data.user_data.first_name +
             ' ' +responseJson.data.user_data.last_name
         });
         console.log('Context - \nName: '+this.state.name+'\nEmail: '+this.state.email);
-      })
+      }
+      else{ console.log('Context Not fetched')}
+    })
       .catch(error => {
         console.error(error);
       });
@@ -63,7 +69,8 @@ export default class CartProvider extends Component {
           state: this.state,
           onPlus: this.PlusCount,
           onMinus: this.MinusCount,
-          getUpdate: this.getUpdate
+          getUpdate: this.getUpdate,
+          getCount: this.getCount
         }}
       >
         {this.props.children}
