@@ -12,7 +12,7 @@ class CartCount extends Component {
                     borderRadius: 20,
                     backgroundColor: 'red',
                     alignItems: 'center',
-                    ustifyContent: 'center',
+                    justifyContent: 'center',
                     position: 'absolute',
                     right: 15,
                     bottom: 15,

@@ -73,17 +73,20 @@ export default class Table extends Component {
     }
 
     //Add Quantity
-    setQuantityModalVisible(visible) {
+    setQuantityModalVisible(visible,ContextVal) {
         this.setState({ quantityModalVisible: visible });
         console.log(this.state.qty);
         if (visible == false) {
-            if (this.state.qty != 0) {
+            if(this.state.qty<0){
+                alert('No of product cannot be negative number!');
+            }
+            else if (this.state.qty != 0 && this.state.qty >0) {
                 if (this.state.qty >= 9) {
                     alert('Maximum 8 orders can be placed by a user!');
                     this.setState({ qty: 0 })
                 }
                 else {
-                    this.addToCart();
+                    this.addToCart(ContextVal);
                 }
             }
             else {
@@ -92,7 +95,7 @@ export default class Table extends Component {
         }
     }
 
-    async addToCart() {
+    async addToCart(ContextVal) {
         const quantity = this.state.qty;
         const product_id = this.state.pid;
         url = "addToCart";
@@ -104,7 +107,8 @@ export default class Table extends Component {
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
-                    this.props.navigation.navigate('Dashboard')
+                    this.props.navigation.navigate('Dashboard');
+                    ContextVal.onPlus();
                     console.log('COUNT : ' + responseJson.total_carts);
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');
@@ -292,7 +296,7 @@ export default class Table extends Component {
                         <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: 25 }}>Rs. {this.state.dataSource.cost}</Text>
                         <Icon
                             style={{ paddingLeft: 120, color: '#9c908f' }}
-                            onPress={() => navigation.pop()}
+                            //onPress={() => navigation.pop()}
                             name="md-share"
                             size={30}
                         />
@@ -325,7 +329,7 @@ export default class Table extends Component {
 
                         <View style={{ flex: 1 }}>
                             <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
-                                <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible)} style={{ flex: 1 }} />
+                                <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible,null)} style={{ flex: 1 }} />
                             </View>
 
                             <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
@@ -338,6 +342,7 @@ export default class Table extends Component {
                                 <TextInput
                                     style={{ fontSize: 20, padding: 20 }}
                                     placeholder="Enter Quantity"
+                                    defaultValue= {''+this.state.qty}
                                     onChangeText={qty => this.setState({ qty: qty })}
                                     keyboardType='numeric'
                                 />
@@ -353,8 +358,9 @@ export default class Table extends Component {
                                                     justifyContent: 'center',
                                                     alignItems: 'center'
                                                 }}
-                                                onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible);
-                                                ContextVal.onPlus(); }}>
+                                                onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible,ContextVal);
+                                                //ContextVal.onPlus(); 
+                                            }}>
                                                 <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
                                             </TouchableOpacity>
                                         )}
@@ -413,7 +419,7 @@ export default class Table extends Component {
                 </View>
                 <View style={styles.boxend}>
                     <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <TouchableOpacity style={styles.button} onPress={() => { this.setQuantityModalVisible(true) }}>
+                        <TouchableOpacity style={styles.button} onPress={() => { this.setQuantityModalVisible(true,null) }}>
                             <Text style={styles.Textbutton}>BUY NOW</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonRate} onPress={() => { this.setRatingModalVisible(true); }}>

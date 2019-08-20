@@ -92,23 +92,13 @@ class MyCart extends Component {
         this.focusListener.remove();
     }
 
-    //CHECK IF ANY UPDATE IN CART
-    async  componentDidUpdate() {
-        const cartupdate = await AsyncStorage.getItem("@user_addcart");
-        if (cartupdate == 'yes') {
-            this.getCartData();
-            console.log('----Componenet DidUpdate----');
-            AsyncStorage.setItem('@user_addcart', 'no');
-        }
-    }
-
     getCartData = async () => {
         try {
             const url = "cart";
             const method = "GET";
             return API(url, method, null)
                 .then(responseJson => {
-                    console.log(responseJson);
+                    //console.log(responseJson);
                     this.setState({
                         dataSource: responseJson.data,
                         cartCount: responseJson.count,
@@ -148,7 +138,7 @@ class MyCart extends Component {
         console.log(this.state.pid);
     }
 
-    swipeHandleDelete(id) {
+    swipeHandleDelete(id, ContextVal) {
         const product_id = id;
         console.log('Pid delete :' + product_id);
         const url = "deleteCart";
@@ -156,13 +146,14 @@ class MyCart extends Component {
         const body = `product_id=${product_id}`;
         return API(url, method, body)
             .then(responseJson => {
-                console.log(responseJson);
+                //console.log(responseJson);
                 if (responseJson.status == 200) {
                     this.getCartData();
+                    ContextVal.onMinus();
                     this.setState({ update: 1 });
-                    console.log(responseJson.status);
+                    //console.log(responseJson.status);
                     try {
-                        AsyncStorage.setItem('@user_cartcount', ''+responseJson.total_carts);
+                        AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
                     } catch (error) {
                         console.log(error);
                     }
@@ -178,16 +169,16 @@ class MyCart extends Component {
         //const token = this.state.access_token;
         const qty = value;
         const pid = id;
-        console.log(pid + ' ' + qty);
+        //console.log(pid + ' ' + qty);
         const url = "editCart";
         const method = "POST";
         body = `product_id=${pid}&quantity=${qty}`;
         return API(url, method, body)
             .then(responseJson => {
-                console.log(responseJson);
+                //console.log(responseJson);
                 this.getCartData();
                 if (responseJson.status == 200) {
-                    console.log(responseJson.status);
+                    //console.log(responseJson.status);
 
                     this.setState({ update: 1 });
                 }
@@ -200,11 +191,11 @@ class MyCart extends Component {
     render() {
         {
             console.log('My Cart Render'); console.disableYellowBox = true;
-            if (this.state.update == 1) {
-                console.log('UPDATE');
-                this.getCartData();
-                this.setState({ update: 0, })
-            }
+            // if (this.state.update == 1) {
+            //     console.log('UPDATE');
+            //     this.getCartData();
+            //     this.setState({ update: 0, })
+            // }
         }
 
         const swipeoutBtns = [
@@ -215,96 +206,103 @@ class MyCart extends Component {
                 color: 'white',
             }
         ];
-        
-    
+
+
 
         const Data = <View>
-                <FlatList
-                    data={this.state.dataSource}
-                    extraData={this.state.rowIndex}
-                    renderItem={({ item, index }) => {
+            <FlatList
+                data={this.state.dataSource}
+                extraData={this.state.rowIndex}
+                renderItem={({ item, index }) => {
 
-                        return (
+                    return (
                         <CartContext.Consumer>
                             {ContextVal => (
                                 <Swipeout
-                                right={swipeoutBtns} backgroundColor={'white'}
-                                onOpen={() => (this.onSwipeOpen(index, item.product.id))}
-                                close={this.state.rowIndex !== index}
-                                onClose={() => (this.onSwipeClose(index, item.product.id))}
-                                rowIndex={index}
-                                sectionId={0}
-                                autoClose={true}
-                            >
-                                <View>
-                                    <View style={{ flex: 0, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
-                                        <Image
-                                            style={{ height: 90, width: 90, margin: 8, }}
-                                            source={{ uri: item.product.product_images }} />
-                                        <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
-                                            <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>
-                                                <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                                    right={swipeoutBtns} backgroundColor={'white'}
+                                    onOpen={() => (this.onSwipeOpen(index, item.product.id))}
+                                    close={this.state.rowIndex !== index}
+                                    onClose={() => (this.onSwipeClose(index, item.product.id))}
+                                    rowIndex={index}
+                                    sectionId={0}
+                                    autoClose={true}
+                                >
+                                    <View>
+                                        <View style={{ flex: 0, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
+                                            <Image
+                                                style={{ height: 90, width: 90, margin: 8, }}
+                                                source={{ uri: item.product.product_images }} />
+                                            <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
+                                                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>
+                                                    <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <NumericInput
+                                                        //value={item.quantity}
+                                                        initValue={item.quantity}
+                                                        //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                                                        totalWidth={70}
+                                                        totalHeight={30}
+                                                        iconSize={25}
+                                                        minValue={1}
+                                                        maxValue={8}
+                                                        step={1}
+                                                        valueType='integer'
+                                                        rounded
+                                                        textColor='black'
+                                                        iconStyle={{ color: 'black' }}
+                                                        rightButtonBackgroundColor='red'
+                                                        leftButtonBackgroundColor='white'
+                                                        onChange={value => this.UpdateQty(value, item.product.id)} />
+                                                    <View style={{ marginLeft: 150 }}>
+                                                        <TouchableOpacity onPress={() => this.swipeHandleDelete(item.product.id, ContextVal)}>
+                                                            <Icon style={{ color: 'red' }} name="md-trash" size={30} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
                                             </View>
-                                            <NumericInput
-                                                //value={item.quantity}
-                                                initValue={item.quantity}
-                                                //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                                                totalWidth={70}
-                                                totalHeight={30}
-                                                iconSize={25}
-                                                minValue={1}
-                                                maxValue={8}
-                                                step={1}
-                                                valueType='integer'
-                                                rounded
-                                                textColor='black'
-                                                iconStyle={{ color: 'black' }}
-                                                rightButtonBackgroundColor='red'
-                                                leftButtonBackgroundColor='white'
-                                                onChange={value => this.UpdateQty(value, item.product.id)} />
                                         </View>
-                                    </View>
-                                    <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
-    
-                                    </View>
-                                </View></Swipeout>
+                                        <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
+
+                                        </View>
+                                    </View></Swipeout>
                             )}
                         </CartContext.Consumer>
-                        );
+                    );
 
-                    }
+                }
 
-                    }
-                    keyExtractor={(item, index) => index.toString()}
-                />
-                <View style={styles.boxend}>
-                    <View style={{ flexDirection: 'row', margin: 10, }}>
+                }
+                keyExtractor={(item, index) => index.toString()}
+            />
+            <View style={styles.boxend}>
+                <View style={{ flexDirection: 'row', margin: 10, }}>
 
-                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
-                            <Text style={styles.Textbutton}>ORDER NOW</Text>
-                        </TouchableOpacity>
-                        <Text style={{ fontSize: 25, fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
+                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
+                        <Text style={styles.Textbutton}>ORDER NOW</Text>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 25, fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
 
-                    </View>
                 </View>
+            </View>
         </View>
-        const Empty = <View style={{alignContent:'center'}}>
+        const Empty = <View style={{ alignContent: 'center' }}>
             <Icon
                 style={{ paddingLeft: 16, color: 'black' }}
                 name="md-cart"
                 size={150}
-                />
-                <Text style={{ marginLeft:5, fontSize: 25,}}>Cart Empty!</Text>
+            />
+            <Text style={{ marginLeft: 5, fontSize: 25, }}>Cart Empty!</Text>
         </View>
 
         let show = '';
-        if(this.state.cartStatus == 1 ){
-             show = Data
+        if (this.state.cartStatus == 1) {
+            show = Data
         }
-        else{
-             show = Empty
+        else {
+            show = Empty
         }
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
