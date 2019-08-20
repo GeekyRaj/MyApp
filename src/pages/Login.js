@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import style from '../Styles';
-//import AsyncStorage from '@react-native-community/async-storage';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 import Logo from '../components/Logo';
 import CartContext from '../context/CartContext';
@@ -45,6 +46,7 @@ export default class Login extends Component {
             dataLogin: [],
             token: '',
             hidePassword: true,
+            isLoading: true
         }
         this.CheckIfAlreadyLogin()
     }
@@ -93,20 +95,6 @@ export default class Login extends Component {
         }
     }
 
-    getCount(ContextVal) {
-        const method = 'GET';
-        const url = 'users/getUserData';
-        return API(url, method, null)
-            .then(responseJson => {
-                if (responseJson.status == 200) {
-                    console.log('COUNT : ' + responseJson.data.total_carts)
-                    ContextVal.state.count = status;
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
 
     submit(ContextVal) {
         let collection = {}
@@ -126,7 +114,7 @@ export default class Login extends Component {
                     `email=${collection.username}&password=${collection.password}`
             }).then((response) => response.json())
                 .then((responseJson) => {
-                    console.log(responseJson)
+                    //console.log(responseJson)
                     this.setState({ dataLogin: responseJson.data, })
 
                     this.setState({
@@ -149,19 +137,20 @@ export default class Login extends Component {
 
                     if (status == 200) {
                         this.props.navigation.navigate('Dashboard');
+                        ContextVal.getUpdate();
                         //Set initial cart count from API
-                        const method = 'GET';
-                        const url = 'users/getUserData';
-                        return API(url, method, null)
-                            .then(responseJson => {
-                                if (responseJson.status == 200) {
-                                    console.log('COUNT : ' + responseJson.data.total_carts)
-                                    ContextVal.state.count = responseJson.data.total_carts;
-                                }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            });
+                        // const method = 'GET';
+                        // const url = 'users/getUserData';
+                        // return API(url, method, null)
+                        //     .then(responseJson => {
+                        //         if (responseJson.status == 200) {
+                        //             console.log('COUNT : ' + responseJson.data.total_carts)
+                        //             ContextVal.state.count = responseJson.data.total_carts;
+                        //         }
+                        //     })
+                        //     .catch(error => {
+                        //         console.error(error);
+                        //     });
                     }
                     else {
                         alert(msg);
@@ -205,7 +194,7 @@ export default class Login extends Component {
                             <Icon
                                 style={{ paddingLeft: 16, color: '#ffffff' }}
                                 name="md-person"
-                                size={25}
+                                size={hp('3%')}
                             />
                             <TextInput
                                 style={style.inputBox}
@@ -222,7 +211,7 @@ export default class Login extends Component {
                             <Icon
                                 style={{ paddingLeft: 16, color: '#ffffff' }}
                                 name="md-lock"
-                                size={25}
+                                size={hp('3%')}
                             />
                             <TextInput
                                 style={style.inputBox}
@@ -236,7 +225,7 @@ export default class Login extends Component {
                                 ref="pass"
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                                <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={25} />
+                                <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={hp('3%')} />
                             </TouchableOpacity>
                         </View>
 
@@ -250,7 +239,7 @@ export default class Login extends Component {
 
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Forgetpw')}>
-                            <Text style={{ fontSize: 16, color: '#ffffff' }}> Forgot Password?</Text>
+                            <Text style={{ fontSize: hp('2.1%'), color: '#ffffff' }}> Forgot Password?</Text>
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
@@ -283,8 +272,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        width: 300,
-        height: 50,
+        width: wp('80%'),
+        height: hp('7%'),
         margin: 10,
         backgroundColor: 'rgba(255,255,255,0.3)',
         borderRadius: 25,
@@ -304,11 +293,11 @@ const styles = StyleSheet.create({
     },
     signupText: {
         color: 'rgba(255,255,255,0.6)',
-        fontSize: 16,
+        fontSize: hp('2.3%'),
     },
     signupButton: {
         color: '#ffffff',
-        fontSize: 16,
+        fontSize: hp('2.5%'),
         fontWeight: '500',
     },
     error: {
@@ -319,8 +308,8 @@ const styles = StyleSheet.create({
     {
         position: 'absolute',
         right: 3,
-        height: 40,
-        width: 35,
+        height: hp('3%'),
+        width: wp('8%'),
         padding: 5
     },
 
