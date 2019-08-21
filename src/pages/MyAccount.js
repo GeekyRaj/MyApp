@@ -11,6 +11,7 @@ import {
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
 import API from '../components/API';
+import style from '../Styles';
 
 class MyAccount extends Component {
     static navigationOptions = {
@@ -83,30 +84,30 @@ class MyAccount extends Component {
                 <View style={styles.imgView}>
                     <Image style={styles.img} source={require('../images/profile.jpg')} />
                 </View>
-                <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
+                <View style={style.SectionStyle}>
+                    <Icon style={style.Expoicon} name="md-person" size={25}/>
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="First Name"
                         placeholderTextColor='#ffffff'
                         editable={this.state.TextInputEnable}
                         defaultValue={this.state.dataSource.first_name}
                     />
                 </View>
-                <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25}/>
+                <View style={style.SectionStyle}>
+                    <Icon style={style.Expoicon} name="md-person" size={25}/>
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Last Name"
                         placeholderTextColor='#ffffff'
                         editable={this.state.TextInputEnable}
                         defaultValue={this.state.dataSource.last_name}
                     />
                 </View>
-                <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25}/>
+                <View style={style.SectionStyle}>
+                    <Icon style={style.Expoicon} name="md-mail" size={25}/>
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Email"
                         placeholderTextColor='#ffffff'
                         editable={this.state.TextInputEnable}
@@ -114,10 +115,10 @@ class MyAccount extends Component {
                         keyboardType="email-address"
                     />
                 </View>
-                <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25}/>
+                <View style={style.SectionStyle}>
+                    <Icon style={style.Expoicon} name="md-call" size={25}/>
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Phone Number"
                         placeholderTextColor='#ffffff'
                         editable={this.state.TextInputEnable}
@@ -125,10 +126,10 @@ class MyAccount extends Component {
                         keyboardType="number-pad"
                     />
                 </View>
-                <View style={styles.SectionStyle}>
-                    <Icon style={{ color: '#ffffff' }} name="md-time" size={25}/>
+                <View style={style.SectionStyle}>
+                    <Icon style={style.Expoicon} name="md-time" size={25}/>
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="D.O.B"
                         placeholderTextColor='#ffffff'
                         editable={this.state.TextInputEnable}
@@ -137,8 +138,8 @@ class MyAccount extends Component {
                     />
 
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('EditProfile')} >
-                    <Text style={styles.Textbutton}>Edit Profile</Text>
+                <TouchableOpacity style={style.WhiteButton} onPress={() => this.props.navigation.navigate('EditProfile')} >
+                    <Text style={style.WhiteTextbutton}>Edit Profile</Text>
                 </TouchableOpacity>
 
 
@@ -168,17 +169,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: "#e91c1a"
     },
-    inputBox: {
-        width: 250,
-        //backgroundColor: 'rgba(255,255,255,0.3)',
-        //borderRadius: 25,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        fontSize: 16,
-        color: '#ffffff',
-        marginVertical: 5,
-        opacity: 0.8,
-    },
     img: {
         paddingTop: 15,
         height: 130,
@@ -190,33 +180,6 @@ const styles = StyleSheet.create({
         height: 15,
         width: 15,
     },
-    SectionStyle: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 300,
-        height: 40,
-        margin: 10,
-        backgroundColor: 'rgba(255,255,255,0.3)',
-        borderRadius: 25,
-    },
-    Textbutton: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#E91c1a',
-        textAlign: 'center',
-    },
-    button: {
-        width: 300,
-        backgroundColor: '#ffffff',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 10,
-    },
-    error: {
-        borderWidth: 2,
-        borderColor: 'orange',
-    }
 });
 
 export default withNavigation(MyAccount);

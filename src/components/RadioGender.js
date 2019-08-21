@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 export default class RadioButtons extends Component {
 	state = {
@@ -28,7 +29,7 @@ export default class RadioButtons extends Component {
 							>
 								{value === item.key && <View style={styles.checkedCircle} />}
 							</TouchableOpacity>
-							<Text style={{marginLeft:5,}}>{item.text}</Text>
+							<Text style={{marginLeft:5,fontSize: hp('2.1%')}}>{item.text}</Text>
 						</View>
 					);
 				})}

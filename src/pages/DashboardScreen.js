@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   YellowBox,
   AsyncStorage,
-  StyleSheet
 } from 'react-native';
 import { background } from '../components/slider';
+import style from '../Styles';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 export default class DashboardScreen extends Component {
@@ -86,7 +86,7 @@ export default class DashboardScreen extends Component {
 
     return (
 
-      <View style={{ flex: 0, }}>
+      <View style={{ flex: 1, }}>
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={true}
@@ -99,27 +99,28 @@ export default class DashboardScreen extends Component {
           onMomentumScrollEnd = {this.setSelectedIndex}
           ref = {this.scrollRef}
           style={{
-            height: 230,
+            height: 10,
           }}
         >
           {background.map((item, index) => (
             <View key={`img-${index}`}>
               <Image
-                style={{ height: imageHeight, width: imageWidth }}
+                style={{ height: imageHeight+10, width: imageWidth }}
                 source={item.slider}
+                resizeMode="stretch"
               />
             </View>
           ))}
 
         </ScrollView>
             {/* RENDER DOTS */}
-        <View style={styles.circleDiv}>
+        <View style={style.circleDiv}>
           {background.map((item, i) => (
-            <View key={`item+${i}`} style={[styles.whiteCircle, { opacity: i == selectedIndex ? 1 : 0.5 }]}></View>
+            <View key={`item+${i}`} style={[style.whiteCircle, { opacity: i == selectedIndex ? 1 : 0.5 }]}></View>
           ))}
         </View>
 
-        <View style={{ flex: 0, alignContent: 'center', justifyContent: 'center', width: '100%', marginLeft: 5, }}>
+        <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center', width: '100%',}}>
           <FlatList
             numColumns={2}
             data={[
@@ -133,7 +134,8 @@ export default class DashboardScreen extends Component {
               return <TouchableOpacity onPress={() => this.props.navigation.navigate(item.pth)}>
                 <Image
                   style={{ height: typeheight, width: typewidth, margin: 10, }}
-                  source={item.ur} />
+                  source={item.ur}
+                  resizeMode="stretch" />
               </TouchableOpacity>
             }
             }
@@ -147,23 +149,3 @@ export default class DashboardScreen extends Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  circleDiv: {
-    position: 'absolute',
-    width: '100%',
-    height: 415,
-    //bottom:50,
-    marginTop: 0,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  whiteCircle: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    margin: 5,
-    backgroundColor: 'white',
-  }
-})

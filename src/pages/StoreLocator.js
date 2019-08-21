@@ -7,6 +7,7 @@ import {
   FlatList,
   Dimensions
 } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const data = [
   { name: 'SKYLAND STORE', add: '6355 Edgewood Road Reisterstown, MD 21136'},
@@ -35,21 +36,21 @@ export default class StoreLocator extends Component {
     let Width = dimensions.width-10;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',height:Height,width:Width }}>
-        <Image  style={{height: 280,width: 410,}} source={require('../images/map.png')} />
+      <View style={{ flex: 1, }}>
+        <Image  style={{height: 280,width: '100%',}} source={require('../images/map.png')} />
         <FlatList
           data={data}
           renderItem={({ item }) =>
             
             <TouchableOpacity key={item.name}>
-              <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
-                <Image  style={{height: 30,width: 30,color:'gray'}} source={require('../images/locator_icon.png')} />
-                <View style={{ flexGrow: 1, flexDirection: 'column', marginRight: 10, }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.name}</Text>
-                  <Text style={{ fontSize: 15, paddingTop: 10, }}> {item.add}</Text>
+              <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginLeft: 10, }}>
+                <Image  style={{height: hp('3.5%'),width: wp('5%'),}} source={require('../images/locator_icon.png')} />
+                <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 10, }}>
+                  <Text style={{ fontSize: hp('2%'), marginTop: 10, fontWeight: "bold", }}> {item.name}</Text>
+                  <Text style={{ fontSize: hp('2%'), paddingTop: 10, }}> {item.add}</Text>
                 </View>
               </View>
-              <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
+              <View style={{ width: '90%', height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
             </TouchableOpacity>
 
           }

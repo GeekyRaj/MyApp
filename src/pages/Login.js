@@ -190,16 +190,16 @@ export default class Login extends Component {
                 <Logo />
                 <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                     <View style={styles.LoginForm}>
-                        <View style={[styles.SectionStyle, !this.state.userVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.userVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-person"
                                 size={hp('3%')}
                             />
                             <TextInput
                                 style={style.inputBox}
                                 placeholder="Username"
-                                placeholderTextColor='#ffffff'
+                                placeholderTextColor='#DBC6C6'
                                 autoCapitalize='none'
                                 onChangeText={(text) => this.updateValue(text, 'username')}
                                 keyboardType="email-address"
@@ -207,9 +207,9 @@ export default class Login extends Component {
                                 onSubmitEditing={()=> this.refs.pass.focus()}
                             />
                         </View>
-                        <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.passVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-lock"
                                 size={hp('3%')}
                             />
@@ -218,21 +218,21 @@ export default class Login extends Component {
                                 placeholder="Password"
                                 underlineColorAndroid='transparent'
                                 secureTextEntry={this.state.hidePassword}
-                                placeholderTextColor='#ffffff'
+                                placeholderTextColor='#DBC6C6'
                                 autoCapitalize='none'
                                 returnKeyType='go'
                                 onChangeText={(text) => this.updateValue(text, 'password')}
                                 ref="pass"
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                                <Icon style={{ color: '#ffffff' }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={hp('3%')} />
+                                <Icon style={{ color: '#ffffff', }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={hp('3%')} />
                             </TouchableOpacity>
                         </View>
 
                         <CartContext.Consumer>
                             {ContextVal => (
                                 <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit(ContextVal)}>
-                                    <Text style={styles.Textbutton}>LOGIN</Text>
+                                    <Text style={style.WhiteTextbutton}>LOGIN</Text>
                                 </TouchableOpacity>
                             )}
                         </CartContext.Consumer>
@@ -243,10 +243,10 @@ export default class Login extends Component {
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
-                <View style={styles.signupTextCont}>
-                    <Text style={styles.signupText}>DONT HAVE AN ACCOUNT?</Text>
+                <View style={style.signupTextCont}>
+                    <Text style={style.signupText}>DONT HAVE AN ACCOUNT?</Text>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
-                        <Text style={styles.signupButton}> SignUp</Text>
+                        <Text style={style.signupButton}> SignUp</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -268,49 +268,14 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center',
     },
-    SectionStyle: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: wp('80%'),
-        height: hp('7%'),
-        margin: 10,
-        backgroundColor: 'rgba(255,255,255,0.3)',
-        borderRadius: 25,
-    },
-    Textbutton: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#E91c1a',
-        textAlign: 'center',
-    },
-    signupTextCont: {
-        flexGrow: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        paddingVertical: 16,
-        flexDirection: 'row',
-    },
-    signupText: {
-        color: 'rgba(255,255,255,0.6)',
-        fontSize: hp('2.3%'),
-    },
-    signupButton: {
-        color: '#ffffff',
-        fontSize: hp('2.5%'),
-        fontWeight: '500',
-    },
-    error: {
-        borderWidth: 2,
-        borderColor: 'orange',
-    },
+
     visibilityBtn:
     {
         position: 'absolute',
         right: 3,
         height: hp('3%'),
         width: wp('8%'),
-        padding: 5
+        paddingRight: 2
     },
 
 });

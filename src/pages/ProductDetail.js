@@ -12,6 +12,7 @@ import {
     AsyncStorage,
     Dimensions,
 } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import StarRating from '../components/StarRating';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -202,7 +203,7 @@ export default class Table extends Component {
         return this.state.productImages.map(item => {
             return (
                 <TouchableOpacity onPress={() => this.setState({ largeImage: item.image })} key={item.image}>
-                    <Image style={{ width: 70, height: 70, marginTop: 15, margin: 5, borderColor: 'gray', borderWidth: 1 }} source={{ uri: item.image }} />
+                    <Image style={{ width: wp('20%'), height: wp('20%'), marginTop: 15, margin: 5, borderColor: 'gray', borderWidth: 1 }} source={{ uri: item.image }} />
                 </TouchableOpacity>
             );
         });
@@ -211,7 +212,7 @@ export default class Table extends Component {
     renderLargeImage() {
         if (this.state.largeImage.length > 1) {
             return (
-                <Image style={{ width: 257, height: 175, alignItems: 'center', padding: 50 }}
+                <Image style={{ width: wp('50%'), height: hp('18%'), alignItems: 'center', padding: 50,resizeMode:'stretch' }}
                     source={{ uri: this.state.largeImage }} />
             )
         }
@@ -277,14 +278,14 @@ export default class Table extends Component {
 
             <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
                 <View style={styles.box}>
-                    <Text style={{ fontSize: 25, paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
-                    <Text style={{ fontSize: 20, paddingLeft: 20, }}>Category - {pcatval} </Text>
-                    <View style={{ flex: 0, flexDirection: 'row', width: 420, }}>
-                        <View style={{ flex: 0, flexDirection: 'column', }}>
+                    <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
+                    <Text style={{ fontSize: hp('3%'), paddingLeft: 20, }}>Category - {pcatval} </Text>
+                    <View style={{ flex: 0, flexDirection: 'row', width: '100%', }}>
+                        <View>
 
                             <Text style={{ fontSize: 15, paddingLeft: 20, marginBottom: 10, marginRight: 250 }}>{this.state.dataSource.producer}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row-reverse', }}>
+                        <View style={{flex:1, flexDirection: 'row-reverse', }}>
                             <StarRating ratingObj={ratingObj} />
                         </View>
 
@@ -293,14 +294,18 @@ export default class Table extends Component {
 
                 </View>
                 <View style={styles.boxmid}>
-                    <View style={{ flex: 0, flexDirection: 'row', marginTop: 5, marginLeft: 5, }}>
-                        <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: 25 }}>Rs. {this.state.dataSource.cost}</Text>
-                        <Icon
-                            style={{ paddingLeft: 120, color: '#9c908f' }}
-                            //onPress={() => navigation.pop()}
-                            name="md-share"
-                            size={30}
-                        />
+                    <View style={{ flex: 1, flexDirection: 'row', marginTop: 5, marginLeft: 5,}}>
+                        <View style={{flex:5}}>
+                            <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: hp('3%') }}>Rs. {this.state.dataSource.cost}</Text>
+                        </View>
+                        <View style={{flex:1}}>
+                            <Icon
+                                style={{ color: '#9c908f' }}
+                                //onPress={() => navigation.pop()}
+                                name="md-share"
+                                size={hp('5%')}
+                            />
+                        </View>
                     </View>
 
                     <View style={styles.image}>
@@ -316,9 +321,9 @@ export default class Table extends Component {
                     </View>
 
 
-                    <View style={{ flex: 0, }}>
-                        <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: 20, fontWeight: "bold", }}> DESCRIPTION</Text>
-                        <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: 15, }}> {this.state.dataSource.description}</Text>
+                    <View style={{ flex: 4, }}>
+                        <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: hp('3%'), fontWeight: "bold", }}> DESCRIPTION</Text>
+                        <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: hp('2%'), }}> {this.state.dataSource.description}</Text>
                     </View>
 
                     <Modal
@@ -434,13 +439,13 @@ export default class Table extends Component {
 }
 const styles = StyleSheet.create({
     box: {
-        flex: 0,
+        flex: 2,
         width: '100%',
         backgroundColor: '#ffffff',
         marginBottom: 10,
     },
     boxmid: {
-        flex: 0,
+        flex: 10,
         width: '98%',
         height: 405,
         backgroundColor: '#ffffff',
@@ -449,6 +454,7 @@ const styles = StyleSheet.create({
     },
     image: {
         alignItems: "center",
+        flex:4,
     },
     imageThumb: {
         height: 80,
@@ -457,7 +463,7 @@ const styles = StyleSheet.create({
         borderColor: 'black'
     },
     boxend: {
-        flex: 0,
+        flex: 1,
         width: '100%',
         height: 60,
         backgroundColor: '#ffffff',
@@ -465,15 +471,15 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     button: {
-        width: 170,
-        height: 45,
+        width: '47%',
+        height: '90%',
         backgroundColor: '#e91c1a',
         borderRadius: 10,
     },
     buttonRate: {
         marginLeft: 10,
-        width: 170,
-        height: 45,
+        width: '47%',
+        height: '90%',
         backgroundColor: '#9c908f',
         borderRadius: 10,
         alignContent: "center",

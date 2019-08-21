@@ -14,6 +14,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { ImagePicker, Permissions, Constants } from 'expo';
 import API from '../components/API';
 import CartContext from '../context/CartContext';
+import style from '../Styles';
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -235,30 +236,30 @@ export default class EditProfile extends Component {
                         <Image style={styles.img} source={require('../images/profile.jpg')} />
                     </TouchableOpacity>
                 </View>
-                <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
+                <View style={[style.SectionStyle, !this.state.fnameVal ? style.error : null]}>
+                    <Icon style={style.Expoicon} name="md-person" size={25} />
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="First Name"
                         placeholderTextColor='#ffffff'
                         defaultValue={this.state.fname}
                         onChangeText={(text) => this.updateValue(text, 'fname')}
                     />
                 </View>
-                <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
+                <View style={[style.SectionStyle, !this.state.lnameVal ? style.error : null]}>
+                    <Icon style={style.Expoicon} name="md-person" size={25} />
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Last Name"
                         placeholderTextColor='#ffffff'
                         defaultValue={this.state.lname}
                         onChangeText={(text) => this.updateValue(text, 'lname')}
                     />
                 </View>
-                <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-mail" size={25} />
+                <View style={[style.SectionStyle, !this.state.emailVal ? style.error : null]}>
+                    <Icon style={style.Expoicon} name="md-mail" size={25} />
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Email"
                         placeholderTextColor='#ffffff'
                         defaultValue={this.state.email}
@@ -266,10 +267,10 @@ export default class EditProfile extends Component {
                         keyboardType="email-address"
                     />
                 </View>
-                <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
-                    <Icon style={{ color: '#ffffff' }} name="md-call" size={25} />
+                <View style={[style.SectionStyle, !this.state.pnoVal ? style.error : null]}>
+                    <Icon style={style.Expoicon} name="md-call" size={25} />
                     <TextInput
-                        style={styles.inputBox}
+                        style={style.inputBox}
                         placeholder="Phone Number"
                         placeholderTextColor='#ffffff'
                         defaultValue={this.state.pno}
@@ -277,7 +278,7 @@ export default class EditProfile extends Component {
                         keyboardType="number-pad"
                     />
                 </View>
-                <View style={styles.SectionStyle}>
+                <View style={style.SectionStyle}>
 
                     <DatePicker
                         style={{ width: 270, borderColor: null, borderRadius: 15 }}

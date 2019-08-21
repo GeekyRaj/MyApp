@@ -14,6 +14,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
 import API from '../components/API';
 import CartContext from '../context/CartContext';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -227,12 +228,12 @@ class MyCart extends Component {
                                     sectionId={0}
                                     autoClose={true}
                                 >
-                                    <View>
-                                        <View style={{ flex: 0, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
+                                    <View wstyle={{width:'100%'}}>
+                                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
                                             <Image
-                                                style={{ height: 90, width: 90, margin: 8, }}
+                                                style={{ height: hp('12%'), width: wp('20%'), margin: 8, }}
                                                 source={{ uri: item.product.product_images }} />
-                                            <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
+                                            <View style={{ flex: 1, flexDirection: 'column', marginLeft: 5, }}>
                                                 <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
                                                 <View style={{ flexDirection: 'row' }}>
                                                     <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>

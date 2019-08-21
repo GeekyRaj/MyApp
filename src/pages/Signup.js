@@ -4,7 +4,9 @@ import Logo from '../components/Logo';
 import RadioGender from '../components/RadioGender';
 import Icon from '@expo/vector-icons/Ionicons';
 import API from '../components/API';
-
+import style from '../Styles';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-navigation';
 
 const options = [
     {
@@ -196,73 +198,74 @@ export default class Login extends Component {
     render() {
         console.log('My Cart Render'); console.disableYellowBox = true;
         return (
+            <SafeAreaView style={styles.containerMain}>
             <View style={styles.containerMain}>
                 <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                     <Logo />
                     <View style={styles.container}>
 
-                        <View style={[styles.SectionStyle, !this.state.fnameVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.fnameVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-person"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="First Name"
                                 placeholderTextColor='#ffffff'
                                 onChangeText={(text) => this.updateValue(text, 'fname')}
                             />
                         </View>
-                        <View style={[styles.SectionStyle, !this.state.lnameVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.lnameVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-person"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="Last Name"
                                 placeholderTextColor='#ffffff'
                                 onChangeText={(text) => this.updateValue(text, 'lname')}
                             />
                         </View>
-                        <View style={[styles.SectionStyle, !this.state.emailVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.emailVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-mail"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="Email"
                                 placeholderTextColor='#ffffff'
                                 onChangeText={(text) => this.updateValue(text, 'email')}
                                 keyboardType="email-address"
                             />
                         </View>
-                        <View style={[styles.SectionStyle, !this.state.passVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.passVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-lock"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="Password"
                                 secureTextEntry={true}
                                 placeholderTextColor='#ffffff'
                                 onChangeText={(text) => this.updateValue(text, 'pass')}
                             />
                         </View>
-                        <View style={[styles.SectionStyle, !this.state.cpassVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.cpassVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-lock"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="Confirm Password"
                                 secureTextEntry={true}
                                 placeholderTextColor='#ffffff'
@@ -272,7 +275,7 @@ export default class Login extends Component {
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{
-                                fontSize: 16,
+                                fontSize: hp('2.1%'),
                                 color: '#ffffff',
                                 textAlign: 'left',
                                 paddingRight: 10,
@@ -284,14 +287,14 @@ export default class Login extends Component {
                                 callbackFromParent={this.myCallback} />
                         </View>
 
-                        <View style={[styles.SectionStyle, !this.state.pnoVal ? styles.error : null]}>
+                        <View style={[style.SectionStyle, !this.state.pnoVal ? style.error : null]}>
                             <Icon
-                                style={{ paddingLeft: 16, color: '#ffffff' }}
+                                style={style.Expoicon}
                                 name="md-phone-portrait"
                                 size={25}
                             />
                             <TextInput
-                                style={styles.inputBox}
+                                style={style.inputBox}
                                 placeholder="Phone Number"
                                 secureTextEntry={true}
                                 placeholderTextColor='#ffffff'
@@ -305,25 +308,26 @@ export default class Login extends Component {
                         }}>
                             <CheckBox checked={true} />
                             <Text style={{
-                                fontSize: 16,
+                                fontSize: hp('2.1%'),
                                 color: '#ffffff',
                                 textAlign: 'left'
                             }}>I agree the Terms and conditions.
                     </Text>
                         </View>
-                        <TouchableOpacity style={styles.button} onPress={() => this.Register()}>
-                            <Text style={styles.Textbutton}>REGISTER</Text>
+                        <TouchableOpacity style={style.WhiteButton} onPress={() => this.Register()}>
+                            <Text style={style.WhiteTextbutton}>REGISTER</Text>
                         </TouchableOpacity>
 
                     </View>
 
-                    <View style={styles.signupTextCont}>
-                        <Text style={styles.signupText}>ALREADY HAVE AN ACCOUNT?</Text>
+                    <View style={style.signupTextCont}>
+                        <Text style={style.signupText}>ALREADY HAVE AN ACCOUNT?</Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Welcome')}>
-                            <Text style={styles.signupButton}> SIGN IN</Text>
+                            <Text style={style.signupButton}> SIGN IN</Text>
                         </TouchableOpacity>
                     </View></KeyboardAvoidingView>
             </View>
+            </SafeAreaView>
         )
     }
 }
@@ -335,59 +339,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    signupTextCont: {
-        flexGrow: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        paddingVertical: 16,
-        flexDirection: 'row',
-    },
-    signupText: {
-        color: 'rgba(255,255,255,0.6)',
-        fontSize: 16,
-    },
-    signupButton: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '500',
-    },
     container: {
         marginVertical: 10,
         flexGrow: 1,
         alignItems: 'center',
-    },
-    inputBox: {
-        width: 250,
-        //backgroundColor: 'rgba(255,255,255,0.3)',
-        //borderRadius: 25,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        fontSize: 16,
-        color: '#ffffff',
-        marginVertical: 5,
-    },
-    SectionStyle: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 300,
-        height: 40,
-        margin: 10,
-        backgroundColor: 'rgba(255,255,255,0.3)',
-        borderRadius: 25,
-    },
-    Textbutton: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#E91c1a',
-        textAlign: 'center',
-    },
-    button: {
-        width: 300,
-        backgroundColor: '#ffffff',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 10,
     },
     error: {
         borderWidth: 2,

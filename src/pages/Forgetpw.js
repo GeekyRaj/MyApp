@@ -6,11 +6,12 @@ import {
     View,
     TouchableOpacity,
 } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-
 import Logo from '../components/Logo';
-import Form from '../components/form';
-import Signup from './Signup';
+import style from '../Styles';
+import Icon from '@expo/vector-icons/Ionicons';
+import { SafeAreaView } from 'react-navigation';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 export default class Forgetpass extends Component {
     static navigationOptions = {
@@ -101,17 +102,28 @@ export default class Forgetpass extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.container}>
                 <Logo />
                 <View style={styles.LoginForm}>
-                    <TextInput
-                        style={styles.inputBox}
-                        placeholder="Email address"
-                        placeholderTextColor='#ffffff'
-                        onChangeText={(text) => this.updateValue(text, 'email')}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={this.onPressButton}>
-                        <Text style={styles.Textbutton}>Change Password</Text>
+                    <View style={style.SectionStyle}>
+                        <Icon
+                            style={style.Expoicon}
+                            name="md-person"
+                            size={hp('3%')}
+                        />
+                        <TextInput
+                            style={style.inputBox}
+                            placeholder="Email address"
+                            placeholderTextColor='#ffffff'
+                            onChangeText={(text) => this.updateValue(text, 'email')}
+                            autoCapitalize='none'
+                            keyboardType="email-address"
+                            returnKeyType='go'
+                        />
+                    </View>
+                    <TouchableOpacity style={style.WhiteButton} onPress={this.onPressButton}>
+                        <Text style={style.WhiteTextbutton}>Change Password</Text>
                     </TouchableOpacity>
 
                 </View>
@@ -121,7 +133,8 @@ export default class Forgetpass extends Component {
                         <Text style={styles.signupButton}> Login?</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+                </View>
+            </SafeAreaView>
         )
     }
 }
@@ -138,29 +151,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center',
     },
-    inputBox: {
-        width: 300,
-        backgroundColor: 'rgba(255,255,255,0.3)',
-        borderRadius: 25,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        fontSize: 16,
-        color: '#ffffff',
-        marginVertical: 10,
-    },
-    Textbutton: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#E91c1a',
-        textAlign: 'center',
-    },
-    button: {
-        width: 300,
-        backgroundColor: '#ffffff',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 10,
-    },
     signupTextCont: {
         flexGrow: 1,
         alignItems: 'flex-end',
@@ -168,13 +158,9 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         flexDirection: 'row',
     },
-    signupText: {
-        color: 'rgba(255,255,255,0.6)',
-        fontSize: 16,
-    },
     signupButton: {
         color: '#ffffff',
-        fontSize: 16,
+        fontSize: hp('3%'),
         fontWeight: '500',
     }
 });

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -8,6 +7,7 @@ import {
 } from 'react-native';
 import { withNavigation } from "react-navigation";
 import API from '../components/API';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
  class MyOrders extends Component {
@@ -56,24 +56,25 @@ import API from '../components/API';
   }
 
   render() {
+    console.disableYellowBox = true;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin:10, }}>
+      <View >
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) =>
 
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Orderid',{oid:item.id})}>
-              <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
-                <View style={{ flexGrow: 1, flexDirection: 'column', marginRight: 10, }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}>Order ID {item.id}</Text>
-                  <Text style={{ fontSize: 15, paddingTop: 10, }}>Ordered date {item.created}</Text>
+            <TouchableOpacity  onPress={() => this.props.navigation.navigate('Orderid',{oid:item.id})}>
+              <View  style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10,marginLeft:10, }}>
+                <View  style={{ flex: 5, flexDirection: 'column', marginRight: 10, }}>
+                  <Text style={{ fontSize: hp('3%'), marginTop: 10, fontWeight: "bold", }}>Order ID {item.id}</Text>
+                  <Text style={{ fontSize: hp('1.5%'), paddingTop: 10, }}>Ordered date {item.created}</Text>
                 </View>
-                <View style={{ flexGrow: 1, marginLeft: 10, }}>
-                  <Text style={{ fontSize: 20, paddingLeft: 30, paddingTop: 30, fontWeight: "bold", }}>Rs. {item.cost}</Text>
+                <View style={{ flex: 4, marginLeft: 10, }}>
+                  <Text style={{ fontSize: hp('3%'), paddingLeft: 30, paddingTop: 30, fontWeight: "bold", }}>Rs. {item.cost}</Text>
                 </View>
               </View>
-              <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
+              <View style={{ width: '90%', height: 1, backgroundColor: 'gray', marginTop: 5,marginLeft:13,}}></View>
             </TouchableOpacity>
 
           }
@@ -83,22 +84,5 @@ import API from '../components/API';
     )
   }
 }
-
-const styles = StyleSheet.create({
-  Textbutton: {
-      fontSize: 18,
-      fontWeight: '500',
-      color: '#ffffff',
-      textAlign: 'center',
-      paddingVertical: 10,
-  },
-  button: {
-      width: 190,
-      height: 45,
-      backgroundColor: '#e91c1a',
-      borderRadius: 10,
-      marginRight: 20,
-  },
-});
 
 export default withNavigation(MyOrders);

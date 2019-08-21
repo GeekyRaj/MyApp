@@ -8,9 +8,11 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
 import API from './API';
+import style from '../Styles';
 import CartCount from './CartCount';
 import CartContext from '../context/CartContext';
 
@@ -20,8 +22,8 @@ const HEIGHT = Dimensions.get('window').height;
 class MenuDrawer extends Component {
     navLink(nav, text) {
         return (
-            <TouchableOpacity style={{ height: 50, width: 300, }} onPress={() => this.props.navigation.navigate(nav)}>
-                <Text style={styles.link}>{text}</Text>
+            <TouchableOpacity style={style.MenuTouch} onPress={() => this.props.navigation.navigate(nav)}>
+                <Text style={style.link}>{text}</Text>
             </TouchableOpacity>
         )
     }
@@ -99,7 +101,7 @@ class MenuDrawer extends Component {
                                 return (
                                     <View style={styles.profileText}>
                                         <Text style={styles.name}>{userVal.state.name}</Text>
-                                        <Text style={{ fontSize: 15, paddingBottom: 5, color: 'white', textAlign: 'left', }}>{userVal.state.email}</Text>
+                                        <Text style={{ fontSize: hp('2%'), paddingBottom: 5, color: 'white', textAlign: 'left', }}>{userVal.state.email}</Text>
                                     </View>);
                             }}
                         </CartContext.Consumer>
@@ -110,15 +112,15 @@ class MenuDrawer extends Component {
                 {/*<ScrollView style={styles.scroller}>*/}
                 <View style={styles.bottomLinks}>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-cart" size={25} />
+                        <Icon style={{ color: '#ffffff' }} name="md-cart" size={hp('4%')} />
                         {/*this.navLink('MyCart', 'My Cart')*/}
-                        <TouchableOpacity style={{ height: 50, paddingRight: 120, }} onPress={() => this.props.navigation.navigate('MyCart', { cart: this.state.iscart })}>
-                            <Text style={styles.link}>My Cart</Text>
+                        <TouchableOpacity style={style.MenuTouch} onPress={() => this.props.navigation.navigate('MyCart', { cart: this.state.iscart })}>
+                            <Text style={style.link}>My Cart</Text>
                         </TouchableOpacity>
                         <CartCount />
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Image style={styles.imgIcon} source={require('../images/tables_icon.png')} />
+                        <Image style={styles.imgIcon} source={require('../images/tables_icon.png') } resizeMode="stretch"/>
                         {this.navLink('Table', 'Tables')}
                     </View>
                     <View style={styles.SectionStyle}>
@@ -134,21 +136,21 @@ class MenuDrawer extends Component {
                         {this.navLink('Cupboards', 'Cupboards')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-person" size={25} />
+                        <Icon style={{ color: '#ffffff' }} name="md-person" size={hp('4%')} />
                         {this.navLink('MyAccount', 'My Account')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-globe" size={25} />
+                        <Icon style={{ color: '#ffffff' }} name="md-globe" size={hp('4%')} />
                         {this.navLink('StoreLocator', 'Store Locator')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-basket" size={25} />
+                        <Icon style={{ color: '#ffffff' }} name="md-basket" size={hp('4%')} />
                         {this.navLink('MyOrders', 'My Orders')}
                     </View>
                     <View style={styles.SectionStyle}>
-                        <Icon style={{ color: '#ffffff' }} name="md-exit" size={25} />
-                        <TouchableOpacity style={{ height: 50, width: 300, }} onPress={() => this.userLogout()}>
-                            <Text style={styles.link}>Logout</Text>
+                        <Icon style={{ color: '#ffffff' }} name="md-exit" size={hp('4%')} />
+                        <TouchableOpacity style={style.MenuTouch} onPress={() => this.userLogout()}>
+                            <Text style={style.link}>Logout</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -166,8 +168,6 @@ const styles = StyleSheet.create({
     SectionStyle: {
         flexDirection: 'row',
         alignItems: 'center',
-        //margin: 10,
-        //backgroundColor: 'rgba(255,255,255,0.3)',
         borderRadius: 0,
         paddingLeft: 16,
     },
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     name: {
-        fontSize: 20,
+        fontSize: hp('3.5%'),
         paddingBottom: 5,
         color: 'white',
         textAlign: 'left',
@@ -196,16 +196,16 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
     img: {
-        height: 70,
-        width: 70,
+        height: hp('10%'),
+        width: hp('10%'),
         borderRadius: 35,
     },
     imgIcon: {
-        height: 25,
-        width: 25,
+        height: hp('3.5%'),
+        width: hp('3.5%'),
     },
     topLinks: {
-        height: 200,
+        height: hp('25%'),
         backgroundColor: 'black',
     },
     bottomLinks: {
@@ -214,15 +214,6 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 450,
     },
-    link: {
-        flex: 1,
-        fontSize: 20,
-        padding: 6,
-        paddingLeft: 14,
-        margin: 5,
-        textAlign: 'left',
-        color: 'white',
-    }
 })
 
 export default withNavigation(MenuDrawer);
