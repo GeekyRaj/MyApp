@@ -18,23 +18,23 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const styles = StyleSheet.create({
     Textbutton: {
-        fontSize: 18,
+        fontSize: hp('2.5%'),
         fontWeight: '500',
         color: '#ffffff',
         textAlign: 'center',
         paddingVertical: 10,
     },
     boxend: {
-        flex: 0,
+        flex: 1,
         width: '100%',
-        height: 60,
+        height: hp('8%'),
         backgroundColor: '#ffffff',
-        position: 'absolute',
-        bottom: 0,
+        //position: 'absolute',
+        //bottom: 0,
     },
     button: {
-        width: 190,
-        height: 45,
+        width: '50%',
+        height: '100%',
         backgroundColor: '#e91c1a',
         borderRadius: 10,
         marginRight: 20,
@@ -210,7 +210,9 @@ class MyCart extends Component {
 
 
 
-        const Data = <View>
+        const Data = 
+        <View style={{flex:1}}>
+            <View style={{flex:10}}>
             <FlatList
                 data={this.state.dataSource}
                 extraData={this.state.rowIndex}
@@ -228,24 +230,28 @@ class MyCart extends Component {
                                     sectionId={0}
                                     autoClose={true}
                                 >
-                                    <View wstyle={{width:'100%'}}>
+                                    <View style={{width:'100%',marginLeft:10,}}>
                                         <View style={{ flex: 1, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
                                             <Image
                                                 style={{ height: hp('12%'), width: wp('20%'), margin: 8, }}
-                                                source={{ uri: item.product.product_images }} />
+                                                source={{ uri: item.product.product_images }} resizeMode='stretch' />
                                             <View style={{ flex: 1, flexDirection: 'column', marginLeft: 5, }}>
-                                                <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ fontSize: 15, }}>( {item.product.product_category} )</Text>
-                                                    <Text style={{ fontSize: 17, paddingLeft: 20, paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                                                <Text style={{ fontSize: hp('2.5%'), marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
+                                                <View style={{ flex:1,flexDirection: 'row' }}>
+                                                    <View style={{flex:1}}>
+                                                        <Text style={{ fontSize: hp('2%'), }}>( {item.product.product_category} )</Text>
+                                                    </View>
+                                                    <View style={{flex:2}}>
+                                                        <Text style={{ fontSize: hp('3%'),  paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
+                                                    </View>
                                                 </View>
-                                                <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flexDirection: 'row', flex:1 }}>
                                                     <NumericInput
                                                         //value={item.quantity}
                                                         initValue={item.quantity}
                                                         //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                                                        totalWidth={70}
-                                                        totalHeight={30}
+                                                        totalWidth={hp('10%')}
+                                                        totalHeight={hp('4%')}
                                                         iconSize={25}
                                                         minValue={1}
                                                         maxValue={8}
@@ -257,15 +263,15 @@ class MyCart extends Component {
                                                         rightButtonBackgroundColor='red'
                                                         leftButtonBackgroundColor='white'
                                                         onChange={value => this.UpdateQty(value, item.product.id)} />
-                                                    <View style={{ marginLeft: 150 }}>
+                                                    <View style={{ marginLeft: wp('40%') }}>
                                                         <TouchableOpacity onPress={() => this.swipeHandleDelete(item.product.id, ContextVal)}>
-                                                            <Icon style={{ color: 'red' }} name="md-trash" size={30} />
+                                                            <Icon style={{ color: 'red' }} name="md-trash" size={hp('5%')} />
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}>
+                                        <View style={{ width: '90%', height: 1, backgroundColor: 'gray', marginTop: 5, }}>
 
                                         </View>
                                     </View></Swipeout>
@@ -278,24 +284,26 @@ class MyCart extends Component {
                 }
                 keyExtractor={(item, index) => index.toString()}
             />
+            </View>
             <View style={styles.boxend}>
                 <View style={{ flexDirection: 'row', margin: 10, }}>
 
                     <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
                         <Text style={styles.Textbutton}>ORDER NOW</Text>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 25, fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
+                    <Text style={{ fontSize: hp('4%'), fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
 
                 </View>
             </View>
         </View>
+        
         const Empty = <View style={{ alignContent: 'center' }}>
             <Icon
                 style={{ paddingLeft: 16, color: 'black' }}
                 name="md-cart"
                 size={150}
             />
-            <Text style={{ marginLeft: 5, fontSize: 25, }}>Cart Empty!</Text>
+            <Text style={{ marginLeft: 5, fontSize: hp('6%'), }}>Cart Empty!</Text>
         </View>
 
         let show = '';
@@ -306,7 +314,7 @@ class MyCart extends Component {
             show = Empty
         }
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+            <View style={{ flex: 1, }}>
                 {show}
             </View>
         );

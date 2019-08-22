@@ -10,6 +10,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const data = [
     { img: require('../images/Table.png'), categ: 'table', amt: '30000', qty: 2, name: 'Dinning Table' },
@@ -21,7 +22,7 @@ export default class Orderid extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             //title: navigation.getParam('pname', 'Product Detail'),
-            title: "Order ID : "+navigation.getParam('oid','2121'),
+            title: "Order ID : " + navigation.getParam('oid', '2121'),
             headerTintColor: '#fff',
             headerLeft:
                 (<Icon
@@ -40,7 +41,8 @@ export default class Orderid extends Component {
             access_token: "",
             dataSource: [],
             address: "",
-            cost: ""
+            cost: "",
+            total:'',
         };
     }
 
@@ -64,8 +66,10 @@ export default class Orderid extends Component {
         )
             .then(response => response.json())
             .then(responseJson => {
+                console.log(responseJson)
                 this.setState({
                     dataSource: responseJson.data.order_details,
+                    total: responseJson.data.cost,
                 });
                 console.log(responseJson);
                 try {
@@ -82,33 +86,44 @@ export default class Orderid extends Component {
     render() {
 
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, }}>
+                <View style={{flex:8}}>
                 <FlatList
                     data={this.state.dataSource}
                     renderItem={({ item }) =>
 
-                        <View>
+                        <View style={{ width: '100%', marginLeft: 10, }}>
                             <View style={{ flex: 1, flexDirection: 'row', marginTop: 20, marginRight: 10, }}>
                                 <Image
-                                    style={{ height: 100, width: 100, margin: 3, }}
-                                    source={{ uri: item.prod_image }} />
+                                    style={{ height: hp('12%'), width: wp('20%'), margin: 8, }}
+                                    source={{ uri: item.prod_image }}
+                                    resizeMode='stretch' />
 
                                 <View style={{ flexGrow: 1, flexDirection: 'column', marginLeft: 5, }}>
-                                    <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold", }}> {item.prod_name}</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ fontSize: 15, paddingTop: 10, }}>( {item.prod_cat_name} )</Text>
-                                        <Text style={{ fontSize: 20, paddingLeft: 30, paddingTop: 30, fontWeight: "bold", }}>Rs. {item.total}</Text>
+                                    <Text style={{ fontSize: hp('2.5%'), marginTop: 10, fontWeight: "bold", }}> {item.prod_name}</Text>
+                                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                                        <View style={{ flex: 1 }}>
+                                            <Text style={{ fontSize: hp('2%'), paddingTop: 10, }}>( {item.prod_cat_name} )</Text>
+                                        </View>
+                                        <View style={{ flex: 2 }}>
+                                            <Text style={{ fontSize: hp('3%'), paddingLeft: 30, paddingTop: 20, fontWeight: "bold", }}>Rs. {item.total}</Text>
+                                        </View>
                                     </View>
-                                    <Text style={{ fontSize: 15, paddingTop: 10, }}>QTY {item.quantity} </Text>
+                                    <Text style={{ fontSize: hp('2%'), paddingTop: 10, }}>QTY {item.quantity} </Text>
                                 </View>
 
                             </View>
-                            <View style={{ width: 380, height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
+                            <View style={{ width: '90%', height: 1, backgroundColor: 'gray', marginTop: 5, }}></View>
                         </View>
 
                     }
                     keyExtractor={({ id }, index) => id}
                 />
+                </View>
+                <View style={{flex:1, alignItems:'center',}}>
+                    <Text style={{ fontSize: hp('3%'), }}>Total Cost : Rs.{this.state.total}</Text>
+                </View>
+                
             </View>
         )
     }
