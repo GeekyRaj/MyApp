@@ -11,7 +11,7 @@ import {
 import NumericInput from 'react-native-numeric-input';
 import Swipeout from 'react-native-swipeout';
 import Icon from '@expo/vector-icons/Ionicons';
-import { withNavigation } from "react-navigation";
+import { withNavigation, SafeAreaView } from "react-navigation";
 import API from '../components/API';
 import CartContext from '../context/CartContext';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -190,15 +190,7 @@ class MyCart extends Component {
     }
 
     render() {
-        {
-            console.log('My Cart Render'); console.disableYellowBox = true;
-            // if (this.state.update == 1) {
-            //     console.log('UPDATE');
-            //     this.getCartData();
-            //     this.setState({ update: 0, })
-            // }
-        }
-
+        console.log('My Cart Render'); console.disableYellowBox = true;
         const swipeoutBtns = [
             {
                 text: 'Delete',
@@ -297,7 +289,7 @@ class MyCart extends Component {
             </View>
         </View>
         
-        const Empty = <View style={{ alignContent: 'center' }}>
+        const Empty = <View style={{marginTop:250, alignItems: 'center',justifyContent:'center',alignSelf:'center' }}>
             <Icon
                 style={{ paddingLeft: 16, color: 'black' }}
                 name="md-cart"
@@ -314,9 +306,11 @@ class MyCart extends Component {
             show = Empty
         }
         return (
+            <SafeAreaView style={{ flex: 1, }}>
             <View style={{ flex: 1, }}>
                 {show}
             </View>
+            </SafeAreaView>
         );
     }
 }

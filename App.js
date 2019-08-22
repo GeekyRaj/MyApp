@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button,Dimensions } from 'react-native';
+import { View, Text,Dimensions } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 
 import Login from './src/pages/Login';
 import Signup from './src/pages/Signup';
 import Forgetpw from './src/pages/Forgetpw';
-import Table from './src/pages/Table';
-import Chairs from './src/pages/Chairs';
-import Cupboards from './src/pages/Cupboards';
 import MyAccount from './src/pages/MyAccount';
 import MyCart from './src/pages/MyCart';
 import MyOrders from './src/pages/MyOrders';
-import Sofas from './src/pages/Sofas';
 import StoreLocator from './src/pages/StoreLocator';
 import DashboardScreen from './src/pages/DashboardScreen';
+import ProductList from './src/pages/ProductList';
 import ProductDetail from './src/pages/ProductDetail';
 import Resetpw from './src/pages/Resetpw';
 import Orderid from './src/pages/Orderid';
@@ -116,38 +113,6 @@ const StackMyCart = createStackNavigator(
     defaultConfig
 );
 
-const StackTable = createStackNavigator(
-  {
-    Table: Table,
-    ProductDetail: ProductDetail,
-  },
-    defaultConfig,
-);
-
-const StackSofas = createStackNavigator(
-  {
-    Sofas: Sofas,
-    ProductDetail: ProductDetail,
-  },
-    defaultConfig
-);
-
-const StackChairs = createStackNavigator(
-  {
-    Chairs: Chairs,
-    ProductDetail: ProductDetail,
-  },
-    defaultConfig
-);
-
-const StackCupboards = createStackNavigator(
-  {
-    Cupboards: Cupboards,
-    ProductDetail: ProductDetail,
-  },
-    defaultConfig
-);
-
 const StackMyAccount = createStackNavigator(
   {
     MyAccount: MyAccount,
@@ -172,10 +137,19 @@ const StackStoreLocator = createStackNavigator(
     defaultConfig
 );
 
+const ProductListStack = createStackNavigator(
+  {
+    ProductList: ProductList,
+    ProductDetail: ProductDetail,
+  },
+    defaultConfig,
+);
+
 const DashboardStackNavigator = createStackNavigator(
   {
     DashboardTabNavigator: DashboardScreen,
-    Login: Login,
+    ProductList: ProductList,
+    ProductDetail: ProductDetail
   },
   defaultConfig
 );
@@ -186,10 +160,7 @@ const DashboardStackNavigator = createStackNavigator(
 const AppDrawerNavigator = createDrawerNavigator({
   Dashboard: { screen: DashboardStackNavigator},
   MyCart: { screen: StackMyCart},
-  Table: { screen: StackTable },
-  Sofas: { screen: StackSofas },
-  Chairs: { screen: StackChairs },
-  Cupboards: { screen: StackCupboards },
+  ProductList: {screen: ProductListStack},
   MyAccount: { screen: StackMyAccount },
   StoreLocator: { screen: StackStoreLocator},
   MyOrders: { screen: StackMyOrders },
@@ -212,7 +183,4 @@ const InitialNavigator = createSwitchNavigator({
   App: AppSwitchNavigator 
 });
 
-//export default createAppContainer(InitialNavigator);
-
-//const AppContainer = createAppContainer(AppSwitchNavigator);
 const AppContainer = createAppContainer(InitialNavigator);

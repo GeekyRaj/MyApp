@@ -4,13 +4,7 @@ import {
 	View,
     Image,
 } from 'react-native';
-
-/*type Props = {
-    ratingobj : {
-        ratings: Number;
-        vews: Number;
-    }
-};*/
+import style from '../Styles';
 
 export default class StarRating extends Component{
 	render() {
@@ -29,28 +23,21 @@ export default class StarRating extends Component{
                 path = require('../images/star_unchek.png');
             }
 
-            stars.push((<Image key={i} style={styles.image} source={path} />));
+            stars.push((<Image key={i} style={style.Star} source={path} />));
         }
 
         return (
-            <View style={ styles.container }>
+            <View style={ style.StarContainer }>
                 { stars }
             </View>
         );
     }
 }
 const styles = StyleSheet.create({
-	container: {
-		width: 100,
-        height: 50,
-        flexDirection: 'row'
-    },
+	
     star: {
         width: 15,
         height: 15
        },
-       image: {
-		width: 12,
-		height: 12
-	},
+       
 });

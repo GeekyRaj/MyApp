@@ -10,6 +10,7 @@ import {
     ScrollView,
     Modal,
     AsyncStorage,
+    SafeAreaView,
     Dimensions,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -275,17 +276,19 @@ export default class Table extends Component {
         }
 
         return (
-
+            <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
             <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
                 <View style={styles.box}>
-                    <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
-                    <Text style={{ fontSize: hp('3%'), paddingLeft: 20, }}>Category - {pcatval} </Text>
-                    <View style={{ flex: 0, flexDirection: 'row', width: '100%', }}>
-                        <View>
+                    <View style={{flex: 4}}>
+                        <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
+                        <Text style={{ fontSize: hp('3%'), paddingLeft: 20, }}>Category - {pcatval} </Text>
+                    </View>
+                    <View style={{ flex: 2, flexDirection: 'row', width: '100%', }}>
+                        <View style={{flex:8}}>
 
-                            <Text style={{ fontSize: 15, paddingLeft: 20, marginBottom: 10, marginRight: 250 }}>{this.state.dataSource.producer}</Text>
+                            <Text style={{ fontSize: hp('2%'), paddingLeft: 20, marginBottom: 10, }}>{this.state.dataSource.producer}</Text>
                         </View>
-                        <View style={{flex:1, flexDirection: 'row-reverse', }}>
+                        <View style={{flex:4,}}>
                             <StarRating ratingObj={ratingObj} />
                         </View>
 
@@ -434,6 +437,7 @@ export default class Table extends Component {
                     </View>
                 </View>
             </View>
+            </SafeAreaView>
         )
     }
 }
@@ -463,7 +467,7 @@ const styles = StyleSheet.create({
         borderColor: 'black'
     },
     boxend: {
-        flex: 1,
+        flex: 2,
         width: '100%',
         height: 60,
         backgroundColor: '#ffffff',
@@ -472,14 +476,14 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '47%',
-        height: '90%',
+        height: '100%',
         backgroundColor: '#e91c1a',
         borderRadius: 10,
     },
     buttonRate: {
         marginLeft: 10,
         width: '47%',
-        height: '90%',
+        height: '100%',
         backgroundColor: '#9c908f',
         borderRadius: 10,
         alignContent: "center",

@@ -125,13 +125,13 @@ export default class DashboardScreen extends Component {
             numColumns={2}
             data={[
               { key: 1, ur: require("../images/Table.png"), pth: 'Table' },
-              { key: 2, ur: require("../images/Sofas.png"), pth: 'Sofas' },
-              { key: 3, ur: require("../images/Chairs.png"), pth: 'Chairs' },
+              { key: 3, ur: require("../images/Sofas.png"), pth: 'Sofas' },
+              { key: 2, ur: require("../images/Chairs.png"), pth: 'Chairs' },
               { key: 4, ur: require("../images/Cupboards.png"), pth: 'Cupboards' },
             ]}
             renderItem={({ item }) => {
-              // const p = item.pth;
-              return <TouchableOpacity onPress={() => this.props.navigation.navigate(item.pth)}>
+
+              return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductList', { name: item.pth, pid: item.key})}>
                 <Image
                   style={{ height: typeheight, width: typewidth, margin: 10, }}
                   source={item.ur}

@@ -101,6 +101,7 @@ export default class Forgetpass extends Component {
     }
 
     render() {
+        console.log('My Cart Render'); console.disableYellowBox = true;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.container}>

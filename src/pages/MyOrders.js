@@ -5,23 +5,29 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { withNavigation } from "react-navigation";
+import { withNavigation, SafeAreaView } from "react-navigation";
 import API from '../components/API';
+import Icon from '@expo/vector-icons/Ionicons';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
  class MyOrders extends Component {
-  static navigationOptions = {
-    title: 'My Orders',
-    headerStyle: {
-      backgroundColor: '#e91c1a',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-
-    }
-  };
+  static navigationOptions = ({ navigation }) => {
+    return {
+        title: 'My Orders',
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerLeft:
+            (<Icon
+                style={{ paddingLeft: 16, color: '#ffffff' }}
+                onPress={() => navigation.navigate('Dashboard')}
+                name="md-arrow-back"
+                size={30}
+            />),
+    };
+};
 
   constructor() {
     super();
@@ -59,6 +65,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
     console.disableYellowBox = true;
 
     return (
+      <SafeAreaView>
       <View >
         <FlatList
           data={this.state.dataSource}
@@ -81,6 +88,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
           keyExtractor={({ id }, index) => id}
         />
       </View>
+      </SafeAreaView>
     )
   }
 }

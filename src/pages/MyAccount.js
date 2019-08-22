@@ -9,20 +9,26 @@ import {
     AsyncStorage,
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
-import { withNavigation } from "react-navigation";
+import { withNavigation ,SafeAreaView,} from "react-navigation";
 import API from '../components/API';
 import style from '../Styles';
 
 class MyAccount extends Component {
-    static navigationOptions = {
-        title: 'My Account',
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-        headerStyle: {
-            backgroundColor: '#e91c1a',
-        }
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'My Account',
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerLeft:
+                (<Icon
+                    style={{ paddingLeft: 16, color: '#ffffff' }}
+                    onPress={() => navigation.navigate('Dashboard')}
+                    name="md-arrow-back"
+                    size={30}
+                />),
+        };
     };
 
     constructor() {
@@ -79,6 +85,7 @@ class MyAccount extends Component {
 
     render() {
         return (
+            <SafeAreaView style={styles.container}>
             <View style={styles.container}>
 
                 <View style={styles.imgView}>
@@ -157,6 +164,7 @@ class MyAccount extends Component {
                 </View>
 
             </View>
+            </SafeAreaView>
         )
     }
 }

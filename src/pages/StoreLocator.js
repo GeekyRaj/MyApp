@@ -7,7 +7,9 @@ import {
   FlatList,
   Dimensions
 } from 'react-native';
+import Icon from '@expo/vector-icons/Ionicons';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-navigation';
 
 const data = [
   { name: 'SKYLAND STORE', add: '6355 Edgewood Road Reisterstown, MD 21136'},
@@ -18,17 +20,22 @@ const data = [
 ]
 
 export default class StoreLocator extends Component {
-  static navigationOptions = {
-    title: 'Store Locator',
-    headerStyle: {
-      backgroundColor: '#e91c1a',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-
-    }
-  };
+  static navigationOptions = ({ navigation }) => {
+    return {
+        title: 'Store Locator',
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        headerLeft:
+            (<Icon
+                style={{ paddingLeft: 16, color: '#ffffff' }}
+                onPress={() => navigation.navigate('Dashboard')}
+                name="md-arrow-back"
+                size={30}
+            />),
+    };
+};
   render() {
     {console.disableYellowBox = true;}
     let dimensions = Dimensions.get("window");
@@ -36,6 +43,7 @@ export default class StoreLocator extends Component {
     let Width = dimensions.width-10;
 
     return (
+      <SafeAreaView style={{ flex: 1, }}>
       <View style={{ flex: 1, }}>
         <Image  style={{height: 280,width: '100%',}} source={require('../images/map.png')} />
         <FlatList
@@ -58,6 +66,7 @@ export default class StoreLocator extends Component {
         />
 
       </View>
+      </SafeAreaView>
     )
   }
 }

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-navigation';
 
 const data = [
     { img: require('../images/Table.png'), categ: 'table', amt: '30000', qty: 2, name: 'Dinning Table' },
@@ -86,6 +87,7 @@ export default class Orderid extends Component {
     render() {
 
         return (
+            <SafeAreaView style={{ flex: 1, }}>
             <View style={{ flex: 1, }}>
                 <View style={{flex:8}}>
                 <FlatList
@@ -125,6 +127,7 @@ export default class Orderid extends Component {
                 </View>
                 
             </View>
+            </SafeAreaView>
         )
     }
 }

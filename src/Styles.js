@@ -98,6 +98,20 @@ const style = StyleSheet.create({
             margin: 5,
             textAlign: 'left',
             color: 'white',
-        }
+        },
+    //Star Rating
+    StarContainer: {
+		width: '100%',
+        height: '70%',
+        flexDirection: 'row',
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    Star:{
+        padding:2,
+        //marginLeft:1,
+        width: wp('4%'),
+        height: hp('2%')
+    }
 })
 export default style;

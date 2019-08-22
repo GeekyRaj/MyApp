@@ -11,7 +11,6 @@ import {
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation } from "react-navigation";
-import API from './API';
 import style from '../Styles';
 import CartCount from './CartCount';
 import CartContext from '../context/CartContext';
@@ -24,6 +23,14 @@ class MenuDrawer extends Component {
         return (
             <TouchableOpacity style={style.MenuTouch} onPress={() => this.props.navigation.navigate(nav)}>
                 <Text style={style.link}>{text}</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    navType(pth,key) {
+        return (
+            <TouchableOpacity style={style.MenuTouch} onPress={() => this.props.navigation.navigate('ProductList', { name: pth, pid: key})}>
+                <Text style={style.link}>{pth}</Text>
             </TouchableOpacity>
         )
     }
@@ -121,19 +128,23 @@ class MenuDrawer extends Component {
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/tables_icon.png') } resizeMode="stretch"/>
-                        {this.navLink('Table', 'Tables')}
+                        {/* {this.navLink('Table', 'Tables')} */}
+                        {this.navType('Tables','1')}
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/sofa.png')} />
-                        {this.navLink('Sofas', 'Sofas')}
+                        {/* {this.navLink('Sofas', 'Sofas')} */}
+                        {this.navType('Sofas','3')}
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/chair.png')} />
-                        {this.navLink('Chairs', 'Chairs')}
+                        {/* {this.navLink('Chairs', 'Chairs')} */}
+                        {this.navType('Chairs','2')}
                     </View>
                     <View style={styles.SectionStyle}>
                         <Image style={styles.imgIcon} source={require('../images/cupboard.png')} />
-                        {this.navLink('Cupboards', 'Cupboards')}
+                        {/* {this.navLink('Cupboards', 'Cupboards')} */}
+                        {this.navType('Cupboards','4')}
                     </View>
                     <View style={styles.SectionStyle}>
                         <Icon style={{ color: '#ffffff' }} name="md-person" size={hp('4%')} />
