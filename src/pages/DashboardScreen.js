@@ -3,6 +3,7 @@ import {
   View,
   ScrollView,
   Image,
+  Text,
   Dimensions,
   FlatList,
   TouchableOpacity,
@@ -30,6 +31,7 @@ export default class DashboardScreen extends Component {
       fname: ' ',
       dataSource: [],
       selectedIndex: 0,
+      isLoaded: false,
     }
     this._retrieveData();
   }
@@ -38,7 +40,8 @@ export default class DashboardScreen extends Component {
     try {
       this.setState({
         item: await AsyncStorage.getItem('@user_at'),
-        fname: await AsyncStorage.getItem('@user_fname')
+        fname: await AsyncStorage.getItem('@user_fname'),
+        isloaded: true,
       })
       console.log('\n *** HOME ***')
     } catch (e) {
@@ -83,69 +86,75 @@ export default class DashboardScreen extends Component {
 
 
     //const access_id= this.props.navigation.getParam("access_id",1);
+    if(this.state.isloaded){
+      return (
 
-    return (
-
-      <View style={{ flex: 1, }}>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={true}
-          pagingEnabled={true}
-          scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          decelerationRate={0}
-          scrollEventThrottle={16}
-          snapToAlignment="center"
-          onMomentumScrollEnd = {this.setSelectedIndex}
-          ref = {this.scrollRef}
-          style={{
-            height: 10,
-          }}
-        >
-          {background.map((item, index) => (
-            <View key={`img-${index}`}>
-              <Image
-                style={{ height: imageHeight+10, width: imageWidth }}
-                source={item.slider}
-                resizeMode="stretch"
-              />
-            </View>
-          ))}
-
-        </ScrollView>
-            {/* RENDER DOTS */}
-        <View style={style.circleDiv}>
-          {background.map((item, i) => (
-            <View key={`item+${i}`} style={[style.whiteCircle, { opacity: i == selectedIndex ? 1 : 0.5 }]}></View>
-          ))}
-        </View>
-
-        <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center', width: '100%',}}>
-          <FlatList
-            numColumns={2}
-            data={[
-              { key: 1, ur: require("../images/Table.png"), pth: 'Table' },
-              { key: 3, ur: require("../images/Sofas.png"), pth: 'Sofas' },
-              { key: 2, ur: require("../images/Chairs.png"), pth: 'Chairs' },
-              { key: 4, ur: require("../images/Cupboards.png"), pth: 'Cupboards' },
-            ]}
-            renderItem={({ item }) => {
-
-              return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductList', { name: item.pth, pid: item.key})}>
+        <View style={{ flex: 1, }}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={true}
+            pagingEnabled={true}
+            scrollEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            decelerationRate={0}
+            scrollEventThrottle={16}
+            snapToAlignment="center"
+            onMomentumScrollEnd = {this.setSelectedIndex}
+            ref = {this.scrollRef}
+            style={{
+              height: 10,
+            }}
+          >
+            {background.map((item, index) => (
+              <View key={`img-${index}`}>
                 <Image
-                  style={{ height: typeheight, width: typewidth, margin: 10, }}
-                  source={item.ur}
-                  resizeMode="stretch" />
-              </TouchableOpacity>
-            }
-            }
-            keyExtractor={
-              (item, index) => index.toString()
-            }
-          />
-        </View>
+                  style={{ height: imageHeight+10, width: imageWidth }}
+                  source={item.slider}
+                  resizeMode="stretch"
+                />
+              </View>
+            ))}
 
+          </ScrollView>
+              {/* RENDER DOTS */}
+          <View style={style.circleDiv}>
+            {background.map((item, i) => (
+              <View key={`item+${i}`} style={[style.whiteCircle, { opacity: i == selectedIndex ? 1 : 0.5 }]}></View>
+            ))}
+          </View>
+
+          <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center', width: '100%',}}>
+            <FlatList
+              numColumns={2}
+              data={[
+                { key: 1, ur: require("../images/Table.png"), pth: 'Table' },
+                { key: 3, ur: require("../images/Sofas.png"), pth: 'Sofas' },
+                { key: 2, ur: require("../images/Chairs.png"), pth: 'Chairs' },
+                { key: 4, ur: require("../images/Cupboards.png"), pth: 'Cupboards' },
+              ]}
+              renderItem={({ item }) => {
+
+                return <TouchableOpacity onPress={() => this.props.navigation.navigate('ProductList', { name: item.pth, pid: item.key})}>
+                  <Image
+                    style={{ height: typeheight, width: typewidth, margin: 10, }}
+                    source={item.ur}
+                    resizeMode="stretch" />
+                </TouchableOpacity>
+              }
+              }
+              keyExtractor={
+                (item, index) => index.toString()
+              }
+            />
+          </View>
+
+        </View>
+      );
+    }
+    return (
+      <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+      <Image source={require("../images/9wcA.gif")} />
       </View>
-    );
+    )
   }
 }

@@ -35,7 +35,7 @@ export default class ProductList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = { isloaded: true,}
     }
 
     componentDidMount() {
@@ -46,6 +46,7 @@ export default class ProductList extends Component {
 
                 this.setState({
                     isLoading: false,
+                    isloaded: false,
                     dataSource: responseJson.data,
                 }, function () { });
             })
@@ -67,7 +68,14 @@ export default class ProductList extends Component {
                 </View>
             )
         }
-
+        if(this.state.isloaded){
+            return (
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <Image source={require("../images/9wcA.gif")} />
+                </View>
+              )
+        }
+        
 
 
         return (
