@@ -296,11 +296,7 @@ class MyCart extends Component {
         </View>
         
         const Empty = <View style={{marginTop:250, alignItems: 'center',justifyContent:'center',alignSelf:'center' }}>
-            <Icon
-                style={{ paddingLeft: 16, color: 'black' }}
-                name="md-cart"
-                size={150}
-            />
+            <Image source={require("../images/CartEmpty.jpg")} />
             <Text style={{ marginLeft: 5, fontSize: hp('6%'), }}>Cart Empty!</Text>
         </View>
 

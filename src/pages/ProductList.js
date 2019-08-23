@@ -11,6 +11,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import StarRating from '../components/StarRating';
 import API from '../components/API';
 import Icon from '@expo/vector-icons/Ionicons';
+import { NavigationEvents } from 'react-navigation';
 
 //type Props = {};
 
@@ -22,6 +23,7 @@ export default class ProductList extends Component {
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
+            headerRight: null,
             headerLeft:
                 (<Icon
                     style={{ paddingLeft: 16, color: '#ffffff' }}

@@ -88,7 +88,7 @@ class MyAccount extends Component {
     render() {
         if(this.state.isloading){
             return (
-                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center',}}>
                 <Image source={require("../images/Loader1.gif")} />
                 </View>
               )

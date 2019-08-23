@@ -40,16 +40,8 @@ const defaultConfig = {
             style={{ paddingLeft: 16,  color: '#ffffff' }}  
             onPress={() => navigation.openDrawer()}  
             name="md-menu"  
-            size={30}  
+            size={35}  
         />  
-    ),
-    headerRight: (
-      <Icon
-        style={{ paddingRight: 16 , color: '#ffffff'}}
-        //onPress={() => navigation.openDrawer()}
-        name="md-search"
-        size={30}
-      />
     ),
     headerStyle: {
       backgroundColor: '#e91c1a',
@@ -149,7 +141,7 @@ const DashboardStackNavigator = createStackNavigator(
   {
     DashboardTabNavigator: DashboardScreen,
     ProductList: ProductList,
-    ProductDetail: ProductDetail
+    ProductDetail: ProductDetail,
   },
   defaultConfig
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,Image } from 'react-native';
 
 class SplashScreen extends React.Component {
   performTimeConsumingTask = async() => {
@@ -21,10 +21,12 @@ class SplashScreen extends React.Component {
   render() {
     return (
       <View style={styles.viewStyles}>
-        <Text style={styles.textStyles}>
+        {/* <Text style={styles.textStyles}>
           NeoSTORE
-        </Text>
-      </View>
+        </Text> */}
+        {/* <Image source={require("../images/NeoStore.png")} style={{height:150, width:150,}} /> */}
+        <Image source={require("../images/HomeLoader.gif")} style={{height:200, width:300,}} />
+       </View>
     );
   }
 }
@@ -34,10 +36,10 @@ const styles = {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E91C1A'
+    backgroundColor: 'white'
   },
   textStyles: {
-    color: 'white',
+    color: '#E91C1A',
     fontSize: 40,
     fontWeight: 'bold'
   }

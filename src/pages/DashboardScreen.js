@@ -10,6 +10,7 @@ import {
   YellowBox,
   AsyncStorage,
 } from 'react-native';
+import Icon from '@expo/vector-icons/Ionicons';
 import { background } from '../components/slider';
 import style from '../Styles';
 
