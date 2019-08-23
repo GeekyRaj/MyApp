@@ -49,7 +49,6 @@ export default class Table extends Component {
         super(props);
         this.state = {
             pid: null,
-            isLoading: true,
             rating: [],
             addcart: [],
             dataSource: [],
@@ -64,6 +63,7 @@ export default class Table extends Component {
             //To set the default Star Selected
             Max_Rating: 5,
             //To set the max number of Stars
+            isloaded: true,
         };
         this.Star = 'http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png';
         this.Star_With_Border = 'http://aboutreact.com/wp-content/uploads/2018/08/star_corner.png';
@@ -109,7 +109,7 @@ export default class Table extends Component {
                 if (responseJson.status == 200) {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
-                    this.props.navigation.navigate('Dashboard');
+                    this.props.navigation.navigate('DashboardTabNavigator');
                     //ContextVal.onPlus();
                     ContextVal.state.count= responseJson.total_carts;
                     console.log('COUNT : ' + responseJson.total_carts);
@@ -188,10 +188,10 @@ export default class Table extends Component {
             .then((responseJson) => {
                 //console.log(responseJson);
                 this.setState({
-                    isLoading: false,
                     dataSource: responseJson.data,
                     productImages: responseJson.data.product_images,
-                    largeImage: responseJson.data.product_images[0].image
+                    largeImage: responseJson.data.product_images[0].image,
+                    isloaded: false,
                 })
 
             })
@@ -261,13 +261,7 @@ export default class Table extends Component {
             pcatval = "Cupboard";
         }
 
-        if (this.state.isLoading) {
-            return (
-                <View style={{ flex: 1, padding: 20 }}>
-                    <ActivityIndicator />
-                </View>
-            )
-        }
+       
 
         //getting rating
         const ratingObj = {
@@ -275,9 +269,17 @@ export default class Table extends Component {
             views: this.state.dataSource.view_count
         }
 
+        if(this.state.isloaded){
+            return (
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <Image source={require("../images/Loader1.gif")} />
+                </View>
+              )
+        }
+
         return (
             <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
-            <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
+            <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3", width:'100%' }}>
                 <View style={styles.box}>
                     <View style={{flex: 4}}>
                         <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>

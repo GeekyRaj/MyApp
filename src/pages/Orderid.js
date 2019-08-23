@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
     Text,
     Image,
-    TextInput,
     View,
-    TouchableOpacity,
     FlatList,
     AsyncStorage
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-navigation';
-
-const data = [
-    { img: require('../images/Table.png'), categ: 'table', amt: '30000', qty: 2, name: 'Dinning Table' },
-    { img: require("../images/Sofas.png"), categ: 'Sofa', amt: '25000', qty: 3, name: 'Office Sofa' },
-    { img: require("../images/Chairs.png"), categ: 'Chair', amt: '25000', qty: 1, name: ' Designer Chair' },
-]
 
 export default class Orderid extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -44,6 +35,7 @@ export default class Orderid extends Component {
             address: "",
             cost: "",
             total:'',
+            isloading: true,
         };
     }
 
@@ -71,6 +63,7 @@ export default class Orderid extends Component {
                 this.setState({
                     dataSource: responseJson.data.order_details,
                     total: responseJson.data.cost,
+                    isloading: false,
                 });
                 console.log(responseJson);
                 try {
@@ -85,6 +78,14 @@ export default class Orderid extends Component {
     }
 
     render() {
+
+        if(this.state.isloading){
+            return (
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <Image source={require("../images/Loader1.gif")} />
+                </View>
+              )
+          }
 
         return (
             <SafeAreaView style={{ flex: 1, }}>

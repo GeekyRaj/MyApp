@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     FlatList,
     Image,
-    ActivityIndicator,
     Dimensions,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -45,7 +44,6 @@ export default class ProductList extends Component {
             .then((responseJson) => {
 
                 this.setState({
-                    isLoading: false,
                     isloaded: false,
                     dataSource: responseJson.data,
                 }, function () { });
@@ -61,17 +59,10 @@ export default class ProductList extends Component {
         screenH = dimensions.height - 10;
         console.log(screenW + ' ' + screenH);
 
-        if (this.state.isLoading) {
-            return (
-                <View style={{ flex: 1, padding: 20 }}>
-                    <ActivityIndicator />
-                </View>
-            )
-        }
         if(this.state.isloaded){
             return (
                 <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
-                <Image source={require("../images/9wcA.gif")} />
+                <Image source={require("../images/Loader1.gif")} />
                 </View>
               )
         }

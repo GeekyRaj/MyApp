@@ -37,6 +37,7 @@ class MyAccount extends Component {
             dataSource: [],
             seconds: 0,
             TextInputEnable: false,
+            isloading: true,
         }
         //this.getData();
         console.log('**** My Account ****');
@@ -65,7 +66,8 @@ class MyAccount extends Component {
         return API(url, method, null)
             .then(responseJson => {
                 this.setState({
-                    dataSource: responseJson.data.user_data
+                    dataSource: responseJson.data.user_data,
+                    isloading: false,
                 });
                 try {
                     AsyncStorage.setItem('@user_phoneno', this.state.dataSource.phone_no);
@@ -84,6 +86,13 @@ class MyAccount extends Component {
     }
 
     render() {
+        if(this.state.isloading){
+            return (
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <Image source={require("../images/Loader1.gif")} />
+                </View>
+              )
+        }
         return (
             <SafeAreaView style={styles.container}>
             <View style={styles.container}>

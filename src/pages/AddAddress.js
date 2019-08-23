@@ -46,20 +46,6 @@ export default class AddAddress extends Component {
         const method = "POST";
         const body = `address=${Address}`;
         return API(url,method,body)
-        //const token = await AsyncStorage.getItem("@user_at");
-        /*const fetchConfig = {
-            method: "POST",
-            headers: {
-                access_token: token,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `address=${Address}`
-        };
-        return fetch(
-            `http://staging.php-dev.in:8844/trainingapp/api/order`,
-            fetchConfig
-        )
-        .then(response => response.json())*/
         .then(responseJson => {
             this.setState({ dataSource : responseJson }, function() {}),
               this.Prompt();
@@ -73,7 +59,7 @@ export default class AddAddress extends Component {
         const { navigate } = this.props.navigation;
         if (this.state.dataSource.status == 200) {
           setTimeout(function() {
-            navigate("Home");
+            navigate("MyCart");
           }, 2000);
           alert("" + this.state.dataSource.user_msg);
         } else if (this.state.dataSource.status == 401) {

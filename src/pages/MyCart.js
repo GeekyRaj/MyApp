@@ -74,6 +74,7 @@ class MyCart extends Component {
             cartStatus: 1,
             cartupdate: '',
             update: 0,
+            isloading: true,
         };
         console.log('\n **** In Mycart ****')
     }
@@ -94,6 +95,9 @@ class MyCart extends Component {
     }
 
     getCartData = async () => {
+        if(!this.state.isloading){
+            this.setState({ isloading: true})
+        }
         try {
             const url = "cart";
             const method = "GET";
@@ -103,13 +107,14 @@ class MyCart extends Component {
                     this.setState({
                         dataSource: responseJson.data,
                         cartCount: responseJson.count,
-                        cartTotal: responseJson.total
+                        cartTotal: responseJson.total,
+                        isloading: false,
                     });
 
                     if (responseJson.message == 'Cart Empty') {
                         this.setState({ cartStatus: 0 })
                     }
-                    else { this.setState({ cartStatus: 1 }) }
+                    else { this.setState({ cartStatus: 1,  }) }
                     console.log('getCartData() : Cart Data retreived');
                 })
                 .catch(error => {
@@ -149,9 +154,10 @@ class MyCart extends Component {
             .then(responseJson => {
                 console.log(responseJson);
                 if (responseJson.status == 200) {
+                    this.setState({ update: 1, isloading: true });
                     this.getCartData();
                     ContextVal.state.count= responseJson.total_carts;
-                    this.setState({ update: 1 });
+                    
                     //console.log(responseJson.status);
                     try {
                         AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
@@ -305,6 +311,15 @@ class MyCart extends Component {
         else {
             show = Empty
         }
+
+        if(this.state.isloading){
+            return (
+                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+                <Image source={require("../images/Loader1.gif")} />
+                </View>
+              )
+          }
+
         return (
             <SafeAreaView style={{ flex: 1, }}>
             <View style={{ flex: 1, }}>

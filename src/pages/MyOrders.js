@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Image
 } from 'react-native';
 import { withNavigation, SafeAreaView } from "react-navigation";
 import API from '../components/API';
@@ -35,6 +36,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
       access_token: "",
       dataSource: [],
       update: 'no',
+      isloading: true,
     };
   }
 
@@ -53,6 +55,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
       .then(responseJson => {
         this.setState({
           dataSource: responseJson.data,
+          isloading: false,
         });
         console.log('OrderList retreived');
       })
@@ -64,6 +67,13 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
   render() {
     console.disableYellowBox = true;
 
+    if(this.state.isloading){
+      return (
+          <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
+          <Image source={require("../images/Loader1.gif")} />
+          </View>
+        )
+    }
     return (
       <SafeAreaView>
       <View >

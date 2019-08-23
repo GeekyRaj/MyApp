@@ -153,7 +153,7 @@ export default class DashboardScreen extends Component {
     }
     return (
       <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
-      <Image source={require("../images/9wcA.gif")} />
+      <Image source={require("../images/Loader1.gif")} />
       </View>
     )
   }
