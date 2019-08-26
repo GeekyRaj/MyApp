@@ -30,7 +30,6 @@ const DrawerConfig = {
     return(<MenuDrawer navigation={navigation}/>)
     
   },
-  
 }
 const defaultConfig = {
   defaultNavigationOptions: ({ navigation }) => {  
@@ -172,7 +171,8 @@ const AppSwitchNavigator = createSwitchNavigator({
 
 const InitialNavigator = createSwitchNavigator({
   Splash: SplashScreen,
-  App: AppSwitchNavigator 
+  App: AppSwitchNavigator,
+  Dashboard: { screen: AppDrawerNavigator },
 });
 
 const AppContainer = createAppContainer(InitialNavigator);

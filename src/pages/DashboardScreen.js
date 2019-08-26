@@ -80,7 +80,7 @@ export default class DashboardScreen extends Component {
     let imageHeight = Math.round((dimensions.width * 9) / 16);
     let imageWidth = dimensions.width;
     let typewidth = dimensions.width / 2.3;
-    let typeheight = dimensions.height / 4.3;
+    let typeheight = dimensions.height / 3.9;
     //console.log(dimensions.height+' '+typeheight);
     const selectedIndex = this.state.selectedIndex;
 

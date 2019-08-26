@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text,Image } from 'react-native';
+import { View,Image,AsyncStorage, } from 'react-native';
 
 class SplashScreen extends React.Component {
   performTimeConsumingTask = async() => {
@@ -14,9 +14,21 @@ class SplashScreen extends React.Component {
   async componentDidMount() {
     const data = await this.performTimeConsumingTask();
     if (data !== null) {
-      this.props.navigation.navigate('App');
+      this.CheckIfAlreadyLogin()
     }
   }
+
+  async CheckIfAlreadyLogin() {
+    const email = await AsyncStorage.getItem("@user_at");
+    //const pass = await AsyncStorage.getItem("@user_pass");
+    if (email != null) {
+        console.log('SPLASH: User data already exist ' + email);
+        this.props.navigation.navigate('Dashboard');
+    }
+    else{
+      this.props.navigation.navigate('App');
+    }
+}
 
   render() {
     return (

@@ -30,6 +30,7 @@ export default class Login extends Component {
         headerTitleStyle: {
             fontWeight: 'bold',
         },
+        drawerLockMode: 'locked-closed'
     };
 
     constructor() {
@@ -48,20 +49,10 @@ export default class Login extends Component {
             hidePassword: true,
             isLoading: true
         }
-        this.CheckIfAlreadyLogin()
     }
 
     managePasswordVisibility = () => {
         this.setState({ hidePassword: !this.state.hidePassword });
-    }
-
-    async CheckIfAlreadyLogin() {
-        const email = await AsyncStorage.getItem("@user_at");
-        //const pass = await AsyncStorage.getItem("@user_pass");
-        if (email != null) {
-            console.log('User data already exist ' + email);
-            this.props.navigation.navigate('Dashboard');
-        }
     }
 
     updateValue(text, field) {
