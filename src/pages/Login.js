@@ -6,12 +6,13 @@ import {
     View,
     TouchableOpacity,
     AsyncStorage,
-    Image,
+    BackHandler,
+    ToastAndroid,
     KeyboardAvoidingView
 } from 'react-native';
 import Icon from '@expo/vector-icons/Ionicons';
 import style from '../Styles';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 import Logo from '../components/Logo';
@@ -129,19 +130,6 @@ export default class Login extends Component {
                     if (status == 200) {
                         this.props.navigation.navigate('Dashboard');
                         ContextVal.getUpdate();
-                        //Set initial cart count from API
-                        // const method = 'GET';
-                        // const url = 'users/getUserData';
-                        // return API(url, method, null)
-                        //     .then(responseJson => {
-                        //         if (responseJson.status == 200) {
-                        //             console.log('COUNT : ' + responseJson.data.total_carts)
-                        //             ContextVal.state.count = responseJson.data.total_carts;
-                        //         }
-                        //     })
-                        //     .catch(error => {
-                        //         console.error(error);
-                        //     });
                     }
                     else {
                         alert(msg);
@@ -169,80 +157,89 @@ export default class Login extends Component {
         console.log("User Login Data Saved.");
     }
 
+
     componentDidMount() {
-        console.log('----Login Component Did Mounnt----');
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    }
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    handleBackButton() {
+        ToastAndroid.show('You cant go back', ToastAndroid.SHORT);
+        return true;
     }
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
-            <View style={styles.container}>
+                <View style={styles.container}>
 
-                <Logo />
-                <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-                    <View style={styles.LoginForm}>
-                        <View style={[style.SectionStyle, !this.state.userVal ? style.error : null]}>
-                            <Icon
-                                style={style.Expoicon}
-                                name="md-person"
-                                size={hp('3%')}
-                            />
-                            <TextInput
-                                style={style.inputBox}
-                                placeholder="Username"
-                                placeholderTextColor='#DBC6C6'
-                                autoCapitalize='none'
-                                onChangeText={(text) => this.updateValue(text, 'username')}
-                                keyboardType="email-address"
-                                returnKeyType='next'
-                                onSubmitEditing={()=> this.refs.pass.focus()}
-                            />
-                        </View>
-                        <View style={[style.SectionStyle, !this.state.passVal ? style.error : null]}>
-                            <Icon
-                                style={style.Expoicon}
-                                name="md-lock"
-                                size={hp('3%')}
-                            />
-                            <TextInput
-                                style={style.inputBox}
-                                placeholder="Password"
-                                underlineColorAndroid='transparent'
-                                secureTextEntry={this.state.hidePassword}
-                                placeholderTextColor='#DBC6C6'
-                                autoCapitalize='none'
-                                returnKeyType='go'
-                                onChangeText={(text) => this.updateValue(text, 'password')}
-                                ref="pass"
-                            />
-                            <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                                <Icon style={{ color: '#ffffff', }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={hp('3%')} />
+                    <Logo />
+                    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+                        <View style={styles.LoginForm}>
+                            <View style={[style.SectionStyle, !this.state.userVal ? style.error : null]}>
+                                <Icon
+                                    style={style.Expoicon}
+                                    name="md-person"
+                                    size={hp('3%')}
+                                />
+                                <TextInput
+                                    style={style.inputBox}
+                                    placeholder="Username"
+                                    placeholderTextColor='#DBC6C6'
+                                    autoCapitalize='none'
+                                    onChangeText={(text) => this.updateValue(text, 'username')}
+                                    keyboardType="email-address"
+                                    returnKeyType='next'
+                                    onSubmitEditing={() => this.refs.pass.focus()}
+                                />
+                            </View>
+                            <View style={[style.SectionStyle, !this.state.passVal ? style.error : null]}>
+                                <Icon
+                                    style={style.Expoicon}
+                                    name="md-lock"
+                                    size={hp('3%')}
+                                />
+                                <TextInput
+                                    style={style.inputBox}
+                                    placeholder="Password"
+                                    underlineColorAndroid='transparent'
+                                    secureTextEntry={this.state.hidePassword}
+                                    placeholderTextColor='#DBC6C6'
+                                    autoCapitalize='none'
+                                    returnKeyType='go'
+                                    onChangeText={(text) => this.updateValue(text, 'password')}
+                                    ref="pass"
+                                />
+                                <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                                    <Icon style={{ color: '#ffffff', }} name={(this.state.hidePassword) ? "md-eye-off" : "md-eye"} size={hp('3%')} />
+                                </TouchableOpacity>
+                            </View>
+
+                            <CartContext.Consumer>
+                                {ContextVal => (
+                                    <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit(ContextVal)}>
+                                        <Text style={style.WhiteTextbutton}>LOGIN</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </CartContext.Consumer>
+
+
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Forgetpw')}>
+                                <Text style={{ fontSize: hp('2.1%'), color: '#ffffff' }}> Forgot Password?</Text>
                             </TouchableOpacity>
                         </View>
-
-                        <CartContext.Consumer>
-                            {ContextVal => (
-                                <TouchableOpacity style={style.WhiteButton} onPress={() => this.submit(ContextVal)}>
-                                    <Text style={style.WhiteTextbutton}>LOGIN</Text>
-                                </TouchableOpacity>
-                            )}
-                        </CartContext.Consumer>
-
-
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Forgetpw')}>
-                            <Text style={{ fontSize: hp('2.1%'), color: '#ffffff' }}> Forgot Password?</Text>
+                    </KeyboardAvoidingView>
+                    <View style={style.signupTextCont}>
+                        <Text style={style.signupText}>DONT HAVE AN ACCOUNT?</Text>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
+                            <Text style={style.signupButton}> SignUp</Text>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
-                <View style={style.signupTextCont}>
-                    <Text style={style.signupText}>DONT HAVE AN ACCOUNT?</Text>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
-                        <Text style={style.signupButton}> SignUp</Text>
-                    </TouchableOpacity>
-                </View>
 
-            </View>
-        </SafeAreaView>
+                </View>
+            </SafeAreaView>
         )
     }
 }
