@@ -25,6 +25,7 @@ import CartProvider from './src/context/CartProvider';
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
+  edgeWidth: 0,
   drawerWidth: WIDTH*0.83,
   contentComponent: ({navigation}) => {
     return(<MenuDrawer navigation={navigation}/>)
@@ -145,7 +146,15 @@ const DashboardStackNavigator = createStackNavigator(
   defaultConfig
 );
 
-
+DashboardStackNavigator.navigationOptions = ({ navigation }) => {
+  let drawerLockMode = 'unlocked';
+  if (navigation.state.index > 0) {
+    drawerLockMode = 'locked-closed';
+  }
+  return {
+    drawerLockMode
+  };
+};
 
 /*-----------------DRAWER NAVIGATION CALLED BY SWITCH NAVIGATOR-----------------*/
 const AppDrawerNavigator = createDrawerNavigator({
@@ -172,7 +181,7 @@ const AppSwitchNavigator = createSwitchNavigator({
 const InitialNavigator = createSwitchNavigator({
   Splash: SplashScreen,
   App: AppSwitchNavigator,
-  Dashboard: { screen: AppDrawerNavigator },
+  Dashboard: AppDrawerNavigator ,
 });
 
 const AppContainer = createAppContainer(InitialNavigator);

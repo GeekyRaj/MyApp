@@ -166,7 +166,7 @@ export default class Login extends Component {
     }
 
     handleBackButton() {
-        ToastAndroid.show('You cant go back', ToastAndroid.SHORT);
+        //ToastAndroid.show('You cant go back', ToastAndroid.SHORT);
         return true;
     }
 
