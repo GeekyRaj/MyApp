@@ -7,6 +7,7 @@ import {
     Image,
     Dimensions,
 } from 'react-native';
+import NumberFormat from 'react-number-format';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import StarRating from '../components/StarRating';
 import API from '../components/API';
@@ -93,7 +94,14 @@ export default class ProductList extends Component {
                                     <Text style={{ fontSize: hp('2%'), }}>{item.producer}</Text>
                                     <View style={{flex:1, flexDirection: 'row', }}>
                                         <View style={{flex:8}}>
-                                            <Text style={{ marginTop: 5, color: 'red', fontSize: hp('3%') }}>Rs. {item.cost}</Text>
+                                            <NumberFormat 
+                                                value={item.cost} 
+                                                displayType={'text'} 
+                                                thousandSeparator={true} 
+                                                prefix={'\u20B9 ' } 
+                                                renderText={
+                                                    value=><Text style={{ marginTop: 5, color: 'red', fontSize: hp('3%'), fontWeight:'bold' }}>{value}</Text>} 
+                                            />
                                         </View>
                                         <View style={{flex:4}}>
                                             <StarRating ratingObj={ratingObj} />

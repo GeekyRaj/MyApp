@@ -8,13 +8,14 @@ import {
     FlatList,
     AsyncStorage,
 } from 'react-native';
+import NumberFormat from 'react-number-format';
 import NumericInput from 'react-native-numeric-input';
 import Swipeout from 'react-native-swipeout';
 import Icon from '@expo/vector-icons/Ionicons';
 import { withNavigation, SafeAreaView } from "react-navigation";
 import API from '../components/API';
 import CartContext from '../context/CartContext';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     Textbutton: {
@@ -28,9 +29,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: hp('8%'),
-        backgroundColor: '#ffffff',
-        //position: 'absolute',
-        //bottom: 0,
+        backgroundColor:'#e0ebeb'
     },
     button: {
         width: '50%',
@@ -95,15 +94,15 @@ class MyCart extends Component {
     }
 
     getCartData = async () => {
-        if(!this.state.isloading){
-            this.setState({ isloading: true})
+        if (!this.state.isloading) {
+            this.setState({ isloading: true })
         }
         try {
             const url = "cart";
             const method = "GET";
             return API(url, method, null)
                 .then(responseJson => {
-                    //console.log(responseJson);
+                    console.log(responseJson);
                     this.setState({
                         dataSource: responseJson.data,
                         cartCount: responseJson.count,
@@ -114,7 +113,7 @@ class MyCart extends Component {
                     if (responseJson.message == 'Cart Empty') {
                         this.setState({ cartStatus: 0 })
                     }
-                    else { this.setState({ cartStatus: 1,  }) }
+                    else { this.setState({ cartStatus: 1, }) }
                     console.log('getCartData() : Cart Data retreived');
                 })
                 .catch(error => {
@@ -156,8 +155,8 @@ class MyCart extends Component {
                 if (responseJson.status == 200) {
                     this.setState({ update: 1, isloading: true });
                     this.getCartData();
-                    ContextVal.state.count= responseJson.total_carts;
-                    
+                    ContextVal.state.count = responseJson.total_carts;
+
                     //console.log(responseJson.status);
                     try {
                         AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
@@ -208,94 +207,101 @@ class MyCart extends Component {
 
 
 
-        const Data = 
-        <View style={{flex:1}}>
-            <View style={{flex:10}}>
-            <FlatList
-                data={this.state.dataSource}
-                extraData={this.state.rowIndex}
-                renderItem={({ item, index }) => {
+        const Data =
+            <View style={{ flex: 1 }}>
+                <View style={{ flex: 10 }}>
+                    <FlatList
+                        data={this.state.dataSource}
+                        extraData={this.state.rowIndex}
+                        renderItem={({ item, index }) => {
 
-                    return (
-                        <CartContext.Consumer>
-                            {ContextVal => (
-                                <Swipeout
-                                    right={swipeoutBtns} backgroundColor={'white'}
-                                    onOpen={() => (this.onSwipeOpen(index, item.product.id))}
-                                    close={this.state.rowIndex !== index}
-                                    onClose={() => (this.onSwipeClose(index, item.product.id))}
-                                    rowIndex={index}
-                                    sectionId={0}
-                                    autoClose={true}
-                                >
-                                    <View style={{width:'100%',marginLeft:10,}}>
-                                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
-                                            <Image
-                                                style={{ height: hp('12%'), width: wp('20%'), margin: 8, }}
-                                                source={{ uri: item.product.product_images }} resizeMode='stretch' />
-                                            <View style={{ flex: 1, flexDirection: 'column', marginLeft: 5, }}>
-                                                <Text style={{ fontSize: hp('2.5%'), marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
-                                                <View style={{ flex:1,flexDirection: 'row' }}>
-                                                    <View style={{flex:1}}>
-                                                        <Text style={{ fontSize: hp('2%'), }}>( {item.product.product_category} )</Text>
+                            return (
+                                <CartContext.Consumer>
+                                    {ContextVal => (
+                                        <View style={{ width: '100%', marginLeft: 10, }}>
+                                            <View style={{ flex: 1, flexDirection: 'row', marginTop: 10, marginRight: 10, }}>
+                                                <Image
+                                                    style={{ height: hp('12%'), width: wp('20%'), margin: 8, }}
+                                                    source={{ uri: item.product.product_images }} resizeMode='stretch' />
+                                                <View style={{ flex: 1, flexDirection: 'column', marginLeft: 5, }}>
+                                                    <Text style={{ fontSize: hp('2.5%'), marginTop: 10, fontWeight: "bold", }}> {item.product.name}</Text>
+                                                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                                                        <View style={{ flex: 1 }}>
+                                                            <Text style={{ fontSize: hp('2%'), }}>( {item.product.product_category} )</Text>
+                                                        </View>
+                                                        <View style={{ flex: 2 }}>
+                                                            <NumberFormat
+                                                                value={item.product.cost}
+                                                                displayType={'text'}
+                                                                thousandSeparator={true}
+                                                                prefix={'\u20B9 '}
+                                                                renderText={
+                                                                    value => <Text style={{ fontSize: hp('3%'), paddingTop: 10, fontWeight: "bold", fontWeight: 'bold' }}>{value}</Text>}
+                                                            />
+                                                        </View>
                                                     </View>
-                                                    <View style={{flex:2}}>
-                                                        <Text style={{ fontSize: hp('3%'),  paddingTop: 10, fontWeight: "bold", }}>Rs. {item.product.sub_total}</Text>
-                                                    </View>
-                                                </View>
-                                                <View style={{ flexDirection: 'row', flex:1 }}>
-                                                    <NumericInput
-                                                        //value={item.quantity}
-                                                        initValue={item.quantity}
-                                                        //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                                                        totalWidth={hp('10%')}
-                                                        totalHeight={hp('4%')}
-                                                        iconSize={25}
-                                                        minValue={1}
-                                                        maxValue={8}
-                                                        step={1}
-                                                        valueType='integer'
-                                                        rounded
-                                                        textColor='black'
-                                                        iconStyle={{ color: 'black' }}
-                                                        rightButtonBackgroundColor='red'
-                                                        leftButtonBackgroundColor='white'
-                                                        onChange={value => this.UpdateQty(value, item.product.id)} />
-                                                    <View style={{ marginLeft: wp('40%') }}>
-                                                        <TouchableOpacity onPress={() => this.swipeHandleDelete(item.product.id, ContextVal)}>
-                                                            <Icon style={{ color: 'red' }} name="md-trash" size={hp('5%')} />
-                                                        </TouchableOpacity>
+
+                                                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                                                        <NumericInput
+                                                            //value={item.quantity}
+                                                            initValue={item.quantity}
+                                                            //onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                                                            totalWidth={hp('10%')}
+                                                            totalHeight={hp('4%')}
+                                                            iconSize={25}
+                                                            minValue={1}
+                                                            maxValue={8}
+                                                            step={1}
+                                                            valueType='integer'
+                                                            rounded
+                                                            textColor='black'
+                                                            iconStyle={{ color: 'black' }}
+                                                            rightButtonBackgroundColor='red'
+                                                            leftButtonBackgroundColor='white'
+                                                            onChange={value => this.UpdateQty(value, item.product.id)} />
+                                                        <View style={{ marginLeft: wp('40%') }}>
+                                                            <TouchableOpacity onPress={() => this.swipeHandleDelete(item.product.id, ContextVal)}>
+                                                                <Icon style={{ color: 'red' }} name="md-trash" size={hp('5%')} />
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
                                                 </View>
                                             </View>
+                                            <View style={{ width: '95%', height: 1, backgroundColor: 'gray', marginTop: 5, }}>
+
+                                            </View>
                                         </View>
-                                        <View style={{ width: '90%', height: 1, backgroundColor: 'gray', marginTop: 5, }}>
+                                    )}
+                                </CartContext.Consumer>
+                            );
 
-                                        </View>
-                                    </View></Swipeout>
-                            )}
-                        </CartContext.Consumer>
-                    );
+                        }
 
-                }
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+                <View style={styles.boxend}>
+                    <View style={{ flexDirection: 'row', margin: 10,  }}>
 
-                }
-                keyExtractor={(item, index) => index.toString()}
-            />
-            </View>
-            <View style={styles.boxend}>
-                <View style={{ flexDirection: 'row', margin: 10, }}>
+                        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
+                            <Text style={styles.Textbutton}>ORDER NOW</Text>
+                        </TouchableOpacity>
+                        
+                        <NumberFormat
+                            value={this.state.cartTotal}
+                            displayType={'text'}
+                            thousandSeparator={true}
+                            prefix={'\u20B9 '}
+                            renderText={
+                                value => <Text style={{ marginLeft:5,fontSize: hp('3.5%'), paddingTop: 10, fontWeight: "bold",}}>{value}</Text>}
+                        />
 
-                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('AddAddress')}>
-                        <Text style={styles.Textbutton}>ORDER NOW</Text>
-                    </TouchableOpacity>
-                    <Text style={{ fontSize: hp('4%'), fontWeight: "bold", }}> Rs. {this.state.cartTotal} </Text>
-
+                    </View>
                 </View>
             </View>
-        </View>
-        
-        const Empty = <View style={{marginTop:250, alignItems: 'center',justifyContent:'center',alignSelf:'center' }}>
+
+        const Empty = <View style={{ marginTop: 250, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
             <Image source={require("../images/CartEmpty.jpg")} />
             <Text style={{ marginLeft: 5, fontSize: hp('6%'), }}>Cart Empty!</Text>
         </View>
@@ -308,19 +314,19 @@ class MyCart extends Component {
             show = Empty
         }
 
-        if(this.state.isloading){
+        if (this.state.isloading) {
             return (
-                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
-                <Image source={require("../images/Loader1.gif")} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require("../images/Loader1.gif")} />
                 </View>
-              )
-          }
+            )
+        }
 
         return (
             <SafeAreaView style={{ flex: 1, }}>
-            <View style={{ flex: 1, }}>
-                {show}
-            </View>
+                <View style={{ flex: 1, }}>
+                    {show}
+                </View>
             </SafeAreaView>
         );
     }

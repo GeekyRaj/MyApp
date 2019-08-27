@@ -21,7 +21,8 @@
     "react-native-responsive-screen": "^1.2.2",
     "react-native-simple-radio-button": "^2.7.3",
     "react-native-swipeout": "^2.3.6",
-    "react-navigation": "^3.0.8"
+    "react-navigation": "^3.0.8",
+    "react-number-format": "^4.2.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"

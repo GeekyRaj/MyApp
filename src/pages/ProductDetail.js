@@ -4,15 +4,14 @@ import {
     Text,
     View,
     TouchableOpacity,
-    TextInput,
     Image,
-    ActivityIndicator,
     ScrollView,
     Modal,
     AsyncStorage,
     SafeAreaView,
     Dimensions,
 } from 'react-native';
+import NumberFormat from 'react-number-format';
 import NumericInput from 'react-native-numeric-input';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -59,7 +58,7 @@ export default class Table extends Component {
             ratingModalVisible: false,
 
             qty: 1,
-            qtypress: false,
+            qtypress: true,
 
             Default_Rating: 1,
             //To set the default Star Selected
@@ -81,9 +80,9 @@ export default class Table extends Component {
         this.setState({ quantityModalVisible: visible });
         console.log(this.state.qty);
         if (visible == false) {
-            if (this.state.qty >= 1 ) {
-                console.log("YES") 
-                if( this.state.qtypress == true ){
+            if (this.state.qty >= 1) {
+                console.log("YES")
+                if (this.state.qtypress == true) {
                     console.log('Clicked Button')
                     this.addToCart(ContextVal);
                 }
@@ -108,11 +107,11 @@ export default class Table extends Component {
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
                     this.props.navigation.navigate('DashboardTabNavigator');
                     //Set Context count value
-                    if(ContextVal != null){
+                    if (ContextVal != null) {
                         ContextVal.state.count = responseJson.total_carts;
                     }
                     console.log('COUNT : ' + responseJson.total_carts);
-                    this.setState({ qtypress:false})
+                    this.setState({ qtypress: false })
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');
                         AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
@@ -218,14 +217,13 @@ export default class Table extends Component {
             )
         }
     }
-    AddQty(qty){
-        if(qty >8 ){
+    AddQty(qty) {
+        if (qty > 8) {
             ToastAndroid.show('Quantity cannot be greater then 8. ', ToastAndroid.SHORT);
         }
-        else
-        {
-            this.setState({ qty: qty})
-            console.log('Qty : '+this.state.qty);
+        else {
+            this.setState({ qty: qty })
+            console.log('Qty : ' + this.state.qty);
         }
     }
 
@@ -311,15 +309,17 @@ export default class Table extends Component {
                     <View style={styles.boxmid}>
                         <View style={{ flex: 1, flexDirection: 'row', marginTop: 5, marginLeft: 5, }}>
                             <View style={{ flex: 5 }}>
-                                <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: hp('3%') }}>Rs. {this.state.dataSource.cost}</Text>
+                                <NumberFormat
+                                    value={this.state.dataSource.cost}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    prefix={'\u20B9 '}
+                                    renderText={
+                                        value => <Text style={{ marginTop: 5,marginLeft: 20, color: 'red', fontSize: hp('3%'), fontWeight: 'bold' }}>{value}</Text>}
+                                />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Icon
-                                    style={{ color: '#9c908f' }}
-                                    //onPress={() => navigation.pop()}
-                                    name="md-share"
-                                    size={hp('5%')}
-                                />
+                                
                             </View>
                         </View>
 
@@ -335,11 +335,12 @@ export default class Table extends Component {
                             </View>
                         </View>
 
-
-                        <View style={{ flex: 4, }}>
+                        <ScrollView scrollEnabled={true}>
+                        <View >
                             <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: hp('3%'), fontWeight: "bold", }}> DESCRIPTION</Text>
-                            <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: hp('2%'), }}> {this.state.dataSource.description}</Text>
+                            <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: hp('1.9%'), }}> {this.state.dataSource.description}</Text>
                         </View>
+                        </ScrollView>
 
                         <Modal
                             animationType="slide"
@@ -359,22 +360,22 @@ export default class Table extends Component {
                                     <View style={{ marginTop: 33 }}>
                                         {this.renderLargeImage()}
                                     </View>
-                                    <View style={{margin:15,}}>
-                                    <NumericInput
-                                        initValue={1}
-                                        totalWidth={hp('12%')}
-                                        totalHeight={hp('5%')}
-                                        iconSize={25}
-                                        minValue={1}
-                                        maxValue={7}
-                                        step={1}
-                                        valueType='integer'
-                                        rounded
-                                        textColor='black'
-                                        iconStyle={{ color: 'black' }}
-                                        rightButtonBackgroundColor='red'
-                                        leftButtonBackgroundColor='white'
-                                        onChange={value => this.AddQty(value)} />
+                                    <View style={{ margin: 15, }}>
+                                        <NumericInput
+                                            initValue={1}
+                                            totalWidth={hp('12%')}
+                                            totalHeight={hp('5%')}
+                                            iconSize={25}
+                                            minValue={1}
+                                            maxValue={7}
+                                            step={1}
+                                            valueType='integer'
+                                            rounded
+                                            textColor='black'
+                                            iconStyle={{ color: 'black' }}
+                                            rightButtonBackgroundColor='red'
+                                            leftButtonBackgroundColor='white'
+                                            onChange={value => this.AddQty(value)} />
                                     </View>
                                     <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
                                         <CartContext.Consumer>
@@ -390,7 +391,7 @@ export default class Table extends Component {
                                                     onPress={() => {
                                                         this.setQuantityModalVisible(!this.state.quantityModalVisible, ContextVal);
                                                         //ContextVal.onPlus(); 
-                                                        this.setState({ qtypress: true})
+                                                        this.setState({ qtypress: true })
                                                     }}>
                                                     <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
                                                 </TouchableOpacity>
