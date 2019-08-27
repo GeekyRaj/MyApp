@@ -7,8 +7,8 @@ class CartCount extends Component {
         return (
             <View
                 style={{
-                    height: 35,
-                    width: 35,
+                    height: 45,
+                    width: 45,
                     borderRadius: 20,
                     backgroundColor: 'red',
                     alignItems: 'center',

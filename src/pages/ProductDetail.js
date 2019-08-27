@@ -13,7 +13,8 @@ import {
     SafeAreaView,
     Dimensions,
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import NumericInput from 'react-native-numeric-input';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import StarRating from '../components/StarRating';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -57,7 +58,8 @@ export default class Table extends Component {
             quantityModalVisible: false,
             ratingModalVisible: false,
 
-            qty: 0,
+            qty: 1,
+            qtypress: false,
 
             Default_Rating: 1,
             //To set the default Star Selected
@@ -75,19 +77,14 @@ export default class Table extends Component {
     }
 
     //Add Quantity
-    setQuantityModalVisible(visible,ContextVal) {
+    setQuantityModalVisible(visible, ContextVal) {
         this.setState({ quantityModalVisible: visible });
         console.log(this.state.qty);
         if (visible == false) {
-            if(this.state.qty<0){
-                alert('No of product cannot be negative number!');
-            }
-            else if (this.state.qty != 0 && this.state.qty >0) {
-                if (this.state.qty >= 9) {
-                    alert('Maximum 8 orders can be placed by a user!');
-                    this.setState({ qty: 0 })
-                }
-                else {
+            if (this.state.qty >= 1 ) {
+                console.log("YES") 
+                if( this.state.qtypress == true ){
+                    console.log('Clicked Button')
                     this.addToCart(ContextVal);
                 }
             }
@@ -110,9 +107,12 @@ export default class Table extends Component {
                     console.log(responseJson.message);
                     alert(responseJson.message + 'Check My Cart to Confirm / Delete order.');
                     this.props.navigation.navigate('DashboardTabNavigator');
-                    //ContextVal.onPlus();
-                    ContextVal.state.count= responseJson.total_carts;
+                    //Set Context count value
+                    if(ContextVal != null){
+                        ContextVal.state.count = responseJson.total_carts;
+                    }
                     console.log('COUNT : ' + responseJson.total_carts);
+                    this.setState({ qtypress:false})
                     try {
                         AsyncStorage.setItem('@user_addcart', 'yes');
                         AsyncStorage.setItem('@user_cartcount', '' + responseJson.total_carts);
@@ -213,9 +213,19 @@ export default class Table extends Component {
     renderLargeImage() {
         if (this.state.largeImage.length > 1) {
             return (
-                <Image style={{ width: wp('50%'), height: hp('18%'), alignItems: 'center', padding: 50,resizeMode:'stretch' }}
+                <Image style={{ width: wp('50%'), height: hp('18%'), alignItems: 'center', padding: 50, resizeMode: 'stretch' }}
                     source={{ uri: this.state.largeImage }} />
             )
+        }
+    }
+    AddQty(qty){
+        if(qty >8 ){
+            ToastAndroid.show('Quantity cannot be greater then 8. ', ToastAndroid.SHORT);
+        }
+        else
+        {
+            this.setState({ qty: qty})
+            console.log('Qty : '+this.state.qty);
         }
     }
 
@@ -261,7 +271,7 @@ export default class Table extends Component {
             pcatval = "Cupboard";
         }
 
-       
+
 
         //getting rating
         const ratingObj = {
@@ -269,176 +279,186 @@ export default class Table extends Component {
             views: this.state.dataSource.view_count
         }
 
-        if(this.state.isloaded){
+        if (this.state.isloaded) {
             return (
-                <View style={{ flex: 1,justifyContent:'center',alignItems:'center' }}>
-                <Image source={require("../images/Loader1.gif")} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={require("../images/Loader1.gif")} />
                 </View>
-              )
+            )
         }
 
         return (
             <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3" }}>
-            <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3", width:'100%' }}>
-                <View style={styles.box}>
-                    <View style={{flex: 4}}>
-                        <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
-                        <Text style={{ fontSize: hp('3%'), paddingLeft: 20, }}>Category - {pcatval} </Text>
-                    </View>
-                    <View style={{ flex: 2, flexDirection: 'row', width: '100%', }}>
-                        <View style={{flex:8}}>
-
-                            <Text style={{ fontSize: hp('2%'), paddingLeft: 20, marginBottom: 10, }}>{this.state.dataSource.producer}</Text>
+                <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#e8e4e3", width: '100%' }}>
+                    <View style={styles.box}>
+                        <View style={{ flex: 4 }}>
+                            <Text style={{ fontSize: hp('3.2%'), paddingLeft: 20, marginTop: 10, fontWeight: "bold", }}>{this.props.navigation.state.params.pname}</Text>
+                            <Text style={{ fontSize: hp('3%'), paddingLeft: 20, }}>Category - {pcatval} </Text>
                         </View>
-                        <View style={{flex:4,}}>
-                            <StarRating ratingObj={ratingObj} />
-                        </View>
+                        <View style={{ flex: 2, flexDirection: 'row', width: '100%', }}>
+                            <View style={{ flex: 8 }}>
 
-                    </View>
-
-
-                </View>
-                <View style={styles.boxmid}>
-                    <View style={{ flex: 1, flexDirection: 'row', marginTop: 5, marginLeft: 5,}}>
-                        <View style={{flex:5}}>
-                            <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: hp('3%') }}>Rs. {this.state.dataSource.cost}</Text>
-                        </View>
-                        <View style={{flex:1}}>
-                            <Icon
-                                style={{ color: '#9c908f' }}
-                                //onPress={() => navigation.pop()}
-                                name="md-share"
-                                size={hp('5%')}
-                            />
-                        </View>
-                    </View>
-
-                    <View style={styles.image}>
-                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            {this.renderLargeImage()}
-                        </View>
-                        <View style={{ flex: 0, flexDirection: 'row', alignContent: 'center', paddingLeft: 20 }}>
-                            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={true} nestedScrollEnabled>
-                                {this.renderImages()}
-                            </ScrollView>
-
-                        </View>
-                    </View>
-
-
-                    <View style={{ flex: 4, }}>
-                        <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: hp('3%'), fontWeight: "bold", }}> DESCRIPTION</Text>
-                        <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: hp('2%'), }}> {this.state.dataSource.description}</Text>
-                    </View>
-
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={this.state.quantityModalVisible}
-                        onRequestClose={() => { this.setState({ quantityModalVisible: false }) }}
-                    >
-
-                        <View style={{ flex: 1 }}>
-                            <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
-                                <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible,null)} style={{ flex: 1 }} />
+                                <Text style={{ fontSize: hp('2%'), paddingLeft: 20, marginBottom: 10, }}>{this.state.dataSource.producer}</Text>
+                            </View>
+                            <View style={{ flex: 4, }}>
+                                <StarRating ratingObj={ratingObj} />
                             </View>
 
-                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
+                        </View>
 
-                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
-                                <View style={{ marginTop: 33 }}>
-                                    {this.renderLargeImage()}
-                                </View>
 
-                                <TextInput
-                                    style={{ fontSize: 20, padding: 20 }}
-                                    placeholder="Enter Quantity"
-                                    defaultValue= {''+this.state.qty}
-                                    onChangeText={qty => this.setState({ qty: qty })}
-                                    keyboardType='numeric'
+                    </View>
+                    <View style={styles.boxmid}>
+                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 5, marginLeft: 5, }}>
+                            <View style={{ flex: 5 }}>
+                                <Text style={{ marginTop: 5, marginRight: 100, color: 'red', fontSize: hp('3%') }}>Rs. {this.state.dataSource.cost}</Text>
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <Icon
+                                    style={{ color: '#9c908f' }}
+                                    //onPress={() => navigation.pop()}
+                                    name="md-share"
+                                    size={hp('5%')}
                                 />
-
-                                <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
-                                    <CartContext.Consumer>
-                                        {ContextVal => (
-                                            <TouchableOpacity
-                                                style={{
-                                                    backgroundColor: 'red', borderRadius: 8,
-                                                    padding: 10,
-                                                    width: 176, height: 42,
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center'
-                                                }}
-                                                onPress={() => { this.setQuantityModalVisible(!this.state.quantityModalVisible,ContextVal);
-                                                //ContextVal.onPlus(); 
-                                            }}>
-                                                <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    </CartContext.Consumer>
-
-                                </View>
                             </View>
                         </View>
-                    </Modal>
 
-
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={this.state.ratingModalVisible}
-                        onRequestClose={() => { this.setState({ ratingModalVisible: false }) }}>
-
-                        <View style={{ flex: 1 }}>
-                            <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
-                                <TouchableOpacity onPress={() => this.setRatingModalVisible(!this.state.ratingModalVisible)} style={{ flex: 1 }} />
+                        <View style={styles.image}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                {this.renderLargeImage()}
                             </View>
+                            <View style={{ flex: 0, flexDirection: 'row', alignContent: 'center', paddingLeft: 20 }}>
+                                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={true} nestedScrollEnabled>
+                                    {this.renderImages()}
+                                </ScrollView>
 
-                            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 420 }}>
-
-                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2C2B2B', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
-                                <View style={{ marginTop: 33 }}>
-                                    {this.renderLargeImage()}
-                                </View>
-                                {/* Taking Rating from user */}
-                                <View style={styles.childView}>{React_Native_Rating_Bar}</View>
-                                <Text style={styles.textStyle}>
-                                    {/*To show the rating selected*/}
-                                    {this.state.Default_Rating} / {this.state.Max_Rating}
-                                </Text>
-
-
-                                <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            backgroundColor: 'red', borderRadius: 8,
-                                            padding: 10,
-                                            width: screenW / 2, height: 42,
-                                            justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}
-                                        onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible); }}>
-                                        <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold' }}>RATE NOW</Text>
-                                    </TouchableOpacity>
-                                </View>
                             </View>
                         </View>
-                    </Modal>
+
+
+                        <View style={{ flex: 4, }}>
+                            <Text style={{ marginTop: 5, paddingLeft: 10, color: 'black', fontSize: hp('3%'), fontWeight: "bold", }}> DESCRIPTION</Text>
+                            <Text style={{ marginTop: 2, paddingLeft: 10, color: 'black', fontSize: hp('2%'), }}> {this.state.dataSource.description}</Text>
+                        </View>
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={this.state.quantityModalVisible}
+                            onRequestClose={() => { this.setState({ quantityModalVisible: false }) }}
+                        >
+
+                            <View style={{ flex: 1 }}>
+                                <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
+                                    <TouchableOpacity onPress={() => this.setQuantityModalVisible(!this.state.quantityModalVisible, null)} style={{ flex: 1 }} />
+                                </View>
+
+                                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 400 }}>
+
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
+                                    <View style={{ marginTop: 33 }}>
+                                        {this.renderLargeImage()}
+                                    </View>
+                                    <View style={{margin:15,}}>
+                                    <NumericInput
+                                        initValue={1}
+                                        totalWidth={hp('12%')}
+                                        totalHeight={hp('5%')}
+                                        iconSize={25}
+                                        minValue={1}
+                                        maxValue={7}
+                                        step={1}
+                                        valueType='integer'
+                                        rounded
+                                        textColor='black'
+                                        iconStyle={{ color: 'black' }}
+                                        rightButtonBackgroundColor='red'
+                                        leftButtonBackgroundColor='white'
+                                        onChange={value => this.AddQty(value)} />
+                                    </View>
+                                    <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                                        <CartContext.Consumer>
+                                            {ContextVal => (
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: 'red', borderRadius: 8,
+                                                        padding: 10,
+                                                        width: 176, height: 42,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}
+                                                    onPress={() => {
+                                                        this.setQuantityModalVisible(!this.state.quantityModalVisible, ContextVal);
+                                                        //ContextVal.onPlus(); 
+                                                        this.setState({ qtypress: true})
+                                                    }}>
+                                                    <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold', paddingBottom: 5 }}>SUBMIT</Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        </CartContext.Consumer>
+
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={this.state.ratingModalVisible}
+                            onRequestClose={() => { this.setState({ ratingModalVisible: false }) }}>
+
+                            <View style={{ flex: 1 }}>
+                                <View style={{ opacity: 0.5, flex: 6, backgroundColor: '#000' }}>
+                                    <TouchableOpacity onPress={() => this.setRatingModalVisible(!this.state.ratingModalVisible)} style={{ flex: 1 }} />
+                                </View>
+
+                                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', height: 420 }}>
+
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2C2B2B', paddingTop: 20 }}>{this.state.dataSource.name}</Text>
+                                    <View style={{ marginTop: 33 }}>
+                                        {this.renderLargeImage()}
+                                    </View>
+                                    {/* Taking Rating from user */}
+                                    <View style={styles.childView}>{React_Native_Rating_Bar}</View>
+                                    <Text style={styles.textStyle}>
+                                        {/*To show the rating selected*/}
+                                        {this.state.Default_Rating} / {this.state.Max_Rating}
+                                    </Text>
+
+
+                                    <View style={{ width: '70%', justifyContent: 'center', alignItems: 'center' }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                backgroundColor: 'red', borderRadius: 8,
+                                                padding: 10,
+                                                width: screenW / 2, height: 42,
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                            onPress={() => { this.setRatingModalVisible(!this.state.ratingModalVisible); }}>
+                                            <Text style={{ color: 'white', fontSize: 23, fontWeight: 'bold' }}>RATE NOW</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
 
 
 
-                </View>
-                <View style={styles.boxend}>
-                    <View style={{ flexDirection: 'row', margin: 10, }}>
-                        <TouchableOpacity style={styles.button} onPress={() => { this.setQuantityModalVisible(true,null) }}>
-                            <Text style={styles.Textbutton}>BUY NOW</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonRate} onPress={() => { this.setRatingModalVisible(true); }}>
-                            <Text style={styles.TextbuttonRate}>RATE</Text>
-                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.boxend}>
+                        <View style={{ flexDirection: 'row', margin: 10, }}>
+                            <TouchableOpacity style={styles.button} onPress={() => { this.setQuantityModalVisible(true, null) }}>
+                                <Text style={styles.Textbutton}>BUY NOW</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonRate} onPress={() => { this.setRatingModalVisible(true); }}>
+                                <Text style={styles.TextbuttonRate}>RATE</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
             </SafeAreaView>
         )
     }
@@ -460,7 +480,7 @@ const styles = StyleSheet.create({
     },
     image: {
         alignItems: "center",
-        flex:4,
+        flex: 4,
     },
     imageThumb: {
         height: 80,
