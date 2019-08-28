@@ -8,7 +8,8 @@ export default class CartProvider extends Component {
     this.state = {
       count: 0,
       email: null,
-      name: null
+      name: null,
+      profile: null,
     };
     this.getUpdate();
   }
@@ -18,14 +19,16 @@ export default class CartProvider extends Component {
     const url = 'users/getUserData';
     return API(url,method,null)
       .then(responseJson => {
+        console.log(responseJson)
         if(responseJson.status == 200){
         this.setState({
           email: responseJson.data.user_data.email,
           name:'' +responseJson.data.user_data.first_name +
             ' ' +responseJson.data.user_data.last_name,
-            count: responseJson.data.total_carts
+          count: responseJson.data.total_carts,
+          profile: responseJson.data.user_data.profile_pic
         });
-        console.log('Context - \nName: '+this.state.name+'\nEmail: '+this.state.email+'\nCount: '+this.state.count);
+        console.log('Context - \nName: '+this.state.name+'\nEmail: '+this.state.email+'\nCount: '+this.state.count+'\nProfile :'+this.state.profile);
       }
       else{ console.log('Context Not fetched')}
     })

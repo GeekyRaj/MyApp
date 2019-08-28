@@ -8,7 +8,7 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native';
-//import RNFS from 'react-native-fs';
+import ProfileImage from '../components/ProfileImage';
 import DatePicker from 'react-native-datepicker';
 import Icon from '@expo/vector-icons/Ionicons';
 import { ImagePicker, Permissions, Constants } from 'expo';
@@ -149,21 +149,17 @@ export default class EditProfile extends Component {
         const email = this.state.email;
         const phone_no = this.state.pno;
         const dob = this.state.date;
-        const profpic = this.state.imgpath;
-        //console.log(profpic);
+        const profpic = this.state.image;
+        console.log('Profilepic :'+profpic);
 
-        let image = this.state.image;
-        let imageUri = image ? `data:image/jpg;base64,${image.base64}` : null;
-        imageUri && console.log({ uri: imageUri.slice(0, 100) });
-        //console.log('before slice : '+imageUri);
-        //console.log({ uri: imageUri.slice(0, 100) });
-        console.log('BASE 64 : ' + imageUri);
-
-        //const profpic = imageUri;
+        // let image = this.state.image;
+        // let imageUri = image ? `data:image/jpg;base64,${image.base64}` : null;
+        // imageUri && console.log({ uri: imageUri.slice(0, 100) });
 
         const method = "POST";
         const url = "users/update";
         const body = `first_name=${first_name}&last_name=${last_name}&email=${email}&dob=${dob}&profile_pic=${profpic}&phone_no=${phone_no}`
+        //console.log(body)
         return API(url, method, body)
             .then(responseJson => {
                 this.setState({ dataSource: responseJson }, function () { })
@@ -216,24 +212,23 @@ export default class EditProfile extends Component {
             base64: true,
             aspect: [4, 3],
         });
-        console.log('in picker ' + image);
+        //console.log('in picker ' + image.base64);
         if (!image.cancelled) {
-            this.setState({ image, });
+             this.setState({ image: 'data:image/jpeg;base64,' + image.base64 });
         }
-        console.log('Image path : ' + this.state.image);
+        //console.log('\nImage path : ' + this.state.image);
     };
 
     render() {
-
-
-
-
+        let { image } = this.state;
         return (
             <View style={styles.container}>
 
                 <View style={styles.imgView}>
                     <TouchableOpacity onPress={() => this._pickImage()}>
-                        <Image style={styles.img} source={require('../images/profile.jpg')} />
+                        <ProfileImage/>
+                        {image &&
+                            <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                     </TouchableOpacity>
                 </View>
                 <View style={[style.SectionStyle, !this.state.fnameVal ? style.error : null]}>
@@ -306,11 +301,11 @@ export default class EditProfile extends Component {
                 </View>
                 <CartContext.Consumer>
                     {ContextVal => (
-                        <TouchableOpacity style={styles.button} 
-                            onPress={()=>{
-                                this.onPressButton(ContextVal); 
-                            
-                                }}  >
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => {
+                                this.onPressButton(ContextVal);
+
+                            }}  >
                             <Text style={styles.Textbutton}>Edit Profile</Text>
                         </TouchableOpacity>
                     )}
