@@ -24,6 +24,8 @@ const styles= StyleSheet.create({
         height: hp('10%'),
         width: hp('10%'),
         borderRadius: 35,
+        borderColor: '#ffffff',
+        borderBottomWidth:50,
     },
 })
 

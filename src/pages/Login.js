@@ -112,6 +112,7 @@ export default class Login extends Component {
                     this.setState({
                         token: this.state.dataLogin.access_token
                     })
+                    //ToastAndroid.show('SuccessFully Logged in!', ToastAndroid.SHORT);
                     //console.log(this.state.token);
 
                     const msg = responseJson.user_msg

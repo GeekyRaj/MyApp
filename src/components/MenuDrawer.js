@@ -207,11 +207,6 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
     },
-    img: {
-        height: hp('10%'),
-        width: hp('10%'),
-        borderRadius: 35,
-    },
     imgIcon: {
         height: hp('3.5%'),
         width: hp('3.5%'),

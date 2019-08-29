@@ -15,6 +15,7 @@ import { ImagePicker, Permissions, Constants } from 'expo';
 import API from '../components/API';
 import CartContext from '../context/CartContext';
 import style from '../Styles';
+console.reportErrorsAsExceptions= false;
 
 export default class EditProfile extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -152,9 +153,6 @@ export default class EditProfile extends Component {
         const profpic = this.state.image;
         console.log('Profilepic :'+profpic);
 
-        // let image = this.state.image;
-        // let imageUri = image ? `data:image/jpg;base64,${image.base64}` : null;
-        // imageUri && console.log({ uri: imageUri.slice(0, 100) });
 
         const method = "POST";
         const url = "users/update";
@@ -163,7 +161,7 @@ export default class EditProfile extends Component {
         return API(url, method, body)
             .then(responseJson => {
                 this.setState({ dataSource: responseJson }, function () { })
-                this.isSuccessfull();
+                this.isSuccessfull(); 
                 ContextVal.getUpdate();
             })
             .catch(error => {
